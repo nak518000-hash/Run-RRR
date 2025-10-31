@@ -1,0 +1,1372 @@
+/*
+ * FINAL STYLESHEET for Milk Scale App
+ * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
+ * Special Focus: Enhanced Delete Lines Section (Customized as requested).
+ * MODIFIED: Cleaned up unused styles (Dark Mode Toggle, User Count, Share App Modal)
+ */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 10vh;
+    transition: background-color 0.3s;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10mm;
+    transition: background-color 0.3s;
+}
+
+/* --- APP Header and Settings --- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    gap: 10px; 
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #007bff; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    flex-shrink: 1; 
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px; 
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    padding: 5px;
+    flex-shrink: 0; 
+}
+
+.settings-btn .icon {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.clear-button {
+    background-color: #ff8c00; 
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8mm; 
+    cursor: pointer;
+    font-size: 16px; 
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    min-width: 70px; 
+    height: 44px; 
+}
+.clear-button:hover {
+    background-color: #e07b00;
+    transform: scale(1.02);
+}
+
+/* RESTORED: Row for Delete Box (Single item) */
+.main-page-settings-row {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: flex-end; 
+    margin-bottom: 15px;
+    gap: 10px; 
+    flex-wrap: nowrap; 
+}
+
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (FIXED) 💥 */
+.delete-lines-container {
+    display: flex;
+    flex-direction: column; 
+    width: 100%; 
+    max-width: calc(100% - 20mm); 
+    flex-shrink: 0; 
+    margin-bottom: 20px; 
+}
+
+.delete-lines-section-label {
+    text-align: left;
+    font-size: 16px; 
+    color: #007bff; /* Blue color for better prominence */
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-bottom: 8px; 
+    padding-left: 5px; 
+    text-transform: uppercase;
+}
+
+/* 🔑 FIX 1/4: justify-content: space-between सेट किया गया */
+.delete-lines-section-main {
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%; 
+    
+    padding: 8px 10px; 
+    border-radius: 10mm; 
+    
+    background-color: #fff8f0; 
+    border: 2px solid #ff8c00; 
+    box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2); 
+    
+    box-sizing: border-box; 
+    height: 60px; 
+}
+
+/* 🔑 FIX 2/4: justify-content: space-between सेट किया गया, margin-right जोड़ा */
+.delete-controls {
+    display: flex;
+    align-items: center;
+    /* gap: 8px; */ /* Gap removed for more control */
+    width: 100%; 
+    justify-content: space-between; 
+    margin-right: 5px; 
+}
+
+.range-separator {
+    font-size: 18px; 
+    font-weight: 900; 
+    color: #ff8c00; 
+    flex-shrink: 0;
+    margin: 0 5px;
+}
+
+/* 🔑 FIX 3/4: max-width और flex-shrink जोड़ा गया */
+.delete-serial-input {
+    width: 50px; 
+    max-width: 30%; 
+    min-width: 40px; 
+    text-align: center;
+    margin: 0 4px; 
+    flex-shrink: 1; /* Allow to shrink if space is tight */
+    
+    border: 2px solid #ff8c00; 
+    background-color: white;
+    font-size: 18px; 
+    font-weight: 700;
+    padding: 0; 
+    
+    height: 44px; 
+    line-height: 44px; 
+    border-radius: 8mm; 
+    box-sizing: border-box; 
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.delete-serial-input:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+
+/* --- MODIFIED: FIXED WIDTH FOR LANGUAGE CONSISTENCY (80px) --- */
+/* 🔑 FIX 4/4: margin-left: auto और margin-right: 5px हटाया गया */
+.delete-lines-btn {
+    background-color: #dc3545; 
+    color: white; 
+    font-weight: bold; 
+    border: 3px solid #b30000; 
+    
+    padding: 0 5px; 
+    
+    border-radius: 8mm; 
+    cursor: pointer;
+    
+    font-size: 18px; 
+    
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    flex-shrink: 0;
+    
+    height: 48px; 
+    line-height: 1.2;
+    box-sizing: border-box; 
+    
+    width: 80px; 
+    text-align: center;
+}
+.delete-lines-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END 💥 */
+
+
+/* --- Table Structure --- */
+.header-row, .input-row {
+    display: flex;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.header-row {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 0;
+    border-radius: 6mm;
+    margin-bottom: 8px;
+    font-weight: bold;
+    white-space: nowrap; 
+    overflow: hidden; 
+}
+
+#table-body {
+    max-height: 500px; 
+    overflow-y: auto; 
+    margin-bottom: 8px; 
+    scrollbar-width: thin; 
+    scrollbar-color: #007bff #f0f0f0; 
+}
+#table-body::-webkit-scrollbar {
+    width: 6px;
+}
+#table-body::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+.header-cell, .cell {
+    padding: 5px 2px;
+    box-sizing: border-box;
+    min-width: 10%; 
+    max-width: 45%; 
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 13%; } 
+.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 22%; } 
+.header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
+
+.header-cell:nth-child(4), .cell:nth-child(4) { 
+    flex-basis: 38%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-weight: bold;
+    padding: 0; 
+    overflow: visible; 
+} 
+
+.header-cell:nth-child(5), .cell:nth-child(5) { flex-basis: 0%; padding: 0; } 
+
+
+.increment-box, .badhotri-box {
+    width: 100%; 
+    min-height: 40px; 
+    height: auto; 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    padding: 8px 10px; 
+    border-radius: 4mm; 
+    transition: background-color 0.3s, color 0.3s, border-color 0.1s; 
+    
+    font-size: 21.6px; 
+    color: #333;
+    border: 1px solid transparent;
+    box-sizing: border-box; 
+    
+    overflow: hidden; 
+    white-space: nowrap; 
+    position: relative; 
+}
+
+.badhotri-box.highlight-border {
+    border-color: #000000 !important; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4); 
+    transition: border-color 0.05s ease-out, box-shadow 0.05s ease-out; 
+}
+
+.scrolling-text {
+    display: inline-block;
+    padding-right: 0; 
+}
+
+.badhotri-box:not(.static-box) .scrolling-text {
+    animation-name: marquee-badhotri;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; 
+}
+
+@keyframes marquee-badhotri {
+    0% { transform: translateX(100%); } 
+    100% { transform: translateX(-95%); } 
+}
+
+.badhotri-box.static-box {
+    justify-content: center; 
+    overflow: hidden; 
+}
+.badhotri-box.static-box .scrolling-text {
+    animation: none !important;
+    padding-left: 0;
+    padding-right: 0;
+    transform: none !important;
+    text-align: center; 
+    width: 100%;
+}
+
+.increment-box.positive, .badhotri-box.positive {
+    background-color: #e6ffec; 
+    color: #1a7e37; 
+    border-color: #c8e6c9;
+}
+
+.increment-box.negative, .badhotri-box.negative {
+    background-color: #ffe6e6; 
+    color: #b73232; 
+    border-color: #f1b0b0;
+}
+
+.input-row input {
+    width: 98%; 
+    padding: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6mm; 
+    text-align: center;
+    font-size: 18px; 
+    font-weight: bold;
+    color: #333;
+    min-height: 40px; 
+    height: auto;
+    box-sizing: border-box;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.input-row .milk-kg-input { border-color: #007bff; }
+.input-row .sample-input { border-color: #ffc107; }
+
+/* --- Results Section --- */
+.results-section {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    margin-top: 20px;
+    margin-bottom: 10px; 
+    text-align: center; 
+    gap: 15px; 
+}
+
+
+.result-card {
+    flex-basis: calc(50% - 7.5px); 
+    width: calc(50% - 7.5px);
+    max-width: 50%; 
+    
+    padding: 10px 5px 15px 5px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white; 
+    border: 1px solid transparent; 
+    
+    position: relative; 
+    overflow: hidden;
+    
+    min-height: 100px; 
+    height: auto; 
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-between; 
+    
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+
+/* 🔑 TARGET CLASS: FULL WIDTH STACK FOR LARGE NUMBERS */
+.results-section.full-width-stack {
+    flex-direction: column; 
+    gap: 5px; /* Less gap when stacked */
+}
+
+.results-section.full-width-stack .result-card {
+    flex-basis: 100%; 
+    width: 100%;
+    max-width: 100%; 
+    margin-bottom: 5px; 
+    padding: 10px 10px 15px 10px; 
+}
+
+.total-milk-card {
+    order: 1; 
+    border-bottom: 8px solid #007bff; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 5px 0 #007bff1a; 
+}
+.total-increment-card {
+    order: 2; 
+    border-bottom: 8px solid #ffb300; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 5px 0 #ffb3001a; 
+}
+
+.result-card p:first-child { 
+    margin: 0; 
+    font-size: 20px; 
+    color: #555; 
+    font-weight: 500; 
+    position: relative; 
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
+    padding-top: 5px;
+    
+    transition: font-size 0.3s ease; 
+}
+.results-section.full-width-stack .result-card p:first-child { 
+    font-size: 26px; /* Bada hone par title bhi bada ho */
+}
+
+.result-value { 
+    font-size: 35px; 
+    font-weight: 900; 
+    margin: 5px 0 0 0; 
+    width: 100%; 
+    box-sizing: border-box;
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal !important; 
+    
+    min-height: 35px; 
+    height: auto; 
+    position: relative; 
+    z-index: 1;
+    line-height: 1.1; 
+    
+    transition: color 0.3s ease; 
+    
+    text-align: center; 
+}
+
+.big-blue-text { color: #007bff; } 
+.big-green-text { color: #28a745; } 
+
+.green-text { color: #28a745; } 
+.red-text { color: #dc3545; } 
+
+
+/* --- Combined Total --- */
+.custom-text-box {
+    width: 100%;
+    word-break: break-word; 
+    overflow-wrap: break-word;
+    min-height: 50px; 
+    height: auto;
+    box-sizing: border-box; 
+}
+
+.total-combined {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px 15px; 
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 24px; 
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #c3e6cb;
+    
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    min-height: 80px; 
+    
+    box-sizing: border-box; 
+}
+
+.total-combined .combined-label {
+    display: block; 
+    line-height: 1.2;
+    font-size: 22px; 
+    color: #0d421d; 
+    margin-bottom: 5px;
+}
+
+.total-combined .combined-value {
+    display: block;
+    line-height: 1.2;
+    font-size: 30px; 
+    color: #155724;
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal; 
+}
+
+
+/* --- Rate Section --- */
+.rate-section-header {
+    background-color: #fff3cd; 
+    padding: 10px 15px 5px 15px; 
+    margin: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border: 1px solid #ffeeba;
+    border-bottom: none;
+    box-sizing: border-box;
+}
+
+.rate-section-header h3 {
+    margin: 0;
+    text-align: center; 
+    font-size: 32px; 
+    color: #ff8c00; 
+    font-weight: bold;
+    white-space: normal; 
+    word-break: break-word; 
+}
+
+.rate-section {
+    background-color: #fff3cd;
+    padding: 15px 15px 20px 15px; 
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid #ffeeba;
+    border-right: 1px solid #ffeeba;
+    border-bottom: 1px solid #ffeeba;
+    border-top: none; 
+    text-align: center;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 0; 
+    margin-bottom: 20px; 
+}
+
+.rate-calculation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%; 
+}
+
+.rate-quantity-box {
+    width: 180px; 
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    word-break: break-word; 
+    overflow-wrap: break-word;
+    height: auto;
+    min-height: 40px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; 
+    
+    font-size: 1.2em; 
+}
+
+.orange-button {
+    background-color: #ff8c00; 
+    color: white; 
+    font-weight: bold; 
+    border: 2px solid #e07b00;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#rate-per-kg {
+    width: 64px; 
+    padding: 10px;
+    border: 2px solid #ffc107;
+    border-radius: 6mm;
+    text-align: center;
+    font-size: 18px;
+    margin: 0 10px;
+    flex-shrink: 0;
+}
+#rate-per-kg::placeholder {
+    color: #555; 
+    opacity: 1; 
+}
+
+/* 🔑 MODIFIED: Total Amount Box Style - Match Blue/Green Display (Day Mode) */
+.total-amount-box {
+    background: linear-gradient(90deg, #007bff, #28a745); /* Same as .blue-green-display */
+    color: white;
+    padding: 8px 0;
+    border-radius: 12px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: flex-start;
+    margin-top: 10px; 
+    width: 100%; 
+    box-sizing: border-box;
+    min-height: 45px;
+    height: auto; 
+    
+    border: 3px solid #0056b3; /* Darker blue for border */
+    box-shadow: none; 
+}
+
+.rupee-large {
+    font-size: 2.1em; 
+    margin-right: 8px; 
+    flex-shrink: 0;
+    padding-left: 15px;
+    color: white; 
+    line-height: 1; 
+    vertical-align: middle; 
+    transform: translateY(0); 
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.total-amount-box #final-price {
+    font-size: 2.2em; 
+    flex-grow: 1; 
+    text-align: center; 
+    word-break: break-word; 
+    overflow-wrap: break-word;
+    white-space: normal; 
+    min-height: 48px;
+    padding-right: 15px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
+    
+    padding-top: 0; 
+    padding-bottom: 0; 
+    height: auto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+
+/* --- Modal (Settings & Help) Styles --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.settings-panel-light {
+    background-color: #fff5e6; 
+    border: 1px solid #ffc107; 
+}
+
+.settings-panel-light h2 {
+    color: #ff9800; 
+    border-bottom: 2px solid #ff9800;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.settings-panel-light .close-btn {
+    color: #ff4500; 
+}
+
+
+.blue-panel {
+    background-color: #e6f7ff; 
+    border: 1px solid #90caf9; 
+}
+.blue-panel h2 {
+    color: #007bff; 
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.blue-panel .close-btn {
+    color: #007bff; 
+}
+
+/* --- Share App Styles Removed --- */
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 40px; 
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background-color: white; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd; 
+    color: #333;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.settings-panel-light .bordered-item {
+    border: 1px solid #ff9800; 
+}
+
+.setting-item.no-border-item {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 5px 0; 
+    margin-bottom: 4px; 
+}
+
+.icon-with-text-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.icon-button {
+    width: 100%; 
+    height: 60px; 
+    border-radius: 30px; 
+    border: 3px solid; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    font-size: 24px; 
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+    
+    position: relative; 
+}
+
+.icon-button:hover {
+    transform: scale(1.03); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.button-text-overlay {
+    position: absolute;
+    color: white; 
+    font-weight: bold; 
+    font-size: 1.2em; 
+    z-index: 2; 
+    left: 20px; 
+    padding-top: 2px; 
+}
+
+.icon-container-circle {
+    width: 44px; 
+    height: 44px; 
+    border-radius: 50%;
+    background-color: #FF8C00; 
+    border: 3px solid #FFD700; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 10px; 
+    z-index: 2;
+    box-shadow: none; 
+}
+
+.green-icon-btn {
+    background-color: #28a745; 
+    border-color: #1e7e34; 
+}
+
+.blue-icon-btn {
+    background-color: #007bff; 
+    border-color: #0056b3; 
+}
+
+.email-icon { 
+    font-size: 1.4em; 
+}
+
+/* User Count and Dark Mode Styles Removed */
+
+.small-input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4mm;
+    font-size: 16px; 
+}
+
+
+/* --- Form Styles (Help Center) --- */
+
+#help-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #007bff; 
+}
+
+#help-form input:not([type="submit"]), 
+#problemDescription { 
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 6mm;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    background-color: white; 
+    
+    font-family: Arial, sans-serif; 
+}
+
+#help-form input:focus, #problemDescription:focus {
+    border-color: #0056b3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.textarea-group {
+    position: relative;
+}
+
+#problemDescription {
+    resize: none;
+    min-height: 150px;
+    max-height: 300px;
+}
+
+.char-count { 
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    z-index: 5;
+}
+
+.submit-btn {
+    align-self: flex-end; 
+    width: 120px; 
+    background-color: #28a745; 
+    color: white;
+    padding: 10px 15px; 
+    border: none;
+    border-radius: 6mm;
+    font-size: 16px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+    background-color: #1e7e34;
+}
+
+/* --- CLEAR ALL MODAL STYLES (MODIFIED) --- */
+
+.clear-panel-yellow {
+    background-color: #fffacd; /* Light Yellow Color */
+    border: 1px solid #ffc107; /* Warning Yellow */
+    text-align: center;
+}
+.clear-panel-yellow h2 {
+    color: #ff9800; /* Darker Orange/Yellow Title */
+    border-bottom: 2px solid #ff9800;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.clear-panel-yellow .close-btn {
+    color: #ff9800; 
+}
+.clear-warning-text {
+    font-size: 18px;
+    color: #555;
+    margin: 20px 0;
+    font-weight: 500;
+}
+/* Removed .clear-icon-container and .clear-icon-danger */
+
+.clear-options-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-btn {
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 6mm;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+}
+.modal-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.cancel-btn {
+    background-color: #6c757d; /* Grey */
+    color: white;
+}
+.confirm-btn {
+    /* Uses .red-button styles from existing CSS */
+    background-color: #dc3545 !important;
+    border: 3px solid #b30000;
+    color: white;
+}
+
+/* 💥 NEW: CUSTOM ALERT MODAL STYLE 💥 */
+.custom-alert-panel {
+    /* light yellow color from clear-panel-yellow */
+    background-color: #fffacd !important; 
+    border: 3px solid #ff9800 !important; /* Orange Border */
+    text-align: center;
+    max-width: 350px !important;
+}
+
+.custom-alert-panel .close-btn {
+    color: #ff9800 !important; 
+}
+
+.custom-alert-panel #alert-message-text {
+    font-size: 18px;
+    color: #333; /* Darker text for readability */
+    margin: 10px 0 20px 0;
+    font-weight: 600;
+}
+
+.custom-alert-panel #alert-ok-btn {
+    background-color: #ff9800; /* Orange OK button */
+    border: none;
+    color: white;
+}
+.custom-alert-panel #alert-ok-btn:hover {
+    background-color: #cc7a00;
+}
+
+/* ------------------------------------------------------------------ */
+/* 💥 DARK MODE STYLES START 💥 */
+/* ------------------------------------------------------------------ */
+
+body.dark-mode {
+    background-color: #121212; 
+}
+
+body.dark-mode .container {
+    background-color: #222222; 
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    color: #f0f0f0;
+}
+
+body.dark-mode .app-header {
+    border-bottom: 2px solid #333;
+}
+
+body.dark-mode .app-header h1 {
+    color: #4da6ff; 
+}
+
+body.dark-mode .settings-btn {
+    color: #b0b0b0;
+}
+
+body.dark-mode .clear-button {
+    background-color: #ff9800;
+    color: #222; 
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+}
+body.dark-mode .clear-button:hover {
+    background-color: #cc7a00;
+}
+
+/* LINE DELETE SETTING DARK MODE - CUSTOMIZED (FIXED) */
+body.dark-mode .delete-lines-container {
+    margin-bottom: 20px;
+}
+
+body.dark-mode .delete-lines-section-label {
+    color: #4da6ff; 
+}
+
+/* 🔑 FIX (DARK MODE): justify-content: space-between सेट किया गया */
+body.dark-mode .delete-lines-section-main {
+     background-color: #332a2a; 
+     border: 2px solid #ff7043; 
+     box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2); 
+     color: #f0f0f0; 
+     height: 60px; 
+     justify-content: space-between; 
+}
+
+body.dark-mode .range-separator {
+    color: #ff7043; 
+}
+
+/* 🔑 FIX (DARK MODE): max-width, flex-shrink, और margin जोड़ा गया */
+body.dark-mode .delete-serial-input {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 2px solid #ff7043; 
+    max-width: 30%; 
+    min-width: 40px; 
+    flex-shrink: 1;
+    margin: 0 4px;
+}
+body.dark-mode .delete-serial-input:focus {
+    border-color: #4da6ff; 
+    box-shadow: 0 0 5px rgba(77, 166, 255, 0.7);
+}
+
+/* 🔑 FIX (DARK MODE): margin-left: auto और margin-right: 5px हटाया गया */
+body.dark-mode .delete-lines-btn {
+    background-color: #f05050; 
+    border: 3px solid #8c0000;
+    color: #f0f0f0;
+    
+    padding: 0 5px; 
+
+    height: 48px; 
+    font-size: 18px; 
+    
+    width: 80px; 
+    text-align: center;
+    
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+body.dark-mode .delete-lines-btn:hover {
+    background-color: #cc4040;
+}
+/* LINE DELETE SETTING DARK MODE END */
+
+/* Table Header */
+body.dark-mode .header-row {
+    background-color: #0056b3; 
+}
+
+/* Scrollbar (Dark Mode) */
+body.dark-mode #table-body {
+    scrollbar-color: #4da6ff #222; 
+}
+body.dark-mode #table-body::-webkit-scrollbar-thumb {
+    background-color: #4da6ff;
+}
+
+
+/* Input Fields */
+body.dark-mode .input-row input {
+    background-color: #333333;
+    color: #f0f0f0;
+    border: 1px solid #555;
+}
+body.dark-mode .input-row .milk-kg-input { border-color: #4da6ff; }
+body.dark-mode .input-row .sample-input { border-color: #ff9800; }
+
+/* Badhotri Box */
+body.dark-mode .badhotri-box {
+    background-color: #333;
+    color: #ccc;
+    border-color: #444;
+}
+
+body.dark-mode .badhotri-box.positive {
+    background-color: #2a472f; 
+    color: #5cb85c;
+    border-color: #4c6d52;
+}
+
+body.dark-mode .badhotri-box.negative {
+    background-color: #4a2f2f; 
+    color: #f05050;
+    border-color: #6d4c4c;
+}
+
+body.dark-mode .badhotri-box.highlight-border {
+    border-color: #ffffff !important; 
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4); 
+}
+
+
+/* Result Cards */
+body.dark-mode .result-card {
+    background-color: #333333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .result-card p:first-child { 
+    color: #b0b0b0; 
+}
+
+body.dark-mode .total-milk-card {
+    border-bottom: 8px solid #4da6ff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 5px 0 #4da6ff1a; 
+}
+body.dark-mode .total-increment-card {
+    border-bottom: 8px solid #ff9800;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 5px 0 #ff98001a; 
+}
+
+body.dark-mode .big-blue-text { color: #4da6ff; } 
+body.dark-mode .big-green-text { color: #5cb85c; } 
+body.dark-mode .green-text { color: #5cb85c; } 
+body.dark-mode .red-text { color: #f05050; } 
+
+
+/* Combined Total Box */
+body.dark-mode .total-combined {
+    background-color: #2a472f;
+    color: #5cb85c;
+    border: 1px solid #4c6d52;
+}
+
+body.dark-mode .total-combined .combined-label {
+    color: #99d6a3;
+}
+
+body.dark-mode .total-combined .combined-value {
+    color: #5cb85c;
+}
+
+/* Rate Section */
+body.dark-mode .rate-section-header,
+body.dark-mode .rate-section {
+    background-color: #333322;
+    border: 1px solid #554400;
+    border-bottom: 1px solid #554400; 
+}
+
+body.dark-mode .rate-section-header h3 {
+    color: #ffb74d; 
+}
+
+body.dark-mode .rate-section-header,
+body.dark-mode .rate-section {
+    background-color: #333322;
+    border: 1px solid #554400;
+    border-bottom: 1px solid #554400; 
+}
+
+body.dark-mode .rate-section-header h3 {
+    color: #ffb74d; 
+}
+
+body.dark-mode .orange-button {
+    background-color: #ff9800; 
+    border: 2px solid #cc7a00;
+}
+
+body.dark-mode #rate-per-kg {
+    background-color: #222;
+    color: #f0f0f0;
+    border: 2px solid #ff9800;
+}
+body.dark-mode #rate-per-kg::placeholder {
+    color: #aaa;
+}
+
+/* 🔑 MODIFIED: Total Amount Box Style - Match Golden Display (Dark Mode) */
+body.dark-mode .total-amount-box {
+    background: linear-gradient(90deg, #FFD700, #FFA500); /* Golden Gradient */
+    border: 3px solid #CC9900; /* Darker Gold Border */
+    color: #333; /* Dark text for contrast */
+}
+body.dark-mode .total-amount-box .rupee-large,
+body.dark-mode .total-amount-box #final-price {
+    color: #333; /* Dark text for contrast */
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3); 
+}
+
+
+/* Settings Modal */
+body.dark-mode .settings-panel-light {
+    background-color: #222222; 
+    border: 1px solid #ff9800; 
+    color: #f0f0f0;
+}
+
+body.dark-mode .settings-panel-light h2 {
+    color: #ffb74d; 
+    border-bottom: 2px solid #ffb74d;
+}
+body.dark-mode .settings-panel-light .close-btn {
+    color: #ff7043; 
+}
+body.dark-mode .setting-item {
+    background-color: #333;
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+    border: 1px solid #444; 
+    color: #f0f0f0;
+}
+body.dark-mode .settings-panel-light .bordered-item {
+    border: 1px solid #ffb74d; 
+}
+
+body.dark-mode .small-input {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+body.dark-mode #language-select {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+body.dark-mode #language-select option {
+    background-color: #444;
+}
+
+/* Help Center Modal */
+body.dark-mode .blue-panel,
+body.dark-mode .share-panel-blue {
+    background-color: #222222; 
+    border: 1px solid #4da6ff; 
+    color: #f0f0f0;
+}
+body.dark-mode .blue-panel h2,
+body.dark-mode .share-panel-blue h2 {
+    color: #4da6ff; 
+    border-bottom: 2px solid #4da6ff;
+}
+body.dark-mode .blue-panel .close-btn,
+body.dark-mode .share-panel-blue .close-btn {
+    color: #4da6ff; 
+}
+
+body.dark-mode .form-group label {
+    color: #4da6ff; 
+}
+
+body.dark-mode #help-form input:not([type="submit"]), 
+body.dark-mode #problemDescription { 
+    border: 1px solid #4da6ff;
+    background-color: #333; 
+    color: #f0f0f0;
+}
+body.dark-mode .char-count { 
+    color: #b0b0b0;
+    background-color: #333;
+}
+
+/* --- Icon Buttons Dark Mode Fix --- */
+body.dark-mode .icon-container-circle {
+    background-color: #FF9800; 
+    border: 3px solid #FFC107; 
+}
+
+/* --- CLEAR ALL MODAL DARK MODE (MODIFIED) --- */
+body.dark-mode .clear-panel-yellow {
+    background-color: #333322; /* Dark Yellowish background */
+    border: 1px solid #ff9800; /* Darker Yellow */
+}
+body.dark-mode .clear-panel-yellow h2 {
+    color: #ffb74d; 
+    border-bottom: 2px solid #ffb74d;
+}
+body.dark-mode .clear-panel-yellow .close-btn {
+    color: #ffb74d; 
+}
+body.dark-mode .clear-warning-text {
+    color: #ccc;
+}
+body.dark-mode .cancel-btn {
+    background-color: #444; 
+    border: 2px solid #6c757d;
+}
+body.dark-mode .confirm-btn {
+    background-color: #f05050 !important;
+    border: 3px solid #8c0000;
+}
+
+/* 💥 NEW: CUSTOM ALERT MODAL DARK MODE STYLE 💥 */
+body.dark-mode .custom-alert-panel {
+    background-color: #333322 !important; /* Dark Yellowish background */
+    border: 3px solid #ffb74d !important; 
+}
+
+body.dark-mode .custom-alert-panel .close-btn {
+    color: #ffb74d !important; 
+}
+
+body.dark-mode .custom-alert-panel #alert-message-text {
+    color: #f0f0f0;
+}
+
+body.dark-mode .custom-alert-panel #alert-ok-btn {
+    background-color: #ffb74d; 
+    color: #333;
+}
+body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
+    background-color: #cc9900;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* 💥 DARK MODE STYLES END 💥 */
+/* ------------------------------------------------------------------ */
