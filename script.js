@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearAllModal = document.getElementById('clear-all-modal'); 
     const clearCloseBtn = document.getElementById('clear-close-btn');   
     const clearCancelBtn = document.getElementById('clear-cancel-btn'); 
-    const clearConfirmBtn = document = document.getElementById('clear-confirm-btn'); 
+    const clearConfirmBtn = document.getElementById('clear-confirm-btn'); 
 
     // Line Delete Elements
     const deleteStartInput = document.getElementById('delete-start-serial'); 
@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const NBSP = '&nbsp;';
     
     // --- CALCULATION CONSTANTS ---
-    const MAX_DIGITS_SMALL_BOX = 7; 
-    const MAX_DIGITS_MILK_WARNING = 10; 
-    const MAX_DIGITS_BADHOTRI_WARNING = 15; 
-    const MAX_DIGITS_PRICE_WARNING = 16; // 🔑 UPDATED: Changed from 15 to 16
+    const MAX_DIGITS_SMALL_BOX = 7; // Individual badhotri scrolling
+    const MAX_DIGITS_MILK_WARNING = 10; // Total Milk warning (Kg)
+    const MAX_DIGITS_BADHOTRI_WARNING = 15; // Total Badhotri warning (Gm)
+    const MAX_DIGITS_PRICE_WARNING = 15; // NEW: Price warning (Rs)
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Large Number Warning
             number_too_large: 'संख्या बहुत बड़ी है', 
-            price_too_large: 'संख्या बहुत बड़ी है', // 🔑 NEW TRANSLATION (HINDI)
+            price_too_large: 'संख्या बहुत बड़ी है', // NEW TRANSLATION (HINDI)
 
             // Help Center Translations
             help_center_title: 'सहायता केंद्र',
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Large Number Warning
             number_too_large: 'Number is very large', 
-            price_too_large: 'The number is very large', // 🔑 NEW TRANSLATION (ENGLISH)
+            price_too_large: 'The number is very large', // NEW TRANSLATION (ENGLISH)
             
             // Help Center Translations
             help_center_title: 'Help Center',
@@ -267,17 +267,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat(cleaned) || 0;
     }
     
-    // 🔑 NEW FUNCTION: Parses MILK/SAMPLE inputs to BigInt (for precise calculation)
+    // NEW FUNCTION: Parses MILK/SAMPLE inputs to BigInt (for precise calculation)
+    // Multiplies by 100 to handle up to 2 decimal places in Kg (e.g., 12.34 Kg -> 1234 BigInt units)
     function parseInputToBigInt(value) {
-        // Remove commas, scientific notation, and decimal points (assuming Milk/Sample are whole or the decimal is handled later)
-        // Since milk input is "inputmode=decimal", we need to handle the decimal.
-        // We convert to BigInt(100) * Kg, so 12.34 Kg becomes 1234 BigInt units.
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         
         if (cleaned === '') return 0n; // 0n is BigInt zero
 
-        // Milk can be decimal (e.g., 12.34 Kg), but BigInt only handles integers.
-        // Multiply by 100 to shift the decimal by 2 places (to handle up to 2 decimal places in Kg).
         const parts = cleaned.split('.');
         let integerPart = parts[0] || '0';
         let decimalPart = (parts[1] || '00').padEnd(2, '0').substring(0, 2); // Only take 2 decimal places
@@ -341,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollingText = badhotriBox.querySelector('.scrolling-text');
         
         if (badhotriBox.classList.contains('static-box')) {
+             // If static, just flash border to show click
              badhotriBox.classList.add('highlight-border');
              setTimeout(() => {
                  badhotriBox.classList.remove('highlight-border');
@@ -362,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- CORE LOGIC (UPDATED FOR BigInt) ---
-    // Calculates Badhotri in BigInt units (Gm * 100)
+    // Calculates Badhotri in BigInt units (Gm)
     function calculateBadhotri(sampleBigInt, milkKgBigInt) {
         // sampleBigInt is Sample * 100 (from parseInputToBigInt)
         // milkKgBigInt is MilkKg * 100 (from parseInputToBigInt)
@@ -387,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return badhotriGmBigInt; 
     }
     
-    // 🔑 NEW FUNCTION: RE-INDEXES SERIAL NUMBERS
+    // NEW FUNCTION: RE-INDEXES SERIAL NUMBERS
     function updateSerialNumbers() {
         const rows = tableBody.querySelectorAll('.input-row');
         rows.forEach((row, index) => {
@@ -554,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 4. Update Display with formatted text (Kg/Gm unit)
         
-        // --- 🔑 NEW LOGIC FOR TOTAL MILK WARNING ---
+        // --- NEW LOGIC FOR TOTAL MILK WARNING ---
         let hasWarning = false; 
         if (milkLength >= MAX_DIGITS_MILK_WARNING) {
              // 10 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
@@ -569,9 +566,9 @@ document.addEventListener('DOMContentLoaded', () => {
              const totalMilkText = `${totalMilkKgDisplayValue}${NBSP}Kg`;
              totalMilkKgDisplay.innerHTML = totalMilkText;
         }
-        // --- 🔑 END OF MILK WARNING LOGIC ---
+        // --- END OF MILK WARNING LOGIC ---
 
-        // --- 🔑 LOGIC FOR TOTAL BADHOTRI WARNING (UPDATED) ---
+        // --- LOGIC FOR TOTAL BADHOTRI WARNING (UPDATED) ---
         if (badhotriLength >= MAX_DIGITS_BADHOTRI_WARNING) {
              // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              totalBadhotriGmDisplay.textContent = t.number_too_large;
@@ -598,7 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   totalBadhotriGmDisplay.classList.add('green-text'); 
              }
         }
-        // --- 🔑 END OF BADHOTRI WARNING LOGIC ---
+        // --- END OF BADHOTRI WARNING LOGIC ---
         
         // --- COMMON WARNING HANDLER ---
         if (hasWarning) {
@@ -632,12 +629,12 @@ document.addEventListener('DOMContentLoaded', () => {
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
-        // 🔑 NEW: FINAL PRICE WARNING LOGIC 
+        // NEW: FINAL PRICE WARNING LOGIC 
         const priceLengthString = finalPriceValue.replace('-', '').replace('.', '');
         const priceLength = priceLengthString.length;
 
         if (priceLength >= MAX_DIGITS_PRICE_WARNING) {
-             // 16 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+             // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              finalPriceDisplay.textContent = t.price_too_large;
              totalAmountBox.classList.add('warning-price-large');
              // Rupee sign color change is handled by CSS class
@@ -645,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
              totalAmountBox.classList.remove('warning-price-large');
              // The finalPriceDisplay.textContent is already set above
         }
-        // 🔑 END OF NEW: FINAL PRICE WARNING LOGIC 
+        // END OF NEW: FINAL PRICE WARNING LOGIC 
     }
 
     // Function: deleteLinesByRange 
@@ -743,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // --- 3. Final Updates ---
-        // 🔑 CORRECTED: Re-index the serial numbers of the remaining rows
+        // CORRECTED: Re-index the serial numbers of the remaining rows
         updateSerialNumbers();
         updateCalculations();
         
@@ -814,7 +811,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     newRow.querySelector('.milk-kg-input').focus();
                     
-                    // 🔑 CORRECTED: updateSerialNumbers is NOT needed here if logic in createRow is correct.
+                    // CORRECTED: updateSerialNumbers is NOT needed here if logic in createRow is correct.
                     // But if it was called to fix numbering issues, it should be here. 
                     // Let's rely on createRow getting the correct serial (currentRows + 1)
                 }
