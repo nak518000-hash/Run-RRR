@@ -24,10 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const languageSelect = document.getElementById('language-select');
     const helpCenterBtn = document.getElementById('help-center-btn'); 
     
-    // Clear Button Element
+    // Clear elements
     const clearAllBtn = document.getElementById('clear-all-btn'); 
-
-    // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
     const clearCloseBtn = document.getElementById('clear-close-btn');   
     const clearCancelBtn = document.getElementById('clear-cancel-btn'); 
@@ -37,14 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteStartInput = document.getElementById('delete-start-serial'); 
     const deleteEndInput = document.getElementById('delete-end-serial');   
     const deleteLinesBtn = document.getElementById('delete-lines-btn-main'); 
-
-    // Share App Modal Elements - **REMOVED**
-    // const shareAppModal = document.getElementById('share-app-modal');
-    // const openShareModalBtn = document.getElementById('open-share-modal-btn'); 
-    // const shareAppCloseBtn = document.getElementById('share-app-close-btn');
-    // const appLinkDisplay = document.getElementById('app-link-display');
-    // const copyLinkBtn = document.getElementById('copy-link-btn');
-    // const copyTooltip = document.getElementById('copy-tooltip');
 
     // Help Center Elements
     const helpCenterModal = document.getElementById('help-center-modal');
@@ -62,21 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertCloseBtn = document.getElementById('alert-close-btn');
     const alertOkBtn = document.getElementById('alert-ok-btn');
     
-    // Total Users Display (Static) - **REMOVED**
-    // const userCountDisplay = document.querySelector('.user-count-display');
-    // const totalUsers = '0000000001'; 
-    // if (userCountDisplay) userCountDisplay.textContent = totalUsers;
-
     // --- Core App Link and Text ---
     const APP_URL = 'https://your-domain.com/app-apk.apk'; 
-    
-    // appLinkDisplay.value = APP_URL; // Removed
     
     // Scrolling animation duration for individual badhotri boxes
     const SCROLL_ANIMATION_DURATION = '13.431s'; 
     
     // --- LAYOUT CONSTANTS ---
     const NBSP = '&nbsp;';
+    
+    // 🔑 NEW CONSTANTS FOR MAX DIGIT LIMIT
+    const MAX_DIGITS_TOTAL_MILK = 10; 
+    const MAX_DIGITS_TOTAL_BADHOTRI = 15;
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -91,11 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
             combined_total_label: 'दूध + बढ़ोतरी = ',
             total_amount_label: 'कुल धनराशि', 
             settings_title: 'सेटिंग्स',
-            // total_users_label: 'कुल यूज़र', // Removed
-            // dark_mode_label: 'डार्क मोड', // Removed
             change_language_label: 'भाषा बदलें',
             help_center_btn: 'सहायता केंद्र', 
-            // share_app_btn: 'ऐप शेयर करें', // Removed
             placeholder_milk: 'दूध', 
             placeholder_sample: 'सैंपल', 
             placeholder_rate: 'दर', 
@@ -118,14 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             separator_to: 'से',
             delete_btn: 'हटाएँ', 
 
-            // Share App Translations - **REMOVED**
-            // share_app_title: 'ऐप शेयर करें',
-            // share_app_sub_title: 'इस लिंक को दोस्तों के साथ साझा करें:',
-            // share_app_via_social: 'सीधे भेजें:',
-            // share_whatsapp_text: 'WhatsApp', 
-            // share_telegram_text: 'Telegram', 
-            // share_message: 'यह Milk Scale App बहुत उपयोगी है! इसे डाउनलोड करने के लिए यहाँ देखें: ',
-            
             // Help Center Translations
             help_center_title: 'सहायता केंद्र',
             form_name_label: 'आपका नाम',
@@ -141,7 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             email_subject: 'Milk Scale App - सहायता अनुरोध',
             lang_hi: 'हिन्दी', 
             lang_en: 'English',
-            alert_ok_btn_text: 'ठीक है'
+            alert_ok_btn_text: 'ठीक है',
+            // 🔑 NEW TRANSLATION KEY
+            large_number_error: 'संख्या बहुत बड़ी है'
         },
         en: {
             app_title: 'Milk Scale App', 
@@ -154,11 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             combined_total_label: 'Milk + Increment = ',
             total_amount_label: 'Total amount', 
             settings_title: 'Settings',
-            // total_users_label: 'Total Users', // Removed
-            // dark_mode_label: 'Dark Mode', // Removed
             change_language_label: 'Change Language',
             help_center_btn: 'Help Center', 
-            // share_app_btn: 'Share App', // Removed
             placeholder_milk: 'Milk', 
             placeholder_sample: 'Sample', 
             placeholder_rate: 'Rate', 
@@ -181,14 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
             separator_to: 'to',
             delete_btn: 'Delete', 
             
-            // Share App Translations - **REMOVED**
-            // share_app_title: 'Share App',
-            // share_app_sub_title: 'Share this link with friends:',
-            // share_app_via_social: 'Share directly via:',
-            // share_whatsapp_text: 'WhatsApp', 
-            // share_telegram_text: 'Telegram', 
-            // share_message: 'This Milk Scale App is very useful! Download it here: ',
-            
             // Help Center Translations
             help_center_title: 'Help Center',
             form_name_label: 'Your Name',
@@ -204,7 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
             email_subject: 'Milk Scale App - Help Request',
             lang_hi: 'Hindi', 
             lang_en: 'English',
-            alert_ok_btn_text: 'OK'
+            alert_ok_btn_text: 'OK',
+            // 🔑 NEW TRANSLATION KEY
+            large_number_error: 'The number is very large'
         }
     };
     
@@ -248,8 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
                      element.appendChild(currentTooltip);
                  }
                  currentTooltip.textContent = t.copy_success_tooltip;
-                 // **NOTE:** Since share app modal is removed, this part is mostly dormant
-                 // but kept just in case you reintroduce the button later.
                  element.innerHTML = `📋${currentTooltip.outerHTML}`; 
             } else if (element.id === 'copy-tooltip') {
                  element.textContent = translation;
@@ -289,8 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 🔑 NEW FUNCTION: Parses MILK/SAMPLE inputs to BigInt (for precise calculation)
     function parseInputToBigInt(value) {
-        // Remove commas, scientific notation, and decimal points (assuming Milk/Sample are whole or the decimal is handled later)
-        // Since milk input is "inputmode=decimal", we need to handle the decimal. 
         // We convert to BigInt(100) * Kg, so 12.34 Kg becomes 1234 BigInt units.
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         
@@ -457,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let totalMilkKgBigInt = 0n; // Total Milk in Kg * 100 units (for accurate addition)
         let totalBadhotriGmBigInt = 0n; // Total Badhotri in Gm units (BigInt)
         
+        const currentLang = languageSelect.value || 'hi';
+        const t = translations[currentLang];
+        
         const inputRows = tableBody.querySelectorAll('.input-row');
         inputRows.forEach(row => {
             const milkKgInput = row.querySelector('.milk-kg-input');
@@ -515,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // If the numeric part length is > 7, enable scrolling.
                 // NOTE: BigInt.toString().length is used
-                if (rawDisplayValue.length > 7) { 
+                if (rawDisplayValue.replace('-', '').length > 7) { 
                     badhotriBox.classList.remove('static-box'); 
                     scrollingText.style.animation = `marquee-badhotri ${SCROLL_ANIMATION_DURATION} linear infinite`;
                     
@@ -545,67 +513,101 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Calculate and Format Totals (using BigInts for milk and badhotri)
         const ratePerKg = parseInputToNumber(ratePerKgInput.value);
         
-        // Format Total Milk (Kg) from Kg*100 BigInt
-        const totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 100n); 
+        // Format Total Milk (Kg) from Kg*100 BigInt (with 2 decimal places)
+        const rawMilkString = totalMilkKgBigInt.toString().replace(/(\.0+|0+)$/, '');
+        const milkLength = rawMilkString.length; // Length of the number part without decimal shift
         
-        // Format Total Badhotri (Gm) from Gm BigInt
-        const totalBadhotriGmDisplayValue = totalBadhotriGmBigInt.toString();
+        // Format Total Badhotri (Gm) from Gm BigInt (integer Gm)
+        const rawBadhotriString = totalBadhotriGmBigInt.toString().replace('-', '');
+        const badhotriLength = rawBadhotriString.length;
 
-        // 2. Check Length Requirement (7 ANK SE ZYADA HO TO BADA)
-        const milkLength = totalMilkKgDisplayValue.replace('-', '').replace('.', '').length;
-        const badhotriLength = totalBadhotriGmDisplayValue.replace('-', '').replace('.', '').length;
         
+        // 🔑 2. CHECK FOR LARGE NUMBERS (TOTAL MILK)
+        let totalMilkKgDisplayValue;
+        let isTotalMilkTooLarge = false;
+        
+        // Since milk BigInt is Kg*100, we check the length of the string before the last two digits (decimal part)
+        // E.g., 1000000000000 Kg (12 digits) is 100000000000000 BigInt (14 digits)
+        // The length check should be on the integer part of Kg (milkLength > 10)
+        if (milkLength > MAX_DIGITS_TOTAL_MILK + 2) { // 10 digits for Kg part + 2 for BigInt precision
+             isTotalMilkTooLarge = true;
+             totalMilkKgDisplay.innerHTML = `<span class="red-text">${t.large_number_error}</span>`;
+             totalMilkKgDisplay.classList.remove('big-blue-text');
+        } else {
+             // Format Milk for display (Kg)
+             totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 100n); 
+             totalMilkKgDisplay.innerHTML = `${totalMilkKgDisplayValue}${NBSP}Kg`;
+             totalMilkKgDisplay.classList.add('big-blue-text');
+        }
+
+        // 🔑 3. CHECK FOR LARGE NUMBERS (TOTAL BADHOTRI)
+        let totalBadhotriGmDisplayValue;
+        let isTotalBadhotriTooLarge = false;
+        
+        if (badhotriLength > MAX_DIGITS_TOTAL_BADHOTRI) {
+             isTotalBadhotriTooLarge = true;
+             totalBadhotriGmDisplay.innerHTML = `<span class="red-text">${t.large_number_error}</span>`;
+             totalBadhotriGmDisplay.classList.remove('big-green-text');
+        } else {
+             // Format Badhotri (Gm)
+             totalBadhotriGmDisplayValue = totalBadhotriGmBigInt.toString();
+             totalBadhotriGmDisplay.innerHTML = `${totalBadhotriGmDisplayValue}${NBSP}Gm`;
+             totalBadhotriGmDisplay.classList.add('big-green-text');
+             
+             // Apply colors (Only if not showing error message)
+             totalBadhotriGmDisplay.classList.remove('green-text', 'red-text');
+             if (totalBadhotriGmBigInt > 0n) {
+                 totalBadhotriGmDisplay.classList.add('green-text');
+             } else if (totalBadhotriGmBigInt < 0n) {
+                 totalBadhotriGmDisplay.classList.add('red-text'); 
+             } else {
+                  totalBadhotriGmDisplay.classList.add('green-text'); 
+             }
+        }
+
+        // 4. Layout Decision: If EITHER total has more than 7 digits, go full width stack.
+        // NOTE: This is independent of the "too large" error check above.
         const MAX_DIGITS_SMALL_BOX = 7; 
-        
-        // Layout Decision: If EITHER total has more than 7 digits, go full width stack.
-        const shouldStack = milkLength > MAX_DIGITS_SMALL_BOX || badhotriLength > MAX_DIGITS_SMALL_BOX;
+        const shouldStack = totalMilkKgDisplayValue ? totalMilkKgDisplayValue.replace('-', '').replace('.', '').length > MAX_DIGITS_SMALL_BOX : false ||
+                            totalBadhotriGmDisplayValue ? totalBadhotriGmDisplayValue.replace('-', '').replace('.', '').length > MAX_DIGITS_SMALL_BOX : false;
 
-        // 3. Apply/Remove Full-Width Stack Class
+        // 5. Apply/Remove Full-Width Stack Class
         if (shouldStack) {
             resultsSection.classList.add('full-width-stack');
         } else {
             resultsSection.classList.remove('full-width-stack');
         }
-        
-        // 4. Update Display with formatted text (Kg/Gm unit)
-        const totalMilkText = `${totalMilkKgDisplayValue}${NBSP}Kg`;
-        totalMilkKgDisplay.innerHTML = totalMilkText;
-        
-        const totalBadhotriText = `${totalBadhotriGmDisplayValue}${NBSP}Gm`;
-        totalBadhotriGmDisplay.innerHTML = totalBadhotriText;
 
-        // 5. Apply colors
-        totalBadhotriGmDisplay.classList.remove('green-text', 'red-text');
-        if (totalBadhotriGmBigInt > 0n) {
-            totalBadhotriGmDisplay.classList.add('green-text');
-        } else if (totalBadhotriGmBigInt < 0n) {
-            totalBadhotriGmDisplay.classList.add('red-text'); 
+        // --- Combined Total and Price Calculation (Only if no error) ---
+        let combinedTotalValue = '0';
+        let finalPriceValue = '0';
+        let combinedTotalKgFloat = 0;
+
+        if (isTotalMilkTooLarge || isTotalBadhotriTooLarge) {
+            combinedTotalValueDisplay.innerHTML = `<span class="red-text">${t.large_number_error}</span>`;
+            quantityForRateDisplay.textContent = `(${t.large_number_error})`;
+            finalPriceDisplay.textContent = `---`; 
         } else {
-             // If 0, keep it green (neutral/positive)
-             totalBadhotriGmDisplay.classList.add('green-text'); 
-        }
-        
-        // 6. Final Combined and Price Calculations
-        // Combined Total Kg: (totalMilkKgBigInt / 100) + (totalBadhotriGmBigInt / 1000)
-        
-        // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
-        const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
-        
-        // Combined Total is in Kg*100 BigInt units
-        let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
-        
-        const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 100n); 
-        combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
+            // Combined Total Kg: (totalMilkKgBigInt / 100) + (totalBadhotriGmBigInt / 1000)
+            
+            // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
+            const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
+            
+            // Combined Total is in Kg*100 BigInt units
+            let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
+            
+            combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 100n); 
+            combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // Price Calculation MUST use floating point for the final multiplication with rate
-        // Combined Total Kg * Rate Per Kg
-        let combinedTotalKgFloat = parseInputToNumber(combinedTotalValue); // Convert back to float for rate calculation
-        
-        let finalPrice = combinedTotalKgFloat * ratePerKg; 
-        const finalPriceValue = formatNumberString(finalPrice);
-        
-        quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
-        finalPriceDisplay.textContent = `${finalPriceValue}`;
+            // Price Calculation MUST use floating point for the final multiplication with rate
+            combinedTotalKgFloat = parseInputToNumber(combinedTotalValue); 
+            
+            let finalPrice = combinedTotalKgFloat * ratePerKg; 
+            finalPriceValue = formatNumberString(finalPrice);
+            
+            quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
+            finalPriceDisplay.textContent = `${finalPriceValue}`;
+        }
     }
 
     // Function: deleteLinesByRange 
@@ -773,10 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     tableBody.scrollTop = tableBody.scrollHeight;
 
                     newRow.querySelector('.milk-kg-input').focus();
-                    
-                    // 🔑 CORRECTED: updateSerialNumbers is NOT needed here if logic in createRow is correct.
-                    // But if it was called to fix numbering issues, it should be here. 
-                    // Let's rely on createRow getting the correct serial (currentRows + 1)
                 }
             }
         });
@@ -863,14 +861,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     helpCenterCloseBtn.addEventListener('click', () => helpCenterModal.style.display = 'none');
     
-    // Share App Modal - **REMOVED**
-    // openShareModalBtn.addEventListener('click', () => {
-    //     settingsModal.style.display = 'none'; 
-    //     shareAppModal.style.display = 'block'; 
-    //     appLinkDisplay.value = APP_URL; 
-    // });
-    // shareAppCloseBtn.addEventListener('click', () => shareAppModal.style.display = 'none');
-
     // Close Modals on outside click 
     window.addEventListener('click', (event) => {
         if (event.target === settingsModal) {
@@ -879,9 +869,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === helpCenterModal) {
             helpCenterModal.style.display = 'none';
         }
-        // if (event.target === shareAppModal) { // Removed
-        //     shareAppModal.style.display = 'none';
-        // }
         if (event.target === clearAllModal) {
             clearAllModal.style.display = 'none';
         }
@@ -890,32 +877,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Dark Mode Toggle - **REMOVED**
-    // darkModeToggle.addEventListener('change', () => {
-    //     const mode = darkModeToggle.checked ? 'enabled' : 'disabled';
-    //     appBody.classList.toggle('dark-mode', darkModeToggle.checked);
-    //     localStorage.setItem('darkMode', mode);
-    // });
-    
     // Language Change Listener
     languageSelect.addEventListener('change', () => {
         const newLang = languageSelect.value;
         localStorage.setItem('appLanguage', newLang);
         applyLanguage(newLang); 
     });
-
-    // --- Share Modal Functionality - **REMOVED** ---
-    
-    // 1. Copy Button Logic - **REMOVED**
-    // copyLinkBtn.addEventListener('click', () => { ... });
-
-    // 2. Direct Share to WhatsApp - **REMOVED**
-    // const shareWhatsappBtn = document.getElementById('share-whatsapp-btn');
-    // if (shareWhatsappBtn) { ... }
-    
-    // 3. Direct Share to Telegram - **REMOVED**
-    // const shareTelegramBtn = document.getElementById('share-telegram-btn');
-    // if (shareTelegramBtn) { ... }
 
     // --- Help Center Form Logic (1000 Char Limit & Mailto) ---
     const MAX_CHARS = 1000;
@@ -991,9 +958,6 @@ ${problem}
     ratePerKgInput.addEventListener('input', updateCalculations);
     
     // --- Initial Load Sequence ---
-    // Dark Mode check removed as the feature is removed
-    // if (localStorage.getItem('darkMode') === 'enabled') { ... }
-    
     const storedLang = localStorage.getItem('appLanguage') || 'hi';
     languageSelect.value = storedLang;
 
