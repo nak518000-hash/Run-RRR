@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.getElementById('table-body');
     const ratePerKgInput = document.getElementById('rate-per-kg');
     const finalPriceDisplay = document.getElementById('final-price'); 
-    const totalAmountBox = document.querySelector('.total-amount-box'); // NEW: Target the box for warning class
+    const totalAmountBox = document.querySelector('.total-amount-box'); // Target the box for warning class
     
     // TARGET ELEMENTS FOR DYNAMIC LAYOUT/HEIGHT
     const resultsSection = document.querySelector('.results-section'); 
@@ -14,14 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const combinedTotalValueDisplay = document.getElementById('combined-total-value'); 
     const quantityForRateDisplay = document.getElementById('quantity-for-rate');
     const rateSectionTitle = document.getElementById('rate-section-title'); 
-    // const appBody = document.getElementById('app-body'); // Dark Mode removed
     const combinedLabelDisplay = document.querySelector('.total-combined .combined-label');
     
     // Settings elements
     const settingsModal = document.getElementById('settings-modal');
     const openSettingsBtn = document.getElementById('open-settings-btn');
     const settingsCloseBtn = document.getElementById('settings-close-btn'); 
-    // const darkModeToggle = document.getElementById('dark-mode-toggle'); // Removed
     const languageSelect = document.getElementById('language-select');
     const helpCenterBtn = document.getElementById('help-center-btn'); 
     
@@ -38,8 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteStartInput = document.getElementById('delete-start-serial'); 
     const deleteEndInput = document.getElementById('delete-end-serial');   
     const deleteLinesBtn = document.getElementById('delete-lines-btn-main'); 
-
-    // Share App Modal Elements - **REMOVED**
 
     // Help Center Elements
     const helpCenterModal = document.getElementById('help-center-modal');
@@ -111,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Large Number Warning
             number_too_large: 'संख्या बहुत बड़ी है', 
-            price_too_large: 'संख्या बहुत बड़ी है', // NEW TRANSLATION (HINDI)
+            price_too_large: 'संख्या बहुत बड़ी है', 
 
             // Help Center Translations
             help_center_title: 'सहायता केंद्र',
@@ -167,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Large Number Warning
             number_too_large: 'Number is very large', 
-            price_too_large: 'The number is very large', // NEW TRANSLATION (ENGLISH)
+            price_too_large: 'The number is very large', 
             
             // Help Center Translations
             help_center_title: 'Help Center',
@@ -218,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (element.tagName === 'OPTION') {
                 element.textContent = translation;
             } else if (element.id === 'copy-link-btn') {
-                 // Check if the tooltip element exists within the button
                  let currentTooltip = element.querySelector('.copy-tooltip');
                  if (!currentTooltip) {
                      currentTooltip = document.createElement('span');
@@ -228,13 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
                      element.appendChild(currentTooltip);
                  }
                  currentTooltip.textContent = t.copy_success_tooltip;
-                 // **NOTE:** Since share app modal is removed, this part is mostly dormant
-                 // but kept just in case you reintroduce the button later.
                  element.innerHTML = `📋${currentTooltip.outerHTML}`; 
             } else if (element.id === 'copy-tooltip') {
                  element.textContent = translation;
             } else if (element.id === 'delete-lines-btn-main' || element.id === 'clear-all-btn' || element.id === 'clear-cancel-btn' || element.id === 'clear-confirm-btn' || element.id === 'alert-ok-btn') {
-                 // No change needed for the element.textContent logic for the remaining buttons
                  element.textContent = translation; 
             } else {
                 element.textContent = translation;
@@ -256,9 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCalculations(); 
     }
     
-    // --- UTILITY FUNCTIONS (UPDATED FOR BigInt ACCURACY) ---
+    // --- UTILITY FUNCTIONS (UPDATED FOR FULL BigInt ACCURACY) ---
     
-    // Parses number inputs (like Rate and Delete Serials) which are small enough
+    // Parses number inputs (like Delete Serials) which are small enough
     function parseInputToNumber(value) {
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         if (cleaned.endsWith('.')) {
@@ -267,18 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat(cleaned) || 0;
     }
     
-    // NEW FUNCTION: Parses MILK/SAMPLE inputs to BigInt (for precise calculation)
-    // Multiplies by 100 to handle up to 2 decimal places in Kg (e.g., 12.34 Kg -> 1234 BigInt units)
-    function parseInputToBigInt(value) {
+    // NEW FUNCTION: Parses MILK/SAMPLE/RATE inputs to BigInt
+    // precisionMultiplier: 100 for Milk (2 decimals), 100 for Sample (2 decimals), 10000 for Rate (4 decimals)
+    function parseInputToBigInt(value, precision = 2) {
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         
-        if (cleaned === '') return 0n; // 0n is BigInt zero
+        if (cleaned === '') return 0n; 
 
         const parts = cleaned.split('.');
         let integerPart = parts[0] || '0';
-        let decimalPart = (parts[1] || '00').padEnd(2, '0').substring(0, 2); // Only take 2 decimal places
         
-        // Combine as a single string of up to 2 decimal precision
+        // Pad and truncate decimal part based on required precision
+        let decimalPart = (parts[1] || '').padEnd(precision, '0').substring(0, precision); 
+        
         const bigIntString = integerPart + decimalPart;
         
         try {
@@ -289,55 +282,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NEW FUNCTION: Formats BigInt into a decimal string (BigInt / 100)
-    function formatBigIntToNumberString(bigIntValue, divisor = 1n) {
+    // NEW FUNCTION: Formats BigInt into a decimal string (BigInt / Divisor)
+    function formatBigIntToNumberString(bigIntValue, precision = 2) {
         if (bigIntValue === 0n) return '0';
         
-        const finalBigInt = bigIntValue * 100n / divisor; // BigInt with 2 implied decimal places
-        const isNegative = finalBigInt < 0n;
-        const absoluteBigInt = isNegative ? -finalBigInt : finalBigInt;
+        const divisor = BigInt(10 ** precision); // e.g., 100n for precision 2
+        const isNegative = bigIntValue < 0n;
+        const absoluteBigInt = isNegative ? -bigIntValue : bigIntValue;
         
         const stringValue = absoluteBigInt.toString();
         
-        // Find the index to place the decimal point (2 places from the end)
-        const decimalIndex = stringValue.length - 2;
+        // Find the index to place the decimal point (precision places from the end)
+        const decimalIndex = stringValue.length - precision;
 
         let result;
         if (decimalIndex <= 0) {
-            // Case: < 0.01, e.g., '5' becomes '0.05'
-            result = '0.' + '0'.repeat(2 - stringValue.length) + stringValue;
+            // Case: < 0.xx, e.g., precision=2, string='5' becomes '0.05'
+            result = '0.' + '0'.repeat(precision - stringValue.length) + stringValue;
         } else {
             // Case: normal number
             result = stringValue.slice(0, decimalIndex) + '.' + stringValue.slice(decimalIndex);
         }
         
         // Remove trailing zeros (e.g., 5.00 -> 5)
-        result = result.replace(/(\.0+|0+)$/, '');
-        
+        // Ensure that for financial output like Price, we keep exactly 2 decimals (Removed the regex for Price formatting in updateCalculations)
+        if (precision === 2) { 
+             // Special case for Milk/Badhotri: remove trailing zeros
+             result = result.replace(/(\.0+|0+)$/, '');
+        }
+
         return isNegative ? `-${result}` : result;
     }
     
-    // Existing function for small number formatting (e.g., Rate Price)
-    function formatNumberString(value) {
-        if (value === 0) return '0';
-        // Use a high precision for safety when formatting large intermediate floating point numbers
-        let stringValue = value.toFixed(10); 
-        
-        if (stringValue.includes('e') || stringValue.includes('E')) {
-             // Fallback to toLocaleString for very large/small numbers if needed, though BigInt should prevent this for core calc
-             stringValue = Number(value).toLocaleString('fullwide', {useGrouping: false}) || stringValue;
-        }
-
-        return stringValue.replace(/(\.0+|0+)$/, '');
-    }
-    
-    // Toggle Scroll and Highlight Function (Black Border is Persistent)
+    // Toggle Scroll and Highlight Function
     function toggleScrollAndHighlight(event) {
         const badhotriBox = event.currentTarget;
         const scrollingText = badhotriBox.querySelector('.scrolling-text');
         
         if (badhotriBox.classList.contains('static-box')) {
-             // If static, just flash border to show click
              badhotriBox.classList.add('highlight-border');
              setTimeout(() => {
                  badhotriBox.classList.remove('highlight-border');
@@ -361,24 +343,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CORE LOGIC (UPDATED FOR BigInt) ---
     // Calculates Badhotri in BigInt units (Gm)
     function calculateBadhotri(sampleBigInt, milkKgBigInt) {
-        // sampleBigInt is Sample * 100 (from parseInputToBigInt)
-        // milkKgBigInt is MilkKg * 100 (from parseInputToBigInt)
+        // sampleBigInt is Sample * 100 (from parseInputToBigInt with precision=2)
+        // milkKgBigInt is MilkKg * 100 (from parseInputToBigInt with precision=2)
         
         // Formula: (Sample - 65) * 15 * MilkKg
         
         // Step 1: Sample - 65
-        // Sample is already integer (Sample * 100). 65 must also be * 100 for subtraction.
-        const sampleValue = sampleBigInt / 100n; // Get the integer sample value
-        const sampleFactor = sampleValue - 65n; 
+        // Sample is BigInt with 2 decimal precision. 65 must also be * 100.
+        const SIXTY_FIVE_HUNDRED = 6500n; 
+        const sampleValueMinus65 = sampleBigInt - SIXTY_FIVE_HUNDRED; 
         
-        // Step 2: sampleFactor * 15
-        const factor15 = sampleFactor * 15n;
+        // Step 2: sampleValueMinus65 * 15
+        const factor15 = sampleValueMinus65 * 15n;
         
         // Step 3: factor15 * MilkKg
-        // MilkKg is milkKgBigInt / 100
-        const milkKgValue = milkKgBigInt / 100n;
+        // The intermediate result (factor15) has 2 implied decimals (from sampleBigInt).
+        // MilkKg (milkKgBigInt) also has 2 implied decimals.
+        // Multiplication result has 4 implied decimals.
+        const badhotriGmBigInt_temp = factor15 * milkKgBigInt; 
         
-        const badhotriGmBigInt = factor15 * milkKgValue; 
+        // Step 4: Divide by 100 (from 2 implied decimals in MilkKg) to get Gm * 100 BigInt
+        // Since we want the final result in integer Gm (no decimals), we need to divide by 100 * 100 = 10000
+        // Badhotri in Gm = (Sample - 65) * 15 * MilkKg
+        // BigInt version: ( (Sample*100 - 6500) * 15 * (MilkKg*100) ) / 10000
+        
+        // We need to divide by the precision multiplier for MilkKg (100) and the precision multiplier for Sample (100). Total 10000.
+        // BUT, since Sample is only integer (no decimals), we only divide by the MilkKg precision (100).
+        // Let's re-examine the formula unit:
+        // Badhotri Gm = ( (Sample*100 - 6500) / 100 ) * 15 * ( (MilkKg*100) / 100 )
+        // Badhotri Gm * 10000 = (Sample*100 - 6500) * 15 * (MilkKg*100) 
+        
+        // Let's use the formula from the previous working code for unit consistency:
+        // badhotriGmBigInt = factor15 * milkKgValue; where milkKgValue = milkKgBigInt / 100n
+        // Since we want the exact Gm result, we should divide by the **Total precision factor** (100 from Sample, 100 from Milk) = 10000n.
+        
+        // Correct approach: Divide by 100 * 100 = 10000n.
+        // Result is in Gm*10000 units. Divide by 10000n to get exact Gm (BigInt).
+        const badhotriGmBigInt = badhotriGmBigInt_temp / 10000n;
         
         // The result is an exact integer in Gm.
         return badhotriGmBigInt; 
@@ -389,9 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = tableBody.querySelectorAll('.input-row');
         rows.forEach((row, index) => {
              const newSerial = index + 1;
-             // Update the data attribute
              row.dataset.serial = newSerial;
-             // Update the visible serial number in the first cell
              const serialCell = row.querySelector('.cell:first-child');
              if (serialCell) {
                  serialCell.textContent = newSerial;
@@ -401,22 +400,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function: Clear All Inputs
     function clearAllInputs() {
-        // Target Milk, Sample, and Rate inputs
         const allInputs = document.querySelectorAll('.milk-kg-input, .sample-input, #rate-per-kg');
-        
-        // Reset all values to empty string
         allInputs.forEach(input => {
             input.value = '';
         });
         
-        // Reset Delete inputs
         deleteStartInput.value = '';
         deleteEndInput.value = '';
         
-        // Update calculations (everything will become 0)
         updateCalculations();
         
-        // Remove highlight from all badhotri boxes
         document.querySelectorAll('.badhotri-box').forEach(box => {
             box.classList.remove('highlight-border');
             const scrollingText = box.querySelector('.scrolling-text');
@@ -426,12 +419,11 @@ document.addEventListener('DOMContentLoaded', () => {
             box.removeAttribute('title');
         });
         
-        // Ensure at least one row exists after clearing all data
         initializeTable(true);
     }
 
     function updateCalculations() {
-        let totalMilkKgBigInt = 0n; // Total Milk in Kg * 100 units (for accurate addition)
+        let totalMilkKgBigInt = 0n; // Total Milk in Kg * 100 units 
         let totalBadhotriGmBigInt = 0n; // Total Badhotri in Gm units (BigInt)
         
         const currentLang = languageSelect.value || 'hi';
@@ -451,18 +443,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const sampleRawValue = sampleInput.value.trim();
             
             // Parse inputs as BigInt with 2 decimal precision (Value * 100)
-            const milkKgBigInt = parseInputToBigInt(milkKgRawValue); 
-            const sampleBigInt = parseInputToBigInt(sampleRawValue); 
+            const milkKgBigInt = parseInputToBigInt(milkKgRawValue, 2); 
+            // Sample is typically integer, but handle up to 2 decimals for input flexibility
+            const sampleBigInt = parseInputToBigInt(sampleRawValue, 2); 
             
             // ONLY ADD MILK KG TO TOTAL MILK if the input is non-empty
             if (milkKgRawValue !== '') {
-                 // Add in Kg*100 units
                  totalMilkKgBigInt += milkKgBigInt;
             }
             
-            // Only calculate Badhotri if both Milk and Sample inputs are provided
             if (milkKgRawValue === '' || sampleRawValue === '') {
-                // If either Milk or Sample is missing, Badhotri is ---
                 scrollingText.textContent = '---';
                 badhotriBox.classList.add('static-box');
                 badhotriBox.classList.remove('positive', 'negative', 'highlight-border'); 
@@ -473,10 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Badhotri is calculated in exact Gm units (BigInt)
             const badhotriGmBigInt = calculateBadhotri(sampleBigInt, milkKgBigInt); 
             
-            // Format Badhotri (Gm) for display
             const badhotriGmDisplay = badhotriGmBigInt.toString();
-            
-            // Use non-breaking space for 'Gm' unit in individual box
             scrollingText.innerHTML = `${badhotriGmDisplay}${NBSP}Gm`; 
             
             badhotriBox.classList.remove('positive', 'negative', 'static-box'); 
@@ -484,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const rawDisplayValue = badhotriGmDisplay;
             
             if (badhotriGmBigInt === 0n) {
-                 // If badhotriGm is 0, display '---'
                  scrollingText.textContent = '---';
                  badhotriBox.classList.add('static-box'); 
                  scrollingText.style.animation = 'none'; 
@@ -496,9 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     badhotriBox.classList.add('negative'); 
                 }
                 
-                // If the numeric part length is > 7, enable scrolling.
-                // NOTE: BigInt.toString().length is used
-                if (rawDisplayValue.length > 7) { 
+                if (rawDisplayValue.length > MAX_DIGITS_SMALL_BOX) { 
                     badhotriBox.classList.remove('static-box'); 
                     scrollingText.style.animation = `marquee-badhotri ${SCROLL_ANIMATION_DURATION} linear infinite`;
                     
@@ -509,7 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
                          scrollingText.style.animationPlayState = 'running'; 
                          badhotriBox.removeAttribute('title');
                     }
-                    
                 } else {
                     badhotriBox.classList.add('static-box');
                     scrollingText.style.animation = 'none'; 
@@ -518,26 +501,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     badhotriBox.removeAttribute('title');
                 }
                 
-                // Only add badhotri if both inputs are valid and badhotri is non-zero
                 totalBadhotriGmBigInt += badhotriGmBigInt;
             }
         });
         
         // --- TOTAL CALCULATIONS & LAYOUT LOGIC ---
         
-        // 1. Calculate and Format Totals (using BigInts for milk and badhotri)
-        // const ratePerKg = parseInputToNumber(ratePerKgInput.value); // REMOVED (OLD FLOAT)
+        // 1. Calculate and Format Totals
         
-        // Format Total Milk (Kg) from Kg*100 BigInt
-        const totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 100n); 
+        // Format Total Milk (Kg) from Kg*100 BigInt (Precision 2)
+        const totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 2); 
         
-        // Format Total Badhotri (Gm) from Gm BigInt
+        // Format Total Badhotri (Gm) from Gm BigInt (Precision 0)
         const totalBadhotriGmDisplayValue = totalBadhotriGmBigInt.toString();
 
-        // 2. Check Length Requirement (7 ANK SE ZYADA HO TO BADA)
+        // 2. Check Length Requirement
         const milkLengthString = totalMilkKgDisplayValue.replace('-', '').replace('.', '');
         const milkLength = milkLengthString.length;
-        const badhotriLengthString = totalBadhotriGmDisplayValue.replace('-', ''); // Total Gm is an integer
+        const badhotriLengthString = totalBadhotriGmDisplayValue.replace('-', ''); 
         const badhotriLength = badhotriLengthString.length;
         
         const shouldStack = milkLength > MAX_DIGITS_SMALL_BOX || badhotriLength > MAX_DIGITS_SMALL_BOX;
@@ -553,8 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- NEW LOGIC FOR TOTAL MILK WARNING ---
         let hasWarning = false; 
-        if (milkLength > MAX_DIGITS_MILK_WARNING) { // Changed >= to > for consistency with 10 digits
-             // 10 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+        if (milkLength > MAX_DIGITS_MILK_WARNING) { 
              totalMilkKgDisplay.textContent = t.number_too_large;
              totalMilkKgDisplay.classList.add('warning-text-large');
              totalMilkKgDisplay.classList.remove('big-blue-text'); 
@@ -566,97 +546,105 @@ document.addEventListener('DOMContentLoaded', () => {
              const totalMilkText = `${totalMilkKgDisplayValue}${NBSP}Kg`;
              totalMilkKgDisplay.innerHTML = totalMilkText;
         }
-        // --- END OF MILK WARNING LOGIC ---
 
-        // --- LOGIC FOR TOTAL BADHOTRI WARNING (UPDATED) ---
-        if (badhotriLength > MAX_DIGITS_BADHOTRI_WARNING) { // Changed >= to > for consistency with 15 digits
-             // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+        // --- LOGIC FOR TOTAL BADHOTRI WARNING ---
+        if (badhotriLength > MAX_DIGITS_BADHOTRI_WARNING) { 
              totalBadhotriGmDisplay.textContent = t.number_too_large;
              totalBadhotriGmDisplay.classList.add('warning-text-large');
-             // Remove all color classes
              totalBadhotriGmDisplay.classList.remove('big-green-text', 'green-text', 'red-text'); 
              hasWarning = true;
         } else {
              totalBadhotriGmDisplay.classList.remove('warning-text-large');
-             // Fallback to original big-green-text (which is a base style for result value)
              totalBadhotriGmDisplay.classList.add('big-green-text'); 
              
              const totalBadhotriText = `${totalBadhotriGmDisplayValue}${NBSP}Gm`;
              totalBadhotriGmDisplay.innerHTML = totalBadhotriText;
              
-             // 5. Apply colors (Only if no warning)
              totalBadhotriGmDisplay.classList.remove('green-text', 'red-text');
              if (totalBadhotriGmBigInt > 0n) {
                  totalBadhotriGmDisplay.classList.add('green-text');
              } else if (totalBadhotriGmBigInt < 0n) {
                  totalBadhotriGmDisplay.classList.add('red-text'); 
              } else {
-                  // If 0, keep it green (neutral/positive)
                   totalBadhotriGmDisplay.classList.add('green-text'); 
              }
         }
-        // --- END OF BADHOTRI WARNING LOGIC ---
         
         // --- COMMON WARNING HANDLER ---
         if (hasWarning) {
-             // Combined Total को भी 0 कर दें क्योंकि कोई भी योग बहुत बड़ा है
              combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
              quantityForRateDisplay.textContent = `(---)`;
              finalPriceDisplay.textContent = '0';
-             return; // आगे की गणना को रोक दें
+             return; 
         }
         
-        // 6. Final Combined and Price Calculations (Only if no warnings)
-        
-        // Combined Total Kg: (totalMilkKgBigInt / 100) + (totalBadhotriGmBigInt / 1000)
+        // 5. Combined and Price Calculations 
         
         // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
+        // Correct way to convert Gm (integer) to Kg*100 (precision 2): Gm * 100 / 1000 = Gm / 10n
         const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
         
-        // Combined Total is in Kg*100 BigInt units
+        // Combined Total is in Kg*100 BigInt units (precision 2)
         let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
         
-        const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 100n); 
+        const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 2); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // --- NEW PRICE CALCULATION USING BIGINT (Highly Accurate) (बदलाव यहाँ) ---
+        // --- FULL BigInt PRICE CALCULATION (बदलाव यहाँ किया गया है) ---
         
-        // 1. दर (Rate) को BigInt में parse करें (मान लें कि दर में 4 दशमलव स्थानों तक की सटीकता है)
-        // Rate input is a float (e.g., 45.50). Convert it to BigInt unit of Rate*10000.
-        const ratePerKgFloat = parseInputToNumber(ratePerKgInput.value);
-        // Use Math.round and toLocaleString for accurate float to BigInt conversion
-        const rateBigIntString = Math.round(ratePerKgFloat * 10000).toLocaleString('fullwide', {useGrouping: false});
-        const rateBigInt = BigInt(rateBigIntString) || 0n;
+        // 1. Rate को BigInt में parse करें (4 दशमलव स्थानों की सटीकता के साथ: Rate * 10000)
+        // Rate input is read as a string and converted to BigInt * 10000
+        const rateBigInt = parseInputToBigInt(ratePerKgInput.value, 4) || 0n;
         
         // 2. Price Calculation: 
-        // combinedTotalBigInt unit is Kg*100. rateBigInt unit is Rate*10000.
-        // Final Price BigInt Unit: Price*100 (पैसे).
-        const PRICE_DIVISOR = 1000000n; // 100 (for Kg*100) * 10000 (for Rate*10000)
-        let finalPriceBigInt = (combinedTotalBigInt * rateBigInt) / PRICE_DIVISOR;
-
-        // 3. Format final price (which is in Price*100 BigInt units)
-        const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt, 1n); 
+        // combinedTotalBigInt unit: Kg*100 (precision 2)
+        // rateBigInt unit: Rate*10000 (precision 4)
+        // Multiplication result: Price * (100 * 10000) = Price * 1000000
         
-        // --- END OF NEW PRICE CALCULATION ---
+        const PRICE_DIVISOR = 1000000n; 
+        let finalPriceBigInt = (combinedTotalBigInt * rateBigInt);
+
+        // Round to the nearest whole rupee/paise (2 decimals).
+        // Since finalPriceBigInt is Price * 1000000, we need to divide by 10000 to get Price * 100 (2 implied decimals)
+        // For correct rounding: add half of the divisor before division.
+        const HALF_DIVISOR = PRICE_DIVISOR / 2n;
+        
+        // Price * 100 BigInt (with correct rounding)
+        let finalPriceBigInt_rounded = (finalPriceBigInt + HALF_DIVISOR) / PRICE_DIVISOR;
+
+        // 3. Format final price (which is in Price*100 BigInt units) to 2 decimal places
+        // formatBigIntToNumberString function is used with precision 2, 
+        // BUT it expects the BigInt value to be the number * 10^precision.
+        // Since finalPriceBigInt_rounded is already the result * 100, we must * 100 / 100 = 1 to keep it consistent.
+        // Let's modify the formatting for the final price to explicitly show 2 decimals.
+        
+        const isNegative = finalPriceBigInt_rounded < 0n;
+        const absoluteBigInt = isNegative ? -finalPriceBigInt_rounded : finalPriceBigInt_rounded;
+        
+        const stringValue = absoluteBigInt.toString();
+        
+        // Format to exactly 2 decimals
+        const finalPriceValue = (isNegative ? '-' : '') + (stringValue.length < 3 ? 
+            '0.' + stringValue.padStart(2, '0') : 
+            stringValue.slice(0, -2) + '.' + stringValue.slice(-2)
+        );
+        
+        // --- END OF FULL BigInt PRICE CALCULATION ---
         
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
         // NEW: FINAL PRICE WARNING LOGIC 
-        // priceLength is checked against the final formatted string value (max 16 digits)
-        const priceLengthString = finalPriceValue.replace('-', '').replace('.', '');
-        const priceLength = priceLengthString.length;
+        // priceLength is checked against the final formatted string value (max 16 integer digits)
+        const priceIntegerPart = finalPriceValue.split('.')[0].replace('-', '');
+        const priceLength = priceIntegerPart.length;
 
-        if (priceLength > MAX_DIGITS_PRICE_WARNING) { // अब 17 या उससे अधिक अंक होने पर चेतावनी आएगी
-             // 17 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+        if (priceLength > MAX_DIGITS_PRICE_WARNING) { 
              finalPriceDisplay.textContent = t.price_too_large;
              totalAmountBox.classList.add('warning-price-large');
-             // Rupee sign color change is handled by CSS class
         } else {
              totalAmountBox.classList.remove('warning-price-large');
-             // The finalPriceDisplay.textContent is already set above
         }
-        // END OF NEW: FINAL PRICE WARNING LOGIC 
     }
 
     function createRow(serial) {
@@ -667,7 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentLang = languageSelect.value || 'hi';
         const t = translations[currentLang];
         
-        // HTML structure remains the same
         row.innerHTML = `
             <div class="cell">${serial}</div>
             <div class="cell"><input type="text" inputmode="decimal" class="milk-kg-input" value="" placeholder="${t.placeholder_milk}" data-key="placeholder_milk"></div>
@@ -689,7 +676,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const sampleInput = row.querySelector('.sample-input');
         const badhotriBox = row.querySelector('.badhotri-box'); 
 
-        // Add Click Listener for persistent highlight/scroll toggle
         badhotriBox.addEventListener('click', toggleScrollAndHighlight);
         
         milkInput.addEventListener('keydown', (e) => {
@@ -699,31 +685,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Auto-add row on Enter in Sample input 
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
                 const nextRow = row.nextElementSibling;
                 
                 if (nextRow) {
-                    // Go to the next row's milk input
                     nextRow.querySelector('.milk-kg-input').focus();
                 } else {
-                    // If this is the last row, add a new one
                     const currentRows = tableBody.querySelectorAll('.input-row').length;
                     const newSerial = currentRows + 1; 
                     
                     const newRow = createRow(newSerial);
                     tableBody.appendChild(newRow);
                     
-                    // Scroll to the bottom to see the new row
                     tableBody.scrollTop = tableBody.scrollHeight;
 
                     newRow.querySelector('.milk-kg-input').focus();
-                    
-                    // CORRECTED: updateSerialNumbers is NOT needed here if logic in createRow is correct.
-                    // But if it was called to fix numbering issues, it should be here. 
-                    // Let's rely on createRow getting the correct serial (currentRows + 1)
                 }
             }
         });
@@ -739,13 +717,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingRows = tableBody.querySelectorAll('.input-row');
         const currentCount = existingRows.length;
 
-        // Ensure at least 1 row exists
         if (currentCount === 0) {
             const newRow = createRow(1);
             tableBody.appendChild(newRow);
-            // newRow.querySelector('.milk-kg-input').focus(); 
         } else {
-            // If not resetting, just update serial numbers to ensure they are 1, 2, 3...
             updateSerialNumbers();
         }
 
@@ -753,6 +728,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- EVENT LISTENERS AND SETUP ---
+    
+    // Function to handle line deletion
+    function deleteLinesByRange() {
+        const start = parseInputToNumber(deleteStartInput.value);
+        const end = parseInputToNumber(deleteEndInput.value) || start; // If end is empty, delete only the start line
+        
+        const rows = tableBody.querySelectorAll('.input-row');
+        
+        if (start < 1 || start > rows.length) {
+            showAlert(`कृपया 1 और ${rows.length} के बीच एक मान्य संख्या डालें।`);
+            return;
+        }
+        
+        if (end < start || end > rows.length) {
+            showAlert(`समाप्ति संख्या (${end}) शुरू संख्या (${start}) से बड़ी होनी चाहिए और ${rows.length} से ज़्यादा नहीं होनी चाहिए।`);
+            return;
+        }
+
+        const rowsToDelete = [];
+        for (let i = start - 1; i < end; i++) {
+            rowsToDelete.push(rows[i]);
+        }
+        
+        rowsToDelete.forEach(row => row.remove());
+
+        // Reset the input fields
+        deleteStartInput.value = '';
+        deleteEndInput.value = '';
+
+        // Re-index and recalculate
+        updateSerialNumbers();
+        updateCalculations();
+        
+        // Ensure at least one row remains
+        initializeTable(false);
+    }
     
     // Clear Button Listener to open modal
     if (clearAllBtn) {
@@ -774,11 +785,10 @@ document.addEventListener('DOMContentLoaded', () => {
     alertCloseBtn.addEventListener('click', () => errorAlertModal.style.display = 'none');
     alertOkBtn.addEventListener('click', () => errorAlertModal.style.display = 'none');
     
-    // Delete Lines Button Listener (Main Page) - Direct Call 
+    // Delete Lines Button Listener (Main Page)
     if (deleteLinesBtn && deleteStartInput && deleteEndInput) {
         deleteLinesBtn.addEventListener('click', deleteLinesByRange);
         
-        // Add Enter key listener for convenience (optional)
         deleteEndInput.addEventListener('keydown', (e) => {
              if (e.key === 'Enter') {
                  e.preventDefault();
@@ -788,7 +798,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteStartInput.addEventListener('keydown', (e) => {
              if (e.key === 'Enter') {
                  e.preventDefault();
-                 // If only start is entered, treat it as a single deletion and trigger the function
                  if (deleteEndInput.value === '') {
                      deleteLinesByRange();
                  } else {
@@ -796,7 +805,6 @@ document.addEventListener('DOMContentLoaded', () => {
                  }
              }
         });
-        
     }
 
     // Modal Open/Close
@@ -833,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyLanguage(newLang); 
     });
 
-    // --- Help Center Form Logic (1000 Char Limit & Mailto) ---
+    // --- Help Center Form Logic ---
     const MAX_CHARS = 1000;
 
     function updateCharCount() {
@@ -867,7 +875,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Construct the email body
         const emailBody = `
 ==============================
 User Details:
@@ -896,7 +903,6 @@ ${problem}
             helpForm.reset();
             updateCharCount(); 
             
-            // Delete count input ko bhi reset karo 
             if (deleteStartInput) deleteStartInput.value = '';
             if (deleteEndInput) deleteEndInput.value = '';
 
