@@ -3,6 +3,7 @@
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
  * MODIFIED: Cleaned up unused styles (Dark Mode Toggle, User Count, Share App Modal)
+ * 🔑 UPDATED: Added styles for Large Number Warnings and Badhotri Scrolling
  */
 
 body {
@@ -310,6 +311,7 @@ body {
     padding-right: 0; 
 }
 
+/* 🔑 NEW CSS: Scrolling Badhotri */
 .badhotri-box:not(.static-box) .scrolling-text {
     animation-name: marquee-badhotri;
     animation-timing-function: linear;
@@ -320,6 +322,7 @@ body {
     0% { transform: translateX(100%); } 
     100% { transform: translateX(-95%); } 
 }
+/* 🔑 END NEW CSS: Scrolling Badhotri */
 
 .badhotri-box.static-box {
     justify-content: center; 
@@ -493,6 +496,7 @@ body {
     justify-content: center;
     text-align: center;
 }
+/* 💥 END OF NEW CSS CLASS FOR LARGE NUMBER WARNING (BADHOTRI WARNING) 💥 */
 
 
 /* --- Combined Total --- */
@@ -1434,4 +1438,3 @@ body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
-
