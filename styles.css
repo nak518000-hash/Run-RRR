@@ -475,6 +475,20 @@ body {
 .red-text { color: #dc3545; } 
 
 
+/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING 💥 */
+.warning-text-large {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #dc3545 !important; /* Red color for warning */
+    word-break: normal !important; 
+    overflow-wrap: normal !important;
+    white-space: normal !important; 
+    line-height: 1.2 !important; 
+    padding: 5px !important;
+    margin-top: 10px !important;
+}
+
+
 /* --- Combined Total --- */
 .custom-text-box {
     width: 100%;
@@ -1178,6 +1192,10 @@ body.dark-mode .big-green-text { color: #5cb85c; }
 body.dark-mode .green-text { color: #5cb85c; } 
 body.dark-mode .red-text { color: #f05050; } 
 
+/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING (DARK MODE) 💥 */
+body.dark-mode .warning-text-large {
+    color: #ff7043 !important; /* Dark Mode Orange/Red Warning */
+}
 
 /* Combined Total Box */
 body.dark-mode .total-combined {
