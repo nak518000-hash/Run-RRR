@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_DIGITS_SMALL_BOX = 7; // Individual badhotri scrolling
     const MAX_DIGITS_MILK_WARNING = 10; // Total Milk warning (Kg)
     const MAX_DIGITS_BADHOTRI_WARNING = 15; // Total Badhotri warning (Gm)
-    const MAX_DIGITS_PRICE_WARNING = 16; // UPDATED: 16 अंकों तक दिखाने की अनुमति (17 पर चेतावनी)
+    const MAX_DIGITS_PRICE_WARNING = 14; // CHANGED: 14 अंकों तक दिखाने की अनुमति (15 पर चेतावनी)
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
         // NEW: FINAL PRICE WARNING LOGIC 
-        // priceLength is checked against the final formatted string value (max 16 integer digits)
+        // priceLength is checked against the final formatted string value (max 14 integer digits)
         const priceIntegerPart = finalPriceValue.split('.')[0].replace('-', '');
         const priceLength = priceIntegerPart.length;
 
