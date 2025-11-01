@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_DIGITS_SMALL_BOX = 7; 
     const MAX_DIGITS_MILK_WARNING = 10; 
     const MAX_DIGITS_BADHOTRI_WARNING = 15; 
-    const MAX_DIGITS_PRICE_WARNING = 15; // 🔑 NEW CONSTANT FOR PRICE WARNING
+    const MAX_DIGITS_PRICE_WARNING = 16; // 🔑 UPDATED: Changed from 15 to 16
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceLength = priceLengthString.length;
 
         if (priceLength >= MAX_DIGITS_PRICE_WARNING) {
-             // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+             // 16 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              finalPriceDisplay.textContent = t.price_too_large;
              totalAmountBox.classList.add('warning-price-large');
              // Rupee sign color change is handled by CSS class
