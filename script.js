@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearAllModal = document.getElementById('clear-all-modal'); 
     const clearCloseBtn = document.getElementById('clear-close-btn');   
     const clearCancelBtn = document.getElementById('clear-cancel-btn'); 
-    const clearConfirmBtn = document.getElementById('clear-confirm-btn'); 
+    const clearConfirmBtn = document = document.getElementById('clear-confirm-btn'); 
 
     // Line Delete Elements
     const deleteStartInput = document.getElementById('delete-start-serial'); 
@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'अंत',
             separator_to: 'से',
             delete_btn: 'हटाएँ', 
+            
+            // Large Number Warning
+            number_too_large: 'संख्या बहुत बड़ी है', 
 
             // Share App Translations - **REMOVED**
             // share_app_title: 'ऐप शेयर करें',
@@ -180,6 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'End',
             separator_to: 'to',
             delete_btn: 'Delete', 
+            
+            // Large Number Warning
+            number_too_large: 'Number is very large', 
             
             // Share App Translations - **REMOVED**
             // share_app_title: 'Share App',
@@ -289,7 +295,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 🔑 NEW FUNCTION: Parses MILK/SAMPLE inputs to BigInt (for precise calculation)
     function parseInputToBigInt(value) {
-        // Remove commas, scientific notation, and non-numeric/decimal chars
+        // Remove commas, scientific notation, and decimal points (assuming Milk/Sample are whole or the decimal is handled later)
+        // Since milk input is "inputmode=decimal", we need to handle the decimal.
+        // We convert to BigInt(100) * Kg, so 12.34 Kg becomes 1234 BigInt units.
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         
         if (cleaned === '') return 0n; // 0n is BigInt zero
@@ -298,16 +306,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Multiply by 100 to shift the decimal by 2 places (to handle up to 2 decimal places in Kg).
         const parts = cleaned.split('.');
         let integerPart = parts[0] || '0';
-        let decimalPart = (parts[1] || '').padEnd(2, '0').substring(0, 2); // Only take 2 decimal places
-        
-        // Handle case where integerPart is empty but decimalPart is present (e.g., ".5")
-        if (integerPart === '') integerPart = '0';
+        let decimalPart = (parts[1] || '00').padEnd(2, '0').substring(0, 2); // Only take 2 decimal places
         
         // Combine as a single string of up to 2 decimal precision
         const bigIntString = integerPart + decimalPart;
         
         try {
-             return BigInt(bigIntString); // Value * 100n
+             return BigInt(bigIntString);
         } catch (e) {
              console.error("BigInt conversion failed:", e);
              return 0n;
@@ -318,8 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatBigIntToNumberString(bigIntValue, divisor = 1n) {
         if (bigIntValue === 0n) return '0';
         
-        // The BigInt value already has 2 implied decimal places (Value * 100n)
-        // Divide by the given divisor (e.g., 100n for Kg)
         const finalBigInt = bigIntValue * 100n / divisor; // BigInt with 2 implied decimal places
         const isNegative = finalBigInt < 0n;
         const absoluteBigInt = isNegative ? -finalBigInt : finalBigInt;
@@ -339,27 +342,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Remove trailing zeros (e.g., 5.00 -> 5)
-        // Note: Use regex to remove trailing zeros and the decimal point if it's followed only by zeros
-        result = result.replace(/\.?0+$/, '');
-
-        // Ensure '0.' remains if the number is exactly zero
-        if (result === '') result = '0';
-
+        result = result.replace(/(\.0+|0+)$/, '');
+        
         return isNegative ? `-${result}` : result;
     }
     
     // Existing function for small number formatting (e.g., Rate Price)
     function formatNumberString(value) {
         if (value === 0) return '0';
-        // Use BigInt to string conversion for the final price calculation (for full precision display)
-        // Note: For final price, since Rate is still a float, we must rely on floating point for the final calculation, 
-        // but we'll try to output the full string representation without scientific notation.
-        
-        let stringValue = value.toFixed(20).replace(/(\.0+|0+)$/, ''); // Use high precision
+        // Use a high precision for safety when formatting large intermediate floating point numbers
+        let stringValue = value.toFixed(10); 
         
         if (stringValue.includes('e') || stringValue.includes('E')) {
-             // If scientific notation is still an issue (for huge prices), use a library 
-             // or a more robust custom function. For now, keep the precision high.
+             // Fallback to toLocaleString for very large/small numbers if needed, though BigInt should prevent this for core calc
              stringValue = Number(value).toLocaleString('fullwide', {useGrouping: false}) || stringValue;
         }
 
@@ -393,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- CORE LOGIC (UPDATED FOR BigInt) ---
-    // Calculates Badhotri in BigInt units (Gm)
+    // Calculates Badhotri in BigInt units (Gm * 100)
     function calculateBadhotri(sampleBigInt, milkKgBigInt) {
         // sampleBigInt is Sample * 100 (from parseInputToBigInt)
         // milkKgBigInt is MilkKg * 100 (from parseInputToBigInt)
@@ -401,8 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Formula: (Sample - 65) * 15 * MilkKg
         
         // Step 1: Sample - 65
-        // Sample: sampleBigInt is Sample * 100. We need (Sample * 100) / 100 to get Sample value.
-        // We use 100n (BigInt for 100)
+        // Sample is already integer (Sample * 100). 65 must also be * 100 for subtraction.
         const sampleValue = sampleBigInt / 100n; // Get the integer sample value
         const sampleFactor = sampleValue - 65n; 
         
@@ -468,6 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCalculations() {
         let totalMilkKgBigInt = 0n; // Total Milk in Kg * 100 units (for accurate addition)
         let totalBadhotriGmBigInt = 0n; // Total Badhotri in Gm units (BigInt)
+        
+        const currentLang = languageSelect.value || 'hi';
+        const t = translations[currentLang];
         
         const inputRows = tableBody.querySelectorAll('.input-row');
         inputRows.forEach(row => {
@@ -555,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- TOTAL CALCULATIONS & LAYOUT LOGIC ---
         
         // 1. Calculate and Format Totals (using BigInts for milk and badhotri)
-        const ratePerKg = parseInputToNumber(ratePerKgInput.value); // Rate is still float
+        const ratePerKg = parseInputToNumber(ratePerKgInput.value);
         
         // Format Total Milk (Kg) from Kg*100 BigInt
         const totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 100n); 
@@ -564,11 +561,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalBadhotriGmDisplayValue = totalBadhotriGmBigInt.toString();
 
         // 2. Check Length Requirement (7 ANK SE ZYADA HO TO BADA)
-        const milkLength = totalMilkKgDisplayValue.replace('-', '').replace('.', '').length;
+        const milkLengthString = totalMilkKgDisplayValue.replace('-', '').replace('.', '');
+        const milkLength = milkLengthString.length;
         const badhotriLength = totalBadhotriGmDisplayValue.replace('-', '').replace('.', '').length;
         
         const MAX_DIGITS_SMALL_BOX = 7; 
-        
+        const MAX_DIGITS_MILK_WARNING = 10; // 🔑 NEW: 10 अंकों से ज़्यादा होने पर चेतावनी
+
         // Layout Decision: If EITHER total has more than 7 digits, go full width stack.
         const shouldStack = milkLength > MAX_DIGITS_SMALL_BOX || badhotriLength > MAX_DIGITS_SMALL_BOX;
 
@@ -580,9 +579,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // 4. Update Display with formatted text (Kg/Gm unit)
-        const totalMilkText = `${totalMilkKgDisplayValue}${NBSP}Kg`;
-        totalMilkKgDisplay.innerHTML = totalMilkText;
         
+        // --- 🔑 NEW LOGIC FOR TOTAL MILK WARNING ---
+        if (milkLength >= MAX_DIGITS_MILK_WARNING) {
+             // 10 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+             totalMilkKgDisplay.textContent = t.number_too_large;
+             totalMilkKgDisplay.classList.add('warning-text-large');
+             totalMilkKgDisplay.classList.remove('big-blue-text'); 
+             
+             // Combined Total को भी 0 कर दें क्योंकि यह बहुत बड़ा है
+             combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
+             quantityForRateDisplay.textContent = `(---)`;
+             finalPriceDisplay.textContent = '0';
+             return; // आगे की गणना को रोक दें
+        } else {
+             totalMilkKgDisplay.classList.remove('warning-text-large');
+             totalMilkKgDisplay.classList.add('big-blue-text');
+             
+             const totalMilkText = `${totalMilkKgDisplayValue}${NBSP}Kg`;
+             totalMilkKgDisplay.innerHTML = totalMilkText;
+        }
+        // --- 🔑 END OF NEW LOGIC ---
+
         const totalBadhotriText = `${totalBadhotriGmDisplayValue}${NBSP}Gm`;
         totalBadhotriGmDisplay.innerHTML = totalBadhotriText;
 
@@ -600,40 +618,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // 6. Final Combined and Price Calculations
         // Combined Total Kg: (totalMilkKgBigInt / 100) + (totalBadhotriGmBigInt / 1000)
         
-        // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100 
-        // Logic: Gm / 1000 = Kg. (totalBadhotriGmBigInt / 1000) * 100 to get Kg*100 units
-        // Simplified: totalBadhotriGmBigInt / 10n
+        // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
         const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
         
         // Combined Total is in Kg*100 BigInt units
         let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
         
-        // Get the final Combined Total Kg value as a string with high precision
         const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 100n); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // 7. Price Calculation - **CRITICAL BIGINT FIX**
-        // Since Rate Per Kg is a small float, we convert the highly accurate combinedTotalKg back to a number for the final step.
-        // For maximum precision, we use the string combinedTotalValue and convert it to a precise floating point number.
-        // NOTE: If the combinedTotalValue has more than ~15-16 digits, this *final* multiplication will still lose float precision. 
-        // To fix this fully, Rate (Rs.) should also be stored as BigInt * 100 or higher precision, and all BigInt math used.
-        
-        let combinedTotalKgFloat = parseInputToNumber(combinedTotalValue); 
+        // Price Calculation MUST use floating point for the final multiplication with rate
+        // Combined Total Kg * Rate Per Kg
+        let combinedTotalKgFloat = parseInputToNumber(combinedTotalValue); // Convert back to float for rate calculation
         
         let finalPrice = combinedTotalKgFloat * ratePerKg; 
-        
         const finalPriceValue = formatNumberString(finalPrice);
         
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
-        
-        // 🔑 FULL BIGINT SOLUTION (Alternative to fix final precision): 
-        // If 'ratePerKg' is guaranteed to have 2 decimal places (e.g., 45.75), 
-        // you can store Rate as BigInt * 100: rateBigInt = parseInputToBigInt(ratePerKgInput.value)
-        // Then: finalPriceBigInt = combinedTotalBigInt * rateBigInt / (100n * 100n)
-        // Since Rate is a generic float input, we keep the simpler approach for now, 
-        // but the BigInt fix ensures the combined total is 100% accurate up to the point of final *float* multiplication.
-        
     }
 
     // Function: deleteLinesByRange 
@@ -682,7 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (deleteStartInput.value !== '' && deleteEndInput.value === '') {
              if (isNaN(startSerial) || startSerial < 1) {
                  showAlert(currentLang === 'hi' ? 'कृपया हटाने के लिए वैध क्रम संख्या दर्ज करें।' : 'Please enter a valid serial number for deletion.');
-            return;
+                 return;
             }
             finalEnd = finalStart; 
         }
@@ -1029,4 +1031,3 @@ ${problem}
     applyLanguage(storedLang); 
     updateCharCount(); 
 });
-
