@@ -66,11 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LAYOUT CONSTANTS ---
     const NBSP = '&nbsp;';
     
-    // --- CALCULATION CONSTANTS ---
+    // --- CALCULATION CONSTANTS (बदलाव यहाँ) ---
     const MAX_DIGITS_SMALL_BOX = 7; // Individual badhotri scrolling
     const MAX_DIGITS_MILK_WARNING = 10; // Total Milk warning (Kg)
     const MAX_DIGITS_BADHOTRI_WARNING = 15; // Total Badhotri warning (Gm)
-    const MAX_DIGITS_PRICE_WARNING = 15; // NEW: Price warning (Rs)
+    const MAX_DIGITS_PRICE_WARNING = 16; // UPDATED: 16 अंकों तक दिखाने की अनुमति (17 पर चेतावनी)
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- TOTAL CALCULATIONS & LAYOUT LOGIC ---
         
         // 1. Calculate and Format Totals (using BigInts for milk and badhotri)
-        const ratePerKg = parseInputToNumber(ratePerKgInput.value);
+        // const ratePerKg = parseInputToNumber(ratePerKgInput.value); // REMOVED (OLD FLOAT)
         
         // Format Total Milk (Kg) from Kg*100 BigInt
         const totalMilkKgDisplayValue = formatBigIntToNumberString(totalMilkKgBigInt, 100n); 
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- NEW LOGIC FOR TOTAL MILK WARNING ---
         let hasWarning = false; 
-        if (milkLength >= MAX_DIGITS_MILK_WARNING) {
+        if (milkLength > MAX_DIGITS_MILK_WARNING) { // Changed >= to > for consistency with 10 digits
              // 10 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              totalMilkKgDisplay.textContent = t.number_too_large;
              totalMilkKgDisplay.classList.add('warning-text-large');
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- END OF MILK WARNING LOGIC ---
 
         // --- LOGIC FOR TOTAL BADHOTRI WARNING (UPDATED) ---
-        if (badhotriLength >= MAX_DIGITS_BADHOTRI_WARNING) {
+        if (badhotriLength > MAX_DIGITS_BADHOTRI_WARNING) { // Changed >= to > for consistency with 15 digits
              // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              totalBadhotriGmDisplay.textContent = t.number_too_large;
              totalBadhotriGmDisplay.classList.add('warning-text-large');
@@ -619,22 +619,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 100n); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // Price Calculation MUST use floating point for the final multiplication with rate
-        // Combined Total Kg * Rate Per Kg
-        let combinedTotalKgFloat = parseInputToNumber(combinedTotalValue); // Convert back to float for rate calculation
+        // --- NEW PRICE CALCULATION USING BIGINT (Highly Accurate) (बदलाव यहाँ) ---
         
-        let finalPrice = combinedTotalKgFloat * ratePerKg; 
-        const finalPriceValue = formatNumberString(finalPrice);
+        // 1. दर (Rate) को BigInt में parse करें (मान लें कि दर में 4 दशमलव स्थानों तक की सटीकता है)
+        // Rate input is a float (e.g., 45.50). Convert it to BigInt unit of Rate*10000.
+        const ratePerKgFloat = parseInputToNumber(ratePerKgInput.value);
+        // Use Math.round and toLocaleString for accurate float to BigInt conversion
+        const rateBigIntString = Math.round(ratePerKgFloat * 10000).toLocaleString('fullwide', {useGrouping: false});
+        const rateBigInt = BigInt(rateBigIntString) || 0n;
+        
+        // 2. Price Calculation: 
+        // combinedTotalBigInt unit is Kg*100. rateBigInt unit is Rate*10000.
+        // Final Price BigInt Unit: Price*100 (पैसे).
+        const PRICE_DIVISOR = 1000000n; // 100 (for Kg*100) * 10000 (for Rate*10000)
+        let finalPriceBigInt = (combinedTotalBigInt * rateBigInt) / PRICE_DIVISOR;
+
+        // 3. Format final price (which is in Price*100 BigInt units)
+        const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt, 1n); 
+        
+        // --- END OF NEW PRICE CALCULATION ---
         
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
         // NEW: FINAL PRICE WARNING LOGIC 
+        // priceLength is checked against the final formatted string value (max 16 digits)
         const priceLengthString = finalPriceValue.replace('-', '').replace('.', '');
         const priceLength = priceLengthString.length;
 
-        if (priceLength >= MAX_DIGITS_PRICE_WARNING) {
-             // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+        if (priceLength > MAX_DIGITS_PRICE_WARNING) { // अब 17 या उससे अधिक अंक होने पर चेतावनी आएगी
+             // 17 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              finalPriceDisplay.textContent = t.price_too_large;
              totalAmountBox.classList.add('warning-price-large');
              // Rupee sign color change is handled by CSS class
@@ -643,110 +657,6 @@ document.addEventListener('DOMContentLoaded', () => {
              // The finalPriceDisplay.textContent is already set above
         }
         // END OF NEW: FINAL PRICE WARNING LOGIC 
-    }
-
-    // Function: deleteLinesByRange 
-    function deleteLinesByRange() {
-        
-        const currentLang = languageSelect.value || 'hi';
-        const t = translations[currentLang];
-        
-        const startSerial = parseInt(deleteStartInput.value);
-        const endSerial = parseInt(deleteEndInput.value);
-        
-        const currentRows = tableBody.querySelectorAll('.input-row');
-        const totalRows = currentRows.length;
-
-        // --- 1. Validation ---
-
-        if (totalRows === 1) {
-             showAlert(currentLang === 'hi' 
-                ? 'क्षमा करें, आप अंतिम पंक्ति को नहीं हटा सकते। कम से कम 1 पंक्ति आवश्यक है।' 
-                : 'Sorry, you cannot delete the last line. At least 1 line is required.');
-             deleteStartInput.value = '';
-             deleteEndInput.value = '';
-             return;
-        }
-        
-        if (deleteStartInput.value === '' && deleteEndInput.value === '') {
-             showAlert(currentLang === 'hi'
-                 ? 'कृपया हटाने के लिए शुरू और अंत में क्रम संख्या दर्ज करें, या केवल एक संख्या दर्ज करें।'
-                 : 'Please enter serial numbers in both start and end inputs, or a single number in the start input.');
-             return;
-        }
-
-
-        let finalStart = startSerial;
-        let finalEnd = endSerial;
-        
-        // Case 2: Only End is filled (Default to start=end, but validation below catches if start is invalid)
-        if (deleteStartInput.value === '' && deleteEndInput.value !== '') {
-            if (isNaN(endSerial) || endSerial < 1) {
-                 showAlert(currentLang === 'hi' ? 'कृपया हटाने के लिए वैध क्रम संख्या दर्ज करें।' : 'Please enter a valid serial number for deletion.');
-                 return;
-            }
-            finalStart = finalEnd; // Assume user wants to delete only the End line
-        }
-        // Case 1: Only Start is filled
-        else if (deleteStartInput.value !== '' && deleteEndInput.value === '') {
-             if (isNaN(startSerial) || startSerial < 1) {
-                 showAlert(currentLang === 'hi' ? 'कृपया हटाने के लिए वैध क्रम संख्या दर्ज करें।' : 'Please enter a valid serial number for deletion.');
-                 return;
-            }
-            finalEnd = finalStart; 
-        }
-        
-        // --- Re-validate after auto-filling if only one input was provided ---
-        if (isNaN(finalStart) || isNaN(finalEnd) || finalStart < 1 || finalEnd < 1) {
-            showAlert(currentLang === 'hi' 
-                ? 'कृपया हटाने के लिए शुरू और अंत दोनों में 1 या उससे अधिक की वैध क्रम संख्या दर्ज करें।'
-                : 'Please enter valid serial numbers of 1 or more for both start and end.');
-            return;
-        }
-
-        if (finalStart > totalRows || finalEnd > totalRows) {
-            showAlert(currentLang === 'hi' 
-                ? `क्षमा करें, आप केवल 1 से ${totalRows} तक की पंक्तियों को ही हटा सकते हैं।`
-                : `Sorry, you can only delete lines from 1 to ${totalRows}.`);
-            return;
-        }
-
-        if (finalStart > finalEnd) {
-            showAlert(currentLang === 'hi' 
-                ? 'शुरू की क्रम संख्या (Start Serial) अंत की क्रम संख्या (End Serial) से बड़ी नहीं हो सकती।'
-                : 'Start Serial cannot be greater than End Serial.');
-            return;
-        }
-        
-        const linesToDelete = finalEnd - finalStart + 1;
-        const rowsRemaining = totalRows - linesToDelete;
-
-        if (rowsRemaining < 1) {
-            showAlert(currentLang === 'hi' 
-                ? 'क्षमा करें, इस रेंज को हटाने से कोई पंक्ति नहीं बचेगी। कम से कम 1 पंक्ति आवश्यक है।'
-                : 'Sorry, deleting this range will leave no lines. At least 1 line is required.');
-            return;
-        }
-
-        // --- 2. Perform Deletion ---
-        
-        // Delete rows based on the serial number range
-        const rowsSnapshot = tableBody.querySelectorAll('.input-row');
-        rowsSnapshot.forEach(row => {
-             const serial = parseInt(row.dataset.serial);
-             if (serial >= finalStart && serial <= finalEnd) {
-                 tableBody.removeChild(row);
-             }
-        });
-
-        // --- 3. Final Updates ---
-        // CORRECTED: Re-index the serial numbers of the remaining rows
-        updateSerialNumbers();
-        updateCalculations();
-        
-        // 4. Clear Input after successful deletion
-        deleteStartInput.value = '';
-        deleteEndInput.value = '';
     }
 
     function createRow(serial) {
