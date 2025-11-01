@@ -3,179 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-key="app_title">Milk Scale App</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>16 अंकों की संख्या सीमा</title>
+    <style>
+        /* यह CSS केवल कोड को देखने में बेहतर बनाने के लिए है */
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 30px; 
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            font-size: 20px; 
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        #numberInput { 
+            width: 100%;
+            padding: 12px; 
+            font-size: 18px; 
+            border: 2px solid #ccc; 
+            border-radius: 4px;
+            box-sizing: border-box; /* पैडिंग को चौड़ाई में शामिल करें */
+            transition: border-color 0.3s;
+        }
+        #numberInput:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        #errorMessage { 
+            margin-top: 15px; 
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 40px;
+            font-weight: bold;
+        }
+        .error {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+        }
+        .success {
+            color: #5cb85c;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+        }
+        .info {
+            color: #337ab7;
+            background-color: #d9edf7;
+            border: 1px solid #bce8f1;
+        }
+    </style>
 </head>
-<body id="app-body">
+<body>
+
     <div class="container">
-        
-        <header class="app-header">
-            <h1 data-key="app_title">Milk Scale App</h1> 
-            <div class="header-buttons">
-                <button class="clear-button" id="clear-all-btn" data-key="clear_btn" title="Clear All Data">
-                    Clear
-                </button>
-                <button class="settings-btn" id="open-settings-btn" title="Settings">
-                    <span class="icon">&#8942;</span>
-                </button>
-            </div>
-        </header>
-        
-        <div class="main-page-settings-row">
-            <div class="delete-lines-container">
-                 <div class="delete-lines-section-label">
-                    <label data-key="delete_lines_label">पंक्ति हटाएँ</label>
-                </div>
-                <div class="delete-lines-section-main bordered-item" id="main-delete-lines-setting">
-                    <div class="delete-controls"> 
-                        <input type="text" inputmode="numeric" id="delete-start-serial" value="" min="1" placeholder="शुरू" class="small-input delete-serial-input" data-key="placeholder_start">
-                        
-                        <span class="range-separator" data-key="separator_to">से</span>
-                        
-                        <input type="text" inputmode="numeric" id="delete-end-serial" value="" min="1" placeholder="अंत" class="small-input delete-serial-input" data-key="placeholder_end">
-                        
-                        <button class="delete-lines-btn red-button" id="delete-lines-btn-main" data-key="delete_btn">
-                            हटाएँ
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-row">
-            <div class="header-cell" data-key="serial">क्रम</div>
-            <div class="header-cell" data-key="milk_kg">दूध (Kg)</div>
-            <div class="header-cell" data-key="sample">सैंपल</div>
-            <div class="header-cell" data-key="badhotri_gm">बढ़ोतरी (Gm)</div>
-            <div class="header-cell action-cell"></div>
-        </div>
+        <h1>🔢 संख्या इनपुट (अधिकतम 16 अंक)</h1>
 
-        <div id="table-body">
-            </div>
-
-        <div class="results-section">
-            <div class="result-card total-milk-card">
-                <p data-key="total_milk_label">कुल दूध</p>
-                <p class="result-value big-blue-text" id="total-milk-kg">0 Kg</p>
-            </div>
-            <div class="result-card total-increment-card">
-                <p data-key="total_badhotri_label">कुल बढ़ोतरी</p>
-                <p class="result-value big-green-text" id="total-badhotri-gm">0 Gm</p>
-            </div>
-        </div>
-
-        <div class="total-combined custom-text-box" id="combined-total">
-            <span class="combined-label" data-key="combined_total_label">दूध + बढ़ोतरी = </span>
-            <span class="combined-value" id="combined-total-value">0 Kg</span>
-        </div>
-        
-        <div class="rate-section-header">
-            <h3 id="rate-section-title" data-key="total_amount_label">कुल धनराशि</h3> 
-        </div>
-
-        <div class="rate-section">
-            <div class="rate-calculation">
-                <span id="quantity-for-rate" class="rate-quantity-box orange-button">(0)</span> 
-                <span class="multiply-sign">×</span>
-                <input type="text" inputmode="decimal" id="rate-per-kg" placeholder="दर" data-key="placeholder_rate" value="" tabindex="-1">
-                <span class="equal-sign">=</span>
-            </div>
-            
-            <div class="total-amount-box custom-text-box">
-                <span class="rupee-large">₹</span> <span id="final-price">0</span>
-            </div>
-        </div>
+        <input type="text" id="numberInput" placeholder="अधिकतम 16 अंक डालें (दशमलव सहित)">
+        <div id="errorMessage" class="info">यहाँ परिणाम दिखेगा।</div>
     </div>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content settings-panel-light" id="settings-content"> 
-            <span class="close-btn large-cross" id="settings-close-btn">&times;</span> 
-            
-            <h2 data-key="settings_title">सेटिंग्स</h2>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField = document.getElementById('numberInput');
+            const errorMessage = document.getElementById('errorMessage');
+            const MAX_LENGTH = 16; // यह आपकी अधिकतम सीमा है
 
-            <div class="setting-item bordered-item">
-                <label for="language-select" data-key="change_language_label">भाषा बदलें</label>
-                <select id="language-select">
-                    <option value="hi" data-key="lang_hi">हिन्दी</option>
-                    <option value="en" data-key="lang_en">English</option>
-                </select>
-            </div>
-            
-            <div class="setting-item icon-with-text-item no-border-item"> 
-                <button id="help-center-btn" class="icon-button green-icon-btn" title="Help Center">
-                    <span class="button-text-overlay" data-key="help_center_btn">सहायता केंद्र</span> 
-                    <span class="icon-container-circle">
-                        <span class="email-icon">📩</span> 
-                    </span>
-                </button>
-            </div>
+            // यह फ़ंक्शन इनपुट में बदलाव होने पर चलता है
+            function validateInput() {
+                let value = inputField.value;
+                
+                // 1. केवल संख्या और एक दशमलव के लिए फ़िल्टर करना
+                // पहले सभी गैर-संख्याओं को हटा दें, लेकिन दशमलव के लिए एक अस्थायी 'पहचान' रखें
+                let cleanValue = value.replace(/[^0-9.]/g, ''); 
 
-            </div>
-    </div>
-    
-    <div id="help-center-modal" class="modal">
-        <div class="modal-content blue-panel" id="help-center-content">
-            <span class="close-btn large-cross" id="help-center-close-btn">&times;</span>
-            <h2 data-key="help_center_title">सहायता केंद्र</h2>
-            <form id="help-form">
-                <div class="form-group">
-                    <label for="userName" data-key="form_name_label">आपका नाम</label>
-                    <input type="text" id="userName" required placeholder="अपना नाम" data-key="placeholder_name">
-                </div>
-                <div class="form-group">
-                    <label for="userEmail" data-key="form_email_label">ईमेल आईडी</label>
-                    <input type="email" id="userEmail" required placeholder="वैध ईमेल" data-key="placeholder_email">
-                </div>
-                <div class="form-group">
-                    <label for="userPhone" data-key="form_phone_label">फ़ोन नंबर</label>
-                    <input type="tel" id="userPhone" required pattern="[0-9]{10}" placeholder="वैध फ़ोन नंबर" data-key="placeholder_phone">
-                </div>
-                <div class="form-group textarea-group">
-                    <label data-key="form_problem_label">अपनी समस्या का वर्णन करें</label>
-                    <textarea id="problemDescription" required maxlength="1000" rows="8" data-key="placeholder_problem" placeholder="अपनी समस्या का वर्णन करें"></textarea>
-                    <div class="char-count"> 
-                         <span id="char-count-display">0</span>/1000
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn" id="send-btn" data-key="form_send_btn">भेजें</button>
-            </form>
-        </div>
-    </div>
-    
-    <div id="clear-all-modal" class="modal">
-        <div class="modal-content clear-panel-yellow" id="clear-modal-content"> 
-            <span class="close-btn large-cross" id="clear-close-btn">&times;</span> 
-            
-            <h2 data-key="clear_modal_title">डेटा साफ़ करें</h2>
+                // 2. एक से ज़्यादा दशमलव को ठीक करना (पहले वाले को रखना)
+                const parts = cleanValue.split('.');
+                if (parts.length > 2) {
+                    cleanValue = parts[0] + '.' + parts.slice(1).join('');
+                }
+                
+                // 3. अधिकतम लंबाई की जाँच करना
+                if (cleanValue.length > MAX_LENGTH) {
+                    // सीमा से ज़्यादा होने पर ट्रिम करें
+                    cleanValue = cleanValue.substring(0, MAX_LENGTH);
+                    errorMessage.textContent = `🚫 माफ़ करें, अधिकतम ${MAX_LENGTH} अंक (दशमलव सहित) ही अनुमत हैं।`;
+                    errorMessage.className = 'error'; // लाल रंग
+                } else if (cleanValue.length === 0) {
+                    errorMessage.textContent = 'यहाँ परिणाम दिखेगा।';
+                    errorMessage.className = 'info'; // नीला रंग
+                } else {
+                    // मान्य लंबाई के लिए संदेश
+                    errorMessage.textContent = `✅ वर्तमान अंक: ${cleanValue.length} / ${MAX_LENGTH} - मान्य संख्या।`;
+                    errorMessage.className = 'success'; // हरा रंग
+                }
 
-            <p data-key="clear_modal_warning" class="clear-warning-text">
-                क्या आप वाकई सारा डेटा (दूध, सैंपल और दर) हटाना चाहते हैं?
-            </p>
+                // इनपुट फ़ील्ड को सही और फ़िल्टर किए गए मान से अपडेट करें
+                inputField.value = cleanValue;
+            }
+
+            // यह फ़ंक्शन लाइव टाइपिंग के दौरान अनावश्यक अक्षरों को रोकता है
+            inputField.addEventListener('keypress', function(event) {
+                const key = event.key;
+                const value = this.value;
+                
+                // 0-9 की अनुमति दें
+                if (/[0-9]/.test(key)) {
+                    return true;
+                }
+
+                // दशमलव (.) की अनुमति सिर्फ़ एक बार दें
+                if (key === '.') {
+                    if (value.includes('.') || value.length === 0) {
+                        // अगर दशमलव पहले से है या इनपुट खाली है तो न आने दें 
+                        // (खाली इनपुट में दशमलव आने पर भी लंबाई 16 से कम हो सकती है, इसलिए यह optional है)
+                        if (value.includes('.')) {
+                            event.preventDefault();
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                // नियंत्रण कुंजियों (जैसे Backspace, Tab, Enter, आदि) को अनुमति दें
+                if (event.ctrlKey || event.altKey || event.metaKey || 
+                    (key.length > 1 && key !== ' ')) {
+                    return true;
+                }
+                
+                event.preventDefault(); // बाकी सभी अक्षरों को रोकें
+            });
+
+            // 'input' इवेंट टाइपिंग और पेस्ट करने दोनों को संभालता है
+            inputField.addEventListener('input', validateInput);
             
-            <div class="clear-options-container">
-                <button class="modal-btn cancel-btn" id="clear-cancel-btn" data-key="clear_modal_cancel">
-                    रद्द करें
-                </button>
-                <button class="modal-btn confirm-btn red-button" id="clear-confirm-btn" data-key="clear_modal_confirm">
-                    हाँ, हटाएँ
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="error-alert-modal" class="modal">
-        <div class="modal-content clear-panel-yellow custom-alert-panel">
-            <span class="close-btn large-cross" id="alert-close-btn">&times;</span>
-            <div class="alert-content">
-                 <p class="clear-warning-text" id="alert-message-text"></p>
-                 <div class="clear-options-container" style="justify-content: center;">
-                      <button class="modal-btn cancel-btn" id="alert-ok-btn" data-key="alert_ok_btn_text" style="width: 100px;">
-                          ठीक है
-                      </button>
-                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
+            // शुरू में एक बार चलाएँ
+            validateInput();
+        });
+    </script>
+
 </body>
 </html>
