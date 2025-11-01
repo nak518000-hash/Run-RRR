@@ -568,7 +568,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const MAX_DIGITS_SMALL_BOX = 7; 
         const MAX_DIGITS_MILK_WARNING = 10; // 10 अंकों से ज़्यादा होने पर चेतावनी
-        const MAX_DIGITS_BADHOTRI_WARNING = 16; // 🔑 नया: 16 अंकों से ज़्यादा होने पर चेतावनी
+        
+        // 🔑 UPDATED: 15 अंकों से ज़्यादा होने पर चेतावनी
+        const MAX_DIGITS_BADHOTRI_WARNING = 15; 
 
         // Layout Decision: If EITHER total has more than 7 digits, go full width stack.
         const shouldStack = milkLength > MAX_DIGITS_SMALL_BOX || badhotriLength > MAX_DIGITS_SMALL_BOX;
@@ -583,17 +585,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 4. Update Display with formatted text (Kg/Gm unit)
         
         // --- 🔑 NEW LOGIC FOR TOTAL MILK WARNING ---
+        // NOTE: This logic should run before the badhotri logic to handle the return statement
+        let hasWarning = false; 
         if (milkLength >= MAX_DIGITS_MILK_WARNING) {
              // 10 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              totalMilkKgDisplay.textContent = t.number_too_large;
              totalMilkKgDisplay.classList.add('warning-text-large');
              totalMilkKgDisplay.classList.remove('big-blue-text'); 
-             
-             // Combined Total को भी 0 कर दें क्योंकि यह बहुत बड़ा है
-             combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
-             quantityForRateDisplay.textContent = `(---)`;
-             finalPriceDisplay.textContent = '0';
-             return; // आगे की गणना को रोक दें
+             hasWarning = true;
         } else {
              totalMilkKgDisplay.classList.remove('warning-text-large');
              totalMilkKgDisplay.classList.add('big-blue-text');
@@ -603,21 +602,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // --- 🔑 END OF MILK WARNING LOGIC ---
 
-        // --- 🔑 NEW LOGIC FOR TOTAL BADHOTRI WARNING ---
+        // --- 🔑 LOGIC FOR TOTAL BADHOTRI WARNING (UPDATED) ---
         if (badhotriLength >= MAX_DIGITS_BADHOTRI_WARNING) {
-             // 16 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
+             // 15 या उससे अधिक अंक होने पर चेतावनी दिखाएँ
              totalBadhotriGmDisplay.textContent = t.number_too_large;
              totalBadhotriGmDisplay.classList.add('warning-text-large');
+             // Remove all color classes
              totalBadhotriGmDisplay.classList.remove('big-green-text', 'green-text', 'red-text'); 
-             
-             // Combined Total को भी 0 कर दें क्योंकि यह बहुत बड़ा है
-             combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
-             quantityForRateDisplay.textContent = `(---)`;
-             finalPriceDisplay.textContent = '0';
-             return; // आगे की गणना को रोक दें
+             hasWarning = true;
         } else {
              totalBadhotriGmDisplay.classList.remove('warning-text-large');
-             totalBadhotriGmDisplay.classList.add('big-green-text'); // Fallback to original
+             // Fallback to original big-green-text (which is a base style for result value)
+             totalBadhotriGmDisplay.classList.add('big-green-text'); 
              
              const totalBadhotriText = `${totalBadhotriGmDisplayValue}${NBSP}Gm`;
              totalBadhotriGmDisplay.innerHTML = totalBadhotriText;
@@ -634,6 +630,15 @@ document.addEventListener('DOMContentLoaded', () => {
              }
         }
         // --- 🔑 END OF BADHOTRI WARNING LOGIC ---
+        
+        // --- COMMON WARNING HANDLER ---
+        if (hasWarning) {
+             // Combined Total को भी 0 कर दें क्योंकि कोई भी योग बहुत बड़ा है
+             combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
+             quantityForRateDisplay.textContent = `(---)`;
+             finalPriceDisplay.textContent = '0';
+             return; // आगे की गणना को रोक दें
+        }
         
         // 6. Final Combined and Price Calculations (Only if no warnings)
         
