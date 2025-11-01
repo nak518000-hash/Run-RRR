@@ -654,6 +654,7 @@ body {
     
     border: 3px solid #0056b3; /* Darker blue for border */
     box-shadow: none; 
+    transition: background 0.3s, border 0.3s; /* Transition for warning */
 }
 
 .rupee-large {
@@ -668,6 +669,7 @@ body {
     height: 100%;
     display: flex;
     align-items: center;
+    transition: color 0.3s; /* Transition for warning */
 }
 
 .total-amount-box #final-price {
@@ -687,7 +689,30 @@ body {
     display: flex; 
     align-items: center; 
     justify-content: center; 
+    transition: color 0.3s, font-size 0.3s; /* Transition for warning */
 }
+
+/* 💥 NEW CSS: PRICE WARNING STYLE 💥 */
+.total-amount-box.warning-price-large {
+    background: linear-gradient(90deg, #ffc107, #dc3545) !important; /* Yellow to Red Gradient */
+    border: 3px solid #8c0000 !important; /* Dark Red Border */
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.total-amount-box.warning-price-large .rupee-large {
+    color: #333 !important; /* Dark text for contrast */
+}
+
+.total-amount-box.warning-price-large #final-price {
+    font-size: 1.4em !important; /* Smaller font for warning text */
+    color: #8c0000 !important; /* Dark Red Warning Text */
+    font-weight: bold;
+    text-shadow: none;
+    padding: 0 10px;
+    text-align: center;
+    justify-content: center;
+}
+/* 💥 END OF NEW CSS: PRICE WARNING STYLE 💥 */
 
 
 /* --- Modal (Settings & Help) Styles --- */
@@ -1198,7 +1223,7 @@ body.dark-mode .big-green-text { color: #5cb85c; }
 body.dark-mode .green-text { color: #5cb85c; } 
 body.dark-mode .red-text { color: #f05050; } 
 
-/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING (DARK MODE) 💥 */
+/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING (BADHOTRI WARNING) 💥 */
 body.dark-mode .warning-text-large {
     color: #ff7043 !important; /* Dark Mode Orange/Red Warning */
 }
@@ -1266,6 +1291,21 @@ body.dark-mode .total-amount-box #final-price {
     color: #333; /* Dark text for contrast */
     text-shadow: 1px 1px 2px rgba(255,255,255,0.3); 
 }
+
+/* 💥 NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
+body.dark-mode .total-amount-box.warning-price-large {
+    background: linear-gradient(90deg, #ff7043, #f05050) !important; /* Darker Yellow/Orange to Red Gradient */
+    border: 3px solid #8c0000 !important; /* Dark Red Border */
+}
+
+body.dark-mode .total-amount-box.warning-price-large .rupee-large {
+    color: #fffacd !important; /* Light text for contrast */
+}
+
+body.dark-mode .total-amount-box.warning-price-large #final-price {
+    color: #fffacd !important; /* Light Yellow Warning Text */
+}
+/* 💥 END OF NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
 
 
 /* Settings Modal */
@@ -1394,3 +1434,4 @@ body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
+
