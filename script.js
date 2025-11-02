@@ -310,6 +310,22 @@ document.addEventListener('DOMContentLoaded', () => {
              // Special case for Milk/Badhotri: remove trailing zeros
              result = result.replace(/(\.0+|0+)$/, '');
         }
+        
+        // 🔑 MODIFICATION: For Price output (which is now BigInt/10) ensure 1 decimal place.
+        if (precision === 1) { 
+            // 1 decimal place is required (e.g., 142.3)
+            if (!result.includes('.')) {
+                 result += '.0';
+            } else if (result.split('.')[1].length === 0) {
+                 result += '0';
+            }
+             
+            // Truncate to exactly 1 decimal place (e.g. 142.34 -> 142.3)
+            let parts = result.split('.');
+            if (parts.length > 1) {
+                 result = parts[0] + '.' + parts[1].substring(0, 1);
+            }
+        }
 
         return isNegative ? `-${result}` : result;
     }
@@ -575,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 2); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // --- FULL BigInt PRICE CALCULATION (100 से गुणा के लिए संशोधित) ---
+        // --- FULL BigInt PRICE CALCULATION (1000 से भाग के लिए संशोधित) ---
         
         // 1. Rate को BigInt में parse करें (4 दशमलव स्थानों की सटीकता के साथ: Rate * 10000)
         const rateBigInt = parseInputToBigInt(ratePerKgInput.value, 4) || 0n;
@@ -585,23 +601,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // rateBigInt unit: Rate*10000 (precision 4)
         // Multiplication result: Price * (100 * 10000) = Price * 1000000
         
-        const PRICE_DIVISOR = 1000000n; 
+        const PRICE_MULTIPLIER = 1000000n; 
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // --- *100 MODIFICATION START ---
-        // हम Price * 1000000 से सीधे Price * 100 (2 दशमलव रुपये) तक राउंड करते थे, 
-        // जिसके लिए 10000n से भाग दिया जाता था।
-        // अब हमें Price * 100 * 100 = Price * 10000 (0 दशमलव रुपये) चाहिए।
-        // इसके लिए, हमें PRICE_DIVISOR (1000000n) को 100 से कम (अर्थात् 10000) से भाग देने की बजाय
-        // 100 से और कम (अर्थात् 100) से भाग देना होगा।
-        
-        // Price * 10000 (जो रुपये में 0 दशमलव है, उदाहरण के लिए 14230 रुपये) के लिए, 
-        // हमें 1000000n को 100n से भाग देना होगा: 10000n.
-        
-        const FINAL_DISPLAY_DIVISOR = 100n; // 1000000n / 10000n = 100n (Price * 10000n)
+        // 🔑 MODIFICATION START: 1000 से भाग देने के लिए डिवीज़न में बदलाव
+        // हम Price * 1000000 से Price * 10 (1 दशमलव रुपये) चाहते हैं, 
+        // जिसके लिए 100000n से भाग दिया जाता है (1000000n / 10n = 100000n).
+
+        const FINAL_DISPLAY_DIVISOR = 100000n; // 1000000n / 10n
         const HALF_FINAL_DIVISOR = FINAL_DISPLAY_DIVISOR / 2n;
 
-        // Price * 10000 BigInt (0 decimal precision) with correct rounding
+        // Price * 10 BigInt (1 decimal precision) with correct rounding
         let finalPriceBigInt_multiplied_rounded;
         if (finalPriceBigInt_temp >= 0n) {
              // Add half the divisor for rounding away from zero (standard rounding)
@@ -611,19 +621,17 @@ document.addEventListener('DOMContentLoaded', () => {
              finalPriceBigInt_multiplied_rounded = (finalPriceBigInt_temp - HALF_FINAL_DIVISOR) / FINAL_DISPLAY_DIVISOR;
         }
         
-        // 3. Format final price (जो अब Price * 100 के रूप में एक पूर्णांक है)
-        // चूंकि अब कोई दशमलव नहीं है, हम इसे सीधे स्ट्रिंग में बदल सकते हैं.
+        // 3. Format final price (जो अब Price * 10 के रूप में एक पूर्णांक है)
+        const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt_multiplied_rounded, 1);
         
-        const finalPriceValue = finalPriceBigInt_multiplied_rounded.toString();
-        
-        // --- *100 MODIFICATION END ---
+        // 🔑 MODIFICATION END
         
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
         // NEW: FINAL PRICE WARNING LOGIC 
         // priceLength is checked against the final formatted string value (max 14 integer digits)
-        const priceIntegerPart = finalPriceValue.replace('-', '');
+        const priceIntegerPart = finalPriceValue.split('.')[0].replace('-', '');
         const priceLength = priceIntegerPart.length;
 
         if (priceLength > MAX_DIGITS_PRICE_WARNING) { 
