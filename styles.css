@@ -2,7 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * 💡 MODIFIED: Styles for Add Line Button (Icon Only with Black Circle Background).
+ * 💡 MODIFIED: Styles for Add Line Button (Icon Only).
  */
 
 body {
@@ -69,72 +69,57 @@ body {
     line-height: 1;
 }
 
-/* 🔑 UPDATED: Add Line Button Styles (Black Circle Icon) */
+/* 🔑 UPDATED: Add Line Button Styles (Only Icon) */
 .add-line-btn {
-    /* बटन को केवल कंटेनर के रूप में सेट करें, कोई बैकग्राउंड नहीं */
+    /* सभी बैकग्राउंड और बॉर्डर हटा दिए गए */
     background: none; 
     border: none;
-    padding: 0; 
+    
+    color: #007bff; /* (+) आइकॉन का रंग नीला (आप बदल सकते हैं) */
+    font-weight: bold; 
+    padding: 0; /* पैडिंग हटाया गया */
+    
     border-radius: 50%; 
     cursor: pointer;
     font-size: 16px; 
-    transition: transform 0.2s; 
-    box-shadow: none; 
+    transition: color 0.2s, transform 0.2s; /* रंग और साइज़ ट्रांज़िशन */
+    box-shadow: none; /* शैडो हटा दिया गया */
+    
     flex-shrink: 0; 
-    height: 40px; 
-    width: 40px; 
+    height: 40px; /* ऊँचाई */
+    width: 40px; /* चौड़ाई */
     display: flex;
     align-items: center;
     justify-content: center; 
     min-width: 40px;
 }
-
-/* काला गोल बैकग्राउंड कंटेनर */
-.add-line-btn .plus-icon-container {
-    /* गोल आकार */
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    background-color: black; /* काला बैकग्राउंड */
-    
-    /* प्लस आइकॉन को केंद्र में लाने के लिए */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.2s, background-color 0.2s;
-}
-
 .add-line-btn .icon {
-    font-size: 30px; /* आइकॉन का साइज़ */
+    font-size: 36px; /* आइकॉन को बड़ा दिखाने के लिए */
     line-height: 1;
-    color: white; /* सफ़ेद प्लस चिह्न */
+    color: inherit; /* पैरेंट से रंग लेगा (#007bff) */
     font-weight: 900;
-    padding-top: 2px; /* प्लस को थोड़ा ऊपर शिफ्ट करने के लिए */
 }
-
-/* माउस ले जाने (Hover) पर इफ़ेक्ट */
+/* टेक्स्ट ओवरले को पूरी तरह से छुपाना */
+.add-line-btn .button-text-overlay {
+    display: none; 
+}
 .add-line-btn:hover {
-    transform: scale(1.1); /* बटन को थोड़ा बड़ा करें */
-}
-
-.add-line-btn:hover .plus-icon-container {
-     background-color: #333; /* हल्का काला इफ़ेक्ट */
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    color: #0056b3; /* माउस ले जाने पर गहरा नीला */
+    background-color: #e6f7ff; /* हल्का बैकग्राउंड (केवल संकेत के लिए) */
+    transform: scale(1.05);
 }
 
 /* Dark Mode के लिए भी स्टाइल अपडेट */
-body.dark-mode .add-line-btn .plus-icon-container {
-    background-color: #f0f0f0; /* Dark Mode में सफेद/हल्का ग्रे बैकग्राउंड */
+body.dark-mode .add-line-btn {
+    background: none; 
+    border: none;
+    color: #4da6ff; /* (+) आइकॉन का रंग हल्का नीला */
 }
-body.dark-mode .add-line-btn .icon {
-    color: black; /* Dark Mode में काला प्लस चिह्न */
-}
-body.dark-mode .add-line-btn:hover .plus-icon-container {
-    background-color: white; /* Dark Mode में Hover पर गहरा सफ़ेद */
+body.dark-mode .add-line-btn:hover {
+    color: #007bff;
+    background-color: #222; /* हल्का बैकग्राउंड (केवल संकेत के लिए) */
 }
 /* 🔑 END UPDATED */
-
 
 .clear-button {
     background-color: #ff8c00; 
@@ -1153,35 +1138,24 @@ body.dark-mode .settings-btn {
     color: #b0b0b0;
 }
 
-/* 🔑 UPDATED: Add Line Button Styles (Dark Mode) - Black Circle Icon */
+/* 🔑 UPDATED: Add Line Button Styles (Dark Mode) - Icon Only */
 body.dark-mode .add-line-btn {
     background: none; 
     border: none;
-    padding: 0; 
-    border-radius: 50%; 
-    cursor: pointer;
-    font-size: 16px; 
-    transition: transform 0.2s; 
-    box-shadow: none; 
-    flex-shrink: 0; 
-    height: 40px; 
+    color: #4da6ff; /* (+) आइकॉन का रंग हल्का नीला */
     width: 40px; 
+    height: 40px; 
     min-width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-}
-body.dark-mode .add-line-btn .plus-icon-container {
-    background-color: #f0f0f0; /* Dark Mode में सफेद/हल्का ग्रे बैकग्राउंड */
+    box-shadow: none;
 }
 body.dark-mode .add-line-btn .icon {
-    color: black; /* Dark Mode में काला प्लस चिह्न */
+    color: inherit; /* पैरेंट से रंग लेगा (#4da6ff) */
 }
-body.dark-mode .add-line-btn:hover .plus-icon-container {
-    background-color: white; /* Dark Mode में Hover पर गहरा सफ़ेद */
+body.dark-mode .add-line-btn:hover {
+    color: #007bff;
+    background-color: #222; 
 }
 /* 🔑 END UPDATED (Dark Mode) */
-
 
 body.dark-mode .clear-button {
     background-color: #ff9800;
