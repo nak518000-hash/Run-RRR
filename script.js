@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
     
-    // ❌ REMOVED: Add Line Button Element (अब केवल एंटर की से लाइन जुड़ेगी)
-    // const addLineBtn = document.getElementById('add-line-btn');
+    // ✅ NEW: Add Line Button Element
+    const addLineBtn = document.getElementById('add-line-btn');
 
     // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
@@ -96,9 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // ❌ REMOVED: Add Line Button Text 
-            // add_line_btn: 'पंक्ति जोड़ें',
-            // add_line_text: 'पंक्ति जोड़ें',
+            // ✅ NEW: Add Line Button Text 
+            add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'डेटा साफ़ करें',
@@ -156,9 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // ❌ REMOVED: Add Line Button Text 
-            // add_line_btn: 'Add Line',
-            // add_line_text: 'Add Line',
+            // ✅ NEW: Add Line Button Text 
+            add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'Clear Data',
@@ -761,10 +759,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeTable(false);
     }
     
-    // ❌ REMOVED: Add Line Button Listener
-    // if (addLineBtn) {
-    //      addLineBtn.addEventListener('click', addLine);
-    // }
+    // ✅ NEW: Add Line Button Listener
+    if (addLineBtn) {
+         addLineBtn.addEventListener('click', addLine);
+    }
     
     // Clear Button Listener to open modal
     if (clearAllBtn) {
@@ -846,6 +844,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (t[key]) {
                  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                      element.placeholder = t[key];
+                 } else if (element.id === 'add-line-btn') {
+                     // Add Line Button is a special case for textContent or innerHTML
+                     element.innerHTML = `<span class="icon">${t[key]}</span>`;
                  } else {
                      element.textContent = t[key];
                  }
