@@ -131,7 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
             email_subject: 'Milk Scale App - सहायता अनुरोध',
             lang_hi: 'हिन्दी', 
             lang_en: 'English',
-            alert_ok_btn_text: 'ठीक है'
+            alert_ok_btn_text: 'ठीक है',
+            
+            // ✅ NEW: Feedback Message
+            feedback_message_title: '👋 आपकी प्रतिक्रिया हमारे लिए सबसे महत्वपूर्ण है!',
+            feedback_message_body: `
+                अगर आपको इस ऐप के उपयोग में **कोई समस्या, तकनीकी त्रुटि (bug), या कोई कमी** नज़र आती है, या फिर आपके पास **कोई नया और बेहतरीन विचार** है जिससे यह ऐप **और भी शानदार** बन सके, तो कृपया हमें ऊपर दिए गए **'हमसे संपर्क करें' (Contact Us) बटन** के माध्यम से **ज़रूर** बताएं।
+                <br><br>
+                हमारी टीम आपके हर सुझाव को अत्यधिक गंभीरता और सम्मान के साथ लेगी। यदि आपका विचार हमें पसंद आता है, तो हम उसे प्राथमिकता के आधार पर जल्द से जल्द ऐप में शामिल करने की पूरी कोशिश करेंगे और, जरूरत पड़ने पर, विस्तृत चर्चा के लिए आपसे आगे संपर्क भी करेंगे।
+                <br><br>
+                🙏 धन्यवाद। आपके सहयोग के लिए आभार!
+            `
         },
         en: {
             app_title: 'Milk Scale App', 
@@ -190,7 +200,17 @@ document.addEventListener('DOMContentLoaded', () => {
             email_subject: 'Milk Scale App - Help Request',
             lang_hi: 'Hindi', 
             lang_en: 'English',
-            alert_ok_btn_text: 'OK'
+            alert_ok_btn_text: 'OK',
+            
+            // ✅ NEW: Feedback Message
+            feedback_message_title: '👋 Your feedback is our top priority!',
+            feedback_message_body: `
+                If you encounter any **issues, technical errors (bugs), or missing features** while using this app, or if you have a **great new idea** to make it **even better**, please **do not hesitate** to tell us via the **'Contact Us' button** above.
+                <br><br>
+                Our team takes every suggestion seriously and with respect. If we like your idea, we will try our best to implement it as soon as possible, and, if necessary, we will contact you for further detailed discussion.
+                <br><br>
+                🙏 Thank you. We appreciate your cooperation!
+            `
         }
     };
     
@@ -868,6 +888,12 @@ document.addEventListener('DOMContentLoaded', () => {
                  } else if (element.id === 'add-line-btn') {
                      // Add Line Button is a special case for innerHTML (to keep the icon class)
                      element.innerHTML = `<span class="icon">${t[key]}</span>`;
+                 } else if (element.classList.contains('feedback-title')) {
+                      // Feedback Title is handled by data-key
+                      element.textContent = t[key];
+                 } else if (element.classList.contains('feedback-body')) {
+                      // Feedback Body uses innerHTML due to <br> and <strong> tags
+                      element.innerHTML = t[key];
                  } else {
                      element.textContent = t[key];
                  }
