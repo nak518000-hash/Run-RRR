@@ -2,7 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * ❌ REMOVED: Styles for Add Line Button.
+ * ✅ ADDED: Styles for Add Line Button.
  */
 
 body {
@@ -55,6 +55,37 @@ body {
     flex-shrink: 0;
 }
 
+/* ✅ NEW: Add Line Button Styles */
+.add-line-button {
+    background-color: #28a745; 
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 0; /* Remove padding */
+    border-radius: 50%; /* Make it circular */
+    cursor: pointer;
+    font-size: 28px; 
+    line-height: 1;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    width: 44px; /* Fixed width */
+    height: 44px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-line-button:hover {
+    background-color: #1e7e34;
+    transform: scale(1.05);
+}
+.add-line-button .icon {
+    line-height: 1;
+    margin-top: -2px; /* Slight adjustment for better visual centering */
+}
+/* ✅ END NEW: Add Line Button Styles */
+
+
 .settings-btn {
     background: none;
     border: none;
@@ -68,8 +99,6 @@ body {
     font-size: 32px;
     line-height: 1;
 }
-
-/* ❌ REMOVED: Add Line Button Styles */
 
 .clear-button {
     background-color: #ff8c00; 
@@ -1084,11 +1113,24 @@ body.dark-mode .app-header h1 {
     color: #4da6ff; 
 }
 
+body.dark-mode .header-buttons {
+    gap: 10px;
+}
+
+/* ✅ NEW: Add Line Button Styles (Dark Mode) */
+body.dark-mode .add-line-button {
+    background-color: #5cb85c; 
+    color: #222; 
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+}
+body.dark-mode .add-line-button:hover {
+    background-color: #4aa44a;
+}
+/* ✅ END NEW: Add Line Button Styles (Dark Mode) */
+
 body.dark-mode .settings-btn {
     color: #b0b0b0;
 }
-
-/* ❌ REMOVED: Add Line Button Styles (Dark Mode) */
 
 body.dark-mode .clear-button {
     background-color: #ff9800;
