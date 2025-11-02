@@ -749,7 +749,7 @@ body {
 /* 💥 END OF NEW CSS: PRICE WARNING STYLE 💥 */
 
 
-/* --- Modal (Settings & Help) Styles --- */
+/* --- Modal (Settings & Contact Us) Styles --- */
 .modal {
     display: none;
     position: fixed;
@@ -925,7 +925,7 @@ body {
 }
 
 
-/* --- Form Styles (Help Center) --- */
+/* --- Form Styles (Contact Us/Help Center) --- */
 
 #help-form {
     display: flex;
@@ -1395,7 +1395,7 @@ body.dark-mode #language-select option {
     background-color: #444;
 }
 
-/* Help Center Modal */
+/* Contact Us/Help Center Modal */
 body.dark-mode .blue-panel,
 body.dark-mode .share-panel-blue {
     background-color: #222222; 
@@ -1483,4 +1483,3 @@ body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
-
