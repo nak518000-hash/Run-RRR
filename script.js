@@ -190,64 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
          errorAlertModal.style.display = 'block';
     }
     
-    // --- CORE TRANSLATION FUNCTION ---
-    function applyLanguage(lang) {
-        const t = translations[lang];
-        if (!t) return;
-        
-        // 1. Title, Header Title, and Rate Title
-        document.title = t.app_title;
-        document.querySelector('.app-header h1').textContent = t.app_title;
-        if (rateSectionTitle) {
-             rateSectionTitle.textContent = t.total_amount_label;
-        }
-
-        // 2. Translate all elements with data-key
-        document.querySelectorAll('[data-key]').forEach(element => {
-            const key = element.dataset.key;
-            const translation = t[key];
-            
-            if (!translation) return;
-
-            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                element.placeholder = translation;
-            } else if (element.tagName === 'OPTION') {
-                element.textContent = translation;
-            } else if (element.id === 'copy-link-btn') {
-                 let currentTooltip = element.querySelector('.copy-tooltip');
-                 if (!currentTooltip) {
-                     currentTooltip = document.createElement('span');
-                     currentTooltip.className = 'copy-tooltip';
-                     currentTooltip.id = 'copy-tooltip';
-                     currentTooltip.dataset.key = 'copy_success_tooltip';
-                     element.appendChild(currentTooltip);
-                 }
-                 currentTooltip.textContent = t.copy_success_tooltip;
-                 element.innerHTML = `📋${currentTooltip.outerHTML}`; 
-            } else if (element.id === 'copy-tooltip') {
-                 element.textContent = translation;
-            } else if (element.id === 'delete-lines-btn-main' || element.id === 'clear-all-btn' || element.id === 'clear-cancel-btn' || element.id === 'clear-confirm-btn' || element.id === 'alert-ok-btn') {
-                 element.textContent = translation; 
-            } else {
-                element.textContent = translation;
-            }
-        });
-        
-        // 3. Custom updates for specific elements 
-        if (combinedLabelDisplay) {
-            combinedLabelDisplay.textContent = t.combined_total_label; 
-        }
-        
-        // 4. Update the Range Separator (the 'से' or 'to' text)
-        const rangeSeparator = document.querySelector('.range-separator');
-        if (rangeSeparator) {
-            rangeSeparator.textContent = t.separator_to;
-        }
-
-        initializeTable(false); 
-        updateCalculations(); 
-    }
-    
     // --- UTILITY FUNCTIONS (UPDATED FOR FULL BigInt ACCURACY) ---
     
     // Parses number inputs (like Delete Serials) which are small enough
@@ -305,25 +247,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Remove trailing zeros (e.g., 5.00 -> 5)
-        // Ensure that for financial output like Price, we keep exactly 2 decimals (Removed the regex for Price formatting in updateCalculations)
+        // Ensure that for financial output like Price, we keep exactly 4 decimals (Removed the regex for Price formatting in updateCalculations)
         if (precision === 2) { 
              // Special case for Milk/Badhotri: remove trailing zeros
              result = result.replace(/(\.0+|0+)$/, '');
         }
         
-        // 🔑 MODIFICATION: For Price output (which is now BigInt/10) ensure 1 decimal place.
-        if (precision === 1) { 
-            // 1 decimal place is required (e.g., 142.3)
+        // 🔑 MODIFICATION: For Price output (which is now BigInt/10000) ensure 4 decimal places.
+        if (precision === 4) { 
+            // 4 decimal places are required (e.g., 142.3456)
             if (!result.includes('.')) {
-                 result += '.0';
-            } else if (result.split('.')[1].length === 0) {
-                 result += '0';
-            }
-             
-            // Truncate to exactly 1 decimal place (e.g. 142.34 -> 142.3)
-            let parts = result.split('.');
-            if (parts.length > 1) {
-                 result = parts[0] + '.' + parts[1].substring(0, 1);
+                 result += '.0000';
+            } else {
+                 let parts = result.split('.');
+                 // Pad with zeros to 4 decimal places
+                 let paddedDecimal = (parts[1] || '').padEnd(4, '0').substring(0, 4);
+                 result = parts[0] + '.' + paddedDecimal;
             }
         }
 
@@ -379,7 +318,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const badhotriGmBigInt_temp = factor15 * milkKgBigInt; 
         
         // Step 4: Divide by 100 * 100 = 10000n.
-        const badhotriGmBigInt = badhotriGmBigInt_temp / 10000n;
+        // We use standard JS rounding by adding half the divisor (5000n) before division
+        const DIVISOR = 10000n;
+        const HALF_DIVISOR = 5000n; 
+        
+        let badhotriGmBigInt;
+        if (badhotriGmBigInt_temp >= 0n) {
+             badhotriGmBigInt = (badhotriGmBigInt_temp + HALF_DIVISOR) / DIVISOR;
+        } else {
+             badhotriGmBigInt = (badhotriGmBigInt_temp - HALF_DIVISOR) / DIVISOR;
+        }
         
         // The result is an exact integer in Gm.
         return badhotriGmBigInt; 
@@ -574,15 +522,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasWarning) {
              combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
              quantityForRateDisplay.textContent = `(---)`;
-             finalPriceDisplay.textContent = '0'; 
+             finalPriceDisplay.textContent = '0.0000'; // Updated for 4 decimal display
              totalAmountBox.classList.remove('warning-price-large'); 
              return; 
         }
         
         // 5. Combined and Price Calculations 
         
-        // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
-        // Correct way to convert Gm (integer) to Kg*100 (precision 2): Gm * 100 / 1000 = Gm / 10n
+        // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 100) / 1000 = Gm / 10n
         const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
         
         // Combined Total is in Kg*100 BigInt units (precision 2)
@@ -591,9 +538,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 2); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // --- FULL BigInt PRICE CALCULATION (1000 से भाग के लिए संशोधित) ---
+        // --- FULL BigInt PRICE CALCULATION (4 DECIMAL PLACES) ---
         
         // 1. Rate को BigInt में parse करें (4 दशमलव स्थानों की सटीकता के साथ: Rate * 10000)
+        // Rate is already parsed with precision 4, so rateBigInt is Rate * 10000n.
         const rateBigInt = parseInputToBigInt(ratePerKgInput.value, 4) || 0n;
         
         // 2. Price Calculation: 
@@ -601,17 +549,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // rateBigInt unit: Rate*10000 (precision 4)
         // Multiplication result: Price * (100 * 10000) = Price * 1000000
         
-        const PRICE_MULTIPLIER = 1000000n; 
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // 🔑 MODIFICATION START: 1000 से भाग देने के लिए डिवीज़न में बदलाव
-        // हम Price * 1000000 से Price * 10 (1 दशमलव रुपये) चाहते हैं, 
-        // जिसके लिए 100000n से भाग दिया जाता है (1000000n / 10n = 100000n).
+        // 🔑 MODIFICATION START: 4 दशमलव स्थान के लिए डिवीज़न में बदलाव
+        // हम Price * 1000000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
+        // जिसके लिए 100n से भाग दिया जाता है (1000000n / 10000n = 100n).
 
-        const FINAL_DISPLAY_DIVISOR = 100000n; // 1000000n / 10n
+        const FINAL_DISPLAY_DIVISOR = 100n; 
         const HALF_FINAL_DIVISOR = FINAL_DISPLAY_DIVISOR / 2n;
 
-        // Price * 10 BigInt (1 decimal precision) with correct rounding
+        // Price * 10000 BigInt (4 decimal precision) with correct rounding
         let finalPriceBigInt_multiplied_rounded;
         if (finalPriceBigInt_temp >= 0n) {
              // Add half the divisor for rounding away from zero (standard rounding)
@@ -621,8 +568,9 @@ document.addEventListener('DOMContentLoaded', () => {
              finalPriceBigInt_multiplied_rounded = (finalPriceBigInt_temp - HALF_FINAL_DIVISOR) / FINAL_DISPLAY_DIVISOR;
         }
         
-        // 3. Format final price (जो अब Price * 10 के रूप में एक पूर्णांक है)
-        const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt_multiplied_rounded, 1);
+        // 3. Format final price (जो अब Price * 10000 के रूप में एक पूर्णांक है)
+        // Use precision 4 for the final display value
+        const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt_multiplied_rounded, 4);
         
         // 🔑 MODIFICATION END
         
@@ -916,3 +864,4 @@ ${problem}
     applyLanguage(storedLang); 
     updateCharCount(); 
 });
+
