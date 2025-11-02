@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
+    
+    // 🔑 NEW: Add Line Button Element
+    const addLineBtn = document.getElementById('add-line-btn');
 
     // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
@@ -86,11 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_milk: 'दूध', 
             placeholder_sample: 'सैंपल', 
             placeholder_rate: 'दर', 
+            // 🔑 UPDATED Alert Message
             alert_message: 'कृपया अगली लाइन जोड़ने से पहले पिछली लाइन में दूध या सैंपल का मान भरें।',
             copy_success_tooltip: 'कॉपी किया गया!', 
             copy_link_btn: '📋', 
             copy_link_text: '', 
             clear_btn: 'Clear', 
+            
+            // 🔑 NEW: Add Line Button Text
+            add_line_btn: 'पंक्ति जोड़ें',
+            add_line_text: 'पंक्ति जोड़ें',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'डेटा साफ़ करें',
@@ -147,6 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_btn: '📋', 
             copy_link_text: '', 
             clear_btn: 'Clear', 
+            
+            // 🔑 NEW: Add Line Button Text
+            add_line_btn: 'Add Line',
+            add_line_text: 'Add Line',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'Clear Data',
@@ -367,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
             box.removeAttribute('title');
         });
         
+        // 🔑 MODIFIED: Ensure table is re-initialized with a single row
         initializeTable(true);
     }
 
@@ -590,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function createRow(serial) {
+    function createRow(serial, focus = false) {
         const row = document.createElement('div');
         row.classList.add('input-row');
         row.dataset.serial = serial;
@@ -631,26 +644,45 @@ document.addEventListener('DOMContentLoaded', () => {
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
-                const nextRow = row.nextElementSibling;
-                
-                if (nextRow) {
-                    nextRow.querySelector('.milk-kg-input').focus();
-                } else {
-                    const currentRows = tableBody.querySelectorAll('.input-row').length;
-                    const newSerial = currentRows + 1; 
-                    
-                    const newRow = createRow(newSerial);
-                    tableBody.appendChild(newRow);
-                    
-                    tableBody.scrollTop = tableBody.scrollHeight;
-
-                    newRow.querySelector('.milk-kg-input').focus();
-                }
+                addLine(); // Use the new addLine function
             }
         });
         
+        if (focus) {
+             // Use setTimeout to ensure the element is focusable after being rendered
+             setTimeout(() => milkInput.focus(), 0);
+        }
+        
         return row;
     }
+    
+    // 🔑 NEW FUNCTION: Add Line with check
+    function addLine() {
+        const rows = tableBody.querySelectorAll('.input-row');
+        const lastRow = rows[rows.length - 1];
+        
+        if (lastRow) {
+             const milkInput = lastRow.querySelector('.milk-kg-input');
+             const sampleInput = lastRow.querySelector('.sample-input');
+             
+             // Check if both fields in the last row are empty or not
+             const milkFilled = milkInput.value.trim() !== '';
+             const sampleFilled = sampleInput.value.trim() !== '';
+
+             if (!milkFilled && !sampleFilled) {
+                 const currentLang = languageSelect.value || 'hi';
+                 showAlert(translations[currentLang].alert_message);
+                 return;
+             }
+        }
+        
+        const newSerial = rows.length + 1; 
+        const newRow = createRow(newSerial, true); // Pass true to focus the new row
+        tableBody.appendChild(newRow);
+        
+        tableBody.scrollTop = tableBody.scrollHeight;
+    }
+
 
     function initializeTable(reset = true) {
         if (reset) {
@@ -660,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingRows = tableBody.querySelectorAll('.input-row');
         const currentCount = existingRows.length;
 
+        // 🔑 FIX: Ensure AT LEAST ONE row exists, and always re-index/recalculate
         if (currentCount === 0) {
             const newRow = createRow(1);
             tableBody.appendChild(newRow);
@@ -679,6 +712,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const rows = tableBody.querySelectorAll('.input-row');
         
+        if (rows.length === 1 && (start === 1 || start === 0)) {
+             // Allow clearing the value of the only row if requested to delete line 1
+             rows[0].querySelector('.milk-kg-input').value = '';
+             rows[0].querySelector('.sample-input').value = '';
+             updateCalculations();
+             deleteStartInput.value = '';
+             deleteEndInput.value = '';
+             return;
+        }
+        
         if (start < 1 || start > rows.length) {
             showAlert(`कृपया 1 और ${rows.length} के बीच एक मान्य संख्या डालें।`);
             return;
@@ -687,6 +730,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (end < start || end > rows.length) {
             showAlert(`समाप्ति संख्या (${end}) शुरू संख्या (${start}) से बड़ी होनी चाहिए और ${rows.length} से ज़्यादा नहीं होनी चाहिए।`);
             return;
+        }
+        
+        // Prevent deleting all rows to maintain a minimum of one empty row
+        if (rows.length - (end - start + 1) < 1) {
+             showAlert('कम से कम एक पंक्ति होनी चाहिए। कृपया सभी पंक्तियों को हटाने के बजाय मान साफ़ करें।');
+             return;
         }
 
         const rowsToDelete = [];
@@ -704,8 +753,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSerialNumbers();
         updateCalculations();
         
-        // Ensure at least one row remains
+        // Ensure at least one row remains (already handled by the check above, but for safety)
         initializeTable(false);
+    }
+    
+    // 🔑 NEW: Add Line Button Listener
+    if (addLineBtn) {
+         addLineBtn.addEventListener('click', addLine);
     }
     
     // Clear Button Listener to open modal
@@ -863,5 +917,7 @@ ${problem}
     // Apply language and initialize everything on load
     applyLanguage(storedLang); 
     updateCharCount(); 
+    
+    // 🔑 Fix: Initial table load is now called inside applyLanguage, but keeping it here for clarity.
+    initializeTable(false); 
 });
-
