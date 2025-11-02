@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const combinedTotalValueDisplay = document.getElementById('combined-total-value'); 
     const quantityForRateDisplay = document.getElementById('quantity-for-rate');
-    const rateSectionTitle = document.getElementById('rate-section-title'); 
-    const combinedLabelDisplay = document.querySelector('.total-combined .combined-label');
+    // const rateSectionTitle = document.getElementById('rate-section-title'); // Not used here
+    // const combinedLabelDisplay = document.querySelector('.total-combined .combined-label'); // Not used here
     
     // Settings elements
     const settingsModal = document.getElementById('settings-modal');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertOkBtn = document.getElementById('alert-ok-btn');
     
     // --- Core App Link and Text ---
-    const APP_URL = 'https://your-domain.com/app-apk.apk'; 
+    // const APP_URL = 'https://your-domain.com/app-apk.apk'; // Not used in this version
     
     // Scrolling animation duration for individual badhotri boxes
     const SCROLL_ANIMATION_DURATION = '13.431s'; 
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_DIGITS_SMALL_BOX = 7; // Individual badhotri scrolling
     const MAX_DIGITS_MILK_WARNING = 10; // Total Milk warning (Kg)
     const MAX_DIGITS_BADHOTRI_WARNING = 15; // Total Badhotri warning (Gm)
-    const MAX_DIGITS_PRICE_WARNING = 14; // CHANGED: 14 अंकों तक दिखाने की अनुमति (15 पर चेतावनी)
+    const MAX_DIGITS_PRICE_WARNING = 14; // 14 अंकों तक दिखाने की अनुमति (15 पर चेतावनी)
     
     // --- Localization/Language Dictionary ---
     const translations = {
@@ -91,9 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_rate: 'दर', 
             // 🔑 UPDATED Alert Message
             alert_message: 'कृपया अगली लाइन जोड़ने से पहले पिछली लाइन में दूध या सैंपल का मान भरें।',
-            copy_success_tooltip: 'कॉपी किया गया!', 
-            copy_link_btn: '📋', 
-            copy_link_text: '', 
+            // copy_success_tooltip: 'कॉपी किया गया!', // Not used in this version
+            // copy_link_btn: '📋', // Not used in this version
+            // copy_link_text: '', // Not used in this version
             clear_btn: 'Clear', 
             
             // ✅ NEW: Add Line Button Text 
@@ -150,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_sample: 'Sample', 
             placeholder_rate: 'Rate', 
             alert_message: 'Please enter Milk or Sample value in the previous line before adding the next one.',
-            copy_success_tooltip: 'Copied!', 
-            copy_link_btn: '📋', 
-            copy_link_text: '', 
+            // copy_success_tooltip: 'Copied!', // Not used in this version
+            // copy_link_btn: '📋', // Not used in this version
+            // copy_link_text: '', // Not used in this version
             clear_btn: 'Clear', 
             
             // ✅ NEW: Add Line Button Text 
@@ -212,11 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // NEW FUNCTION: Parses MILK/SAMPLE/RATE inputs to BigInt
-    // precisionMultiplier: 100 for Milk (2 decimals), 100 for Sample (2 decimals), 10000 for Rate (4 decimals)
+    // precision: 2 for Milk/Sample (Value * 100), 4 for Rate (Value * 10000)
     function parseInputToBigInt(value, precision = 2) {
-        let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
+        let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.-]/g, '');
         
         if (cleaned === '') return 0n; 
+        
+        const isNegative = cleaned.startsWith('-');
+        if (isNegative) cleaned = cleaned.substring(1);
 
         const parts = cleaned.split('.');
         let integerPart = parts[0] || '0';
@@ -227,7 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const bigIntString = integerPart + decimalPart;
         
         try {
-             return BigInt(bigIntString);
+             let bigIntValue = BigInt(bigIntString);
+             return isNegative ? -bigIntValue : bigIntValue;
         } catch (e) {
              console.error("BigInt conversion failed:", e);
              return 0n;
@@ -323,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Step 3: factor15 * MilkKg
         // The intermediate result (factor15) has 2 implied decimals (from sampleBigInt).
         // MilkKg (milkKgBigInt) also has 2 implied decimals.
-        // Multiplication result has 4 implied decimals.
+        // Multiplication result has 4 implied decimals (e.g., Gm * 10000).
         const badhotriGmBigInt_temp = factor15 * milkKgBigInt; 
         
         // Step 4: Divide by 100 * 100 = 10000n.
@@ -440,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     badhotriBox.classList.add('negative'); 
                 }
                 
-                if (rawDisplayValue.length > MAX_DIGITS_SMALL_BOX) { 
+                if (rawDisplayValue.replace('-', '').length > MAX_DIGITS_SMALL_BOX) { 
                     badhotriBox.classList.remove('static-box'); 
                     scrollingText.style.animation = `marquee-badhotri ${SCROLL_ANIMATION_DURATION} linear infinite`;
                     
@@ -540,7 +544,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // 5. Combined and Price Calculations 
         
         // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 100) / 1000 = Gm / 10n
-        const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
+        // Add half the divisor (5n) for correct rounding
+        const DIVISOR_GM_TO_KG_HUNDRED = 10n;
+        const HALF_DIVISOR_GM_TO_KG_HUNDRED = 5n;
+        
+        let badhotriInKgBigInt_temp = totalBadhotriGmBigInt;
+        
+        let badhotriInKgBigInt;
+        if (badhotriInKgBigInt_temp >= 0n) {
+             badhotriInKgBigInt = (badhotriInKgBigInt_temp + HALF_DIVISOR_GM_TO_KG_HUNDRED) / DIVISOR_GM_TO_KG_HUNDRED;
+        } else {
+             badhotriInKgBigInt = (badhotriInKgBigInt_temp - HALF_DIVISOR_GM_TO_KG_HUNDRED) / DIVISOR_GM_TO_KG_HUNDRED;
+        }
         
         // Combined Total is in Kg*100 BigInt units (precision 2)
         let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
@@ -551,7 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- FULL BigInt PRICE CALCULATION (4 DECIMAL PLACES) ---
         
         // 1. Rate को BigInt में parse करें (4 दशमलव स्थानों की सटीकता के साथ: Rate * 10000)
-        // Rate is already parsed with precision 4, so rateBigInt is Rate * 10000n.
         const rateBigInt = parseInputToBigInt(ratePerKgInput.value, 4) || 0n;
         
         // 2. Price Calculation: 
@@ -561,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // 🔑 MODIFICATION START: 4 दशमलव स्थान के लिए डिवीज़न में बदलाव
+        // 🔑 MODIFICATION: 4 दशमलव स्थान के लिए डिवीज़न में बदलाव
         // हम Price * 1000000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
         // जिसके लिए 100n से भाग दिया जाता है (1000000n / 10000n = 100n).
 
@@ -638,11 +652,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 🔑 MODIFIED: Enter Key को नई लाइन जोड़ने के लिए बाध्य करना
+        // 🔑 MODIFIED: Enter Key to add new line or focus to milk input on new line
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
-                addLine(); // Use the updated addLine function
+                addLine(); 
             }
         });
         
@@ -671,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if (!milkFilled && !sampleFilled) {
                  const currentLang = languageSelect.value || 'hi';
                  showAlert(translations[currentLang].alert_message);
-                 // 🔑 महत्वपूर्ण: यदि खाली है, तो फ़ोकस को वापस पिछली पंक्ति पर लाएँ
+                 // 🔑 महत्वपूर्ण: यदि खाली है, तो फ़ोकस को वापस पिछली पंक्ति पर लाएँ
                  milkInput.focus();
                  return;
              }
@@ -725,13 +739,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (start < 1 || start > rows.length) {
-            showAlert(`कृपया 1 और ${rows.length} के बीच एक मान्य संख्या डालें।`);
-            return;
+             const currentLang = languageSelect.value || 'hi';
+             showAlert(`${translations[currentLang].delete_btn} के लिए, कृपया 1 और ${rows.length} के बीच एक मान्य संख्या डालें।`);
+             return;
         }
         
         if (end < start || end > rows.length) {
-            showAlert(`समाप्ति संख्या (${end}) शुरू संख्या (${start}) से बड़ी होनी चाहिए और ${rows.length} से ज़्यादा नहीं होनी चाहिए।`);
-            return;
+             const currentLang = languageSelect.value || 'hi';
+             showAlert(`${translations[currentLang].delete_btn} के लिए, समाप्ति संख्या (${end}) शुरू संख्या (${start}) से बड़ी होनी चाहिए और ${rows.length} से ज़्यादा नहीं होनी चाहिए।`);
+             return;
         }
         
         // Prevent deleting all rows to maintain a minimum of one empty row
@@ -834,9 +850,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Language Change Listener
-    // ... (applyLanguage फ़ंक्शन को लोड करने के लिए यहाँ कोड होना चाहिए)
     
-    // Placeholder function for language application (assuming it exists elsewhere or is missing)
+    // Placeholder function for language application 
     function applyLanguage(lang) {
         const t = translations[lang];
         document.querySelectorAll('[data-key]').forEach(element => {
@@ -845,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                      element.placeholder = t[key];
                  } else if (element.id === 'add-line-btn') {
-                     // Add Line Button is a special case for textContent or innerHTML
+                     // Add Line Button is a special case for innerHTML (to keep the icon class)
                      element.innerHTML = `<span class="icon">${t[key]}</span>`;
                  } else {
                      element.textContent = t[key];
