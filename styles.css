@@ -4,6 +4,7 @@
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
  * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  * 🔑 FIX: Added Noto Sans Devanagari font support.
+ * 💥 FIX: + Button Position (नया CSS जोड़ा गया)
  */
 
 body {
@@ -57,7 +58,7 @@ body {
     flex-shrink: 0;
 }
 
-/* ✅ MODIFIED: Add Line Button Styles (Removed from Header, Kept original styles) */
+/* ✅ NEW: Add Line Button Styles */
 .add-line-button {
     background-color: #28a745; 
     color: white; 
@@ -77,6 +78,23 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+/* 💥 NEW CSS FIX: + बटन को Delete Lines बॉक्स के साथ सीध में लाने के लिए 💥 */
+.add-line-button.fixed-delete-row-pos {
+    /* 🔑 FIX 1: ऊँचाई को Delete Lines Container की मुख्य ऊँचाई के बराबर सेट करना */
+    /* Delete Lines Box की ऊँचाई 60px है, हम बटन को उसी के आसपास लाने के लिए इसे 56px कर रहे हैं */
+    width: 56px; 
+    height: 56px; 
+    font-size: 32px; /* आइकन को थोड़ा बड़ा किया */
+    
+    /* 🔑 FIX 2: ऊपर की ओर मार्जिन सेट करना */
+    /* यह मान delete-lines-section-label की ऊँचाई के कारण नीचे खिसक गया था */
+    margin-top: 25px; 
+    
+    flex-shrink: 0;
+}
+/* 💥 END NEW CSS FIX 💥 */
+
 .add-line-button:hover {
     background-color: #1e7e34;
     transform: scale(1.05);
@@ -85,7 +103,7 @@ body {
     line-height: 1;
     margin-top: -2px; /* Slight adjustment for better visual centering */
 }
-/* ✅ END MODIFIED: Add Line Button Styles */
+/* ✅ END NEW: Add Line Button Styles */
 
 
 .settings-btn {
@@ -125,8 +143,9 @@ body {
 /* RESTORED: Row for Delete Box (Single item) */
 .main-page-settings-row {
     display: flex;
-    justify-content: space-between; /* Adjusted to space between delete and add line */
-    align-items: flex-end; /* Changed to flex-end to align with button */
+    justify-content: flex-start; 
+    /* 🔑 FIX: align-items: flex-end से बदलकर align-items: flex-start किया */
+    align-items: flex-start; 
     margin-bottom: 15px;
     gap: 10px; 
     flex-wrap: nowrap; 
@@ -136,11 +155,10 @@ body {
 .delete-lines-container {
     display: flex;
     flex-direction: column; 
-    /* ✅ MODIFIED: max-width for delete container to accommodate the new button */
     width: 100%; 
-    max-width: calc(100% - 64px); /* Full width minus button (44px) and gap (10px) + margin */
-    flex-shrink: 1; /* Allow to shrink if necessary */
-    margin-bottom: 0; /* Removed margin-bottom */
+    max-width: calc(100% - 20mm); 
+    flex-shrink: 1; 
+    margin-bottom: 20px; 
 }
 
 .delete-lines-section-label {
@@ -251,64 +269,23 @@ body {
 }
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END 💥 */
 
-/* ✅ NEW: Add Line Container Styles */
-.add-line-container {
-    display: flex;
-    align-items: flex-end; /* Align the button with the bottom of the delete section */
-    height: 100%; /* Take full height of the row */
-    padding-bottom: 2px; /* Slight adjustment */
-    flex-shrink: 0; /* Do not shrink */
-}
-/* ✅ END NEW */
 
 /* --- Table Structure --- */
-/* ... (Rest of the CSS remains the same for brevity) ... */
+.header-row, .input-row {
+    display: flex;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+/* ... बाकी CSS कोड ... */
+
+/* 💥 NEW CSS FIX: + बटन को Dark Mode में Delete Lines बॉक्स के साथ सीध में लाने के लिए 💥 */
+body.dark-mode .add-line-button.fixed-delete-row-pos {
+     margin-top: 25px; /* Day mode के समान मार्जिन */
+}
+/* 💥 END NEW CSS FIX 💥 */
+
 
 /* ------------------------------------------------------------------ */
-/* 💥 DARK MODE STYLES START 💥 */
+/* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
-
-body.dark-mode {
-    background-color: #121212; 
-}
-
-body.dark-mode .container {
-    background-color: #222222; 
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-    color: #f0f0f0;
-}
-/* ... (Header, Clear Button, etc. Dark Mode Styles remain the same) ... */
-
-/* LINE DELETE SETTING DARK MODE - CUSTOMIZED (FIXED) */
-body.dark-mode .delete-lines-container {
-    margin-bottom: 0; /* Removed margin-bottom */
-}
-
-body.dark-mode .delete-lines-section-label {
-    color: #4da6ff; 
-}
-
-/* 🔑 FIX (DARK MODE): justify-content: space-between सेट किया गया */
-body.dark-mode .delete-lines-section-main {
-     background-color: #332a2a; 
-     border: 2px solid #ff7043; 
-     box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2); 
-     color: #f0f0f0; 
-     height: 60px; 
-     justify-content: space-between; 
-}
-/* ... (Input, Separator, Delete Button Dark Mode Styles remain the same) ... */
-
-/* ✅ NEW: Add Line Button Styles (Dark Mode) */
-body.dark-mode .add-line-button {
-    background-color: #5cb85c; 
-    color: #222; 
-    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
-}
-body.dark-mode .add-line-button:hover {
-    background-color: #4aa44a;
-}
-/* ✅ END NEW: Add Line Button Styles (Dark Mode) */
-
-/* ... (Rest of the Dark Mode CSS remains the same for brevity) ... */
-
