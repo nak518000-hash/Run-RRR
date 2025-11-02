@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const openSettingsBtn = document.getElementById('open-settings-btn');
     const settingsCloseBtn = document.getElementById('settings-close-btn'); 
     const languageSelect = document.getElementById('language-select');
-    const helpCenterBtn = document.getElementById('help-center-btn'); 
+    const helpCenterBtn = document.getElementById('help-center-btn'); // Renamed to Contact Us
     
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_DIGITS_BADHOTRI_WARNING = 15; // Total Badhotri warning (Gm)
     const MAX_DIGITS_PRICE_WARNING = 14; // 14 अंकों तक दिखाने की अनुमति (15 पर चेतावनी)
     
-    // --- Localization/Language Dictionary ---
+    // --- Localization/Language Dictionary (UPDATED) ---
     const translations = {
         hi: {
             app_title: 'Milk Scale App', 
@@ -85,15 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
             total_amount_label: 'कुल धनराशि', 
             settings_title: 'सेटिंग्स',
             change_language_label: 'भाषा बदलें',
-            help_center_btn: 'सहायता केंद्र', 
+            
+            // 🔑 UPDATED: Help Center -> Contact Us
+            contact_us_btn: 'हमसे संपर्क करें', 
+            contact_us_title: 'हमसे संपर्क करें',
+            
             placeholder_milk: 'दूध', 
             placeholder_sample: 'सैंपल', 
             placeholder_rate: 'दर', 
             // 🔑 UPDATED Alert Message
             alert_message: 'कृपया अगली लाइन जोड़ने से पहले पिछली लाइन में दूध या सैंपल का मान भरें।',
-            // copy_success_tooltip: 'कॉपी किया गया!', // Not used in this version
-            // copy_link_btn: '📋', // Not used in this version
-            // copy_link_text: '', // Not used in this version
             clear_btn: 'Clear', 
             
             // ✅ NEW: Add Line Button Text 
@@ -116,8 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             number_too_large: 'संख्या बहुत बड़ी है', 
             price_too_large: 'संख्या बहुत बड़ी है', 
 
-            // Help Center Translations
-            help_center_title: 'सहायता केंद्र',
+            // Help Center/Contact Us Translations
             form_name_label: 'आपका नाम',
             placeholder_name: 'अपना नाम', 
             form_email_label: 'ईमेल आईडी',
@@ -145,14 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
             total_amount_label: 'Total amount', 
             settings_title: 'Settings',
             change_language_label: 'Change Language',
-            help_center_btn: 'Help Center', 
+            
+            // 🔑 UPDATED: Help Center -> Contact Us
+            contact_us_btn: 'Contact Us', 
+            contact_us_title: 'Contact Us',
+            
             placeholder_milk: 'Milk', 
             placeholder_sample: 'Sample', 
             placeholder_rate: 'Rate', 
             alert_message: 'Please enter Milk or Sample value in the previous line before adding the next one.',
-            // copy_success_tooltip: 'Copied!', // Not used in this version
-            // copy_link_btn: '📋', // Not used in this version
-            // copy_link_text: '', // Not used in this version
             clear_btn: 'Clear', 
             
             // ✅ NEW: Add Line Button Text 
@@ -175,8 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             number_too_large: 'Number is very large', 
             price_too_large: 'The number is very large', 
             
-            // Help Center Translations
-            help_center_title: 'Help Center',
+            // Help Center/Contact Us Translations
             form_name_label: 'Your Name',
             placeholder_name: 'Enter your name', 
             form_email_label: 'Email ID',
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openSettingsBtn.addEventListener('click', () => settingsModal.style.display = 'block');
     settingsCloseBtn.addEventListener('click', () => settingsModal.style.display = 'none');
     
-    // Help Center Modal
+    // Help Center Modal (Now Contact Us)
     helpCenterBtn.addEventListener('click', () => {
         settingsModal.style.display = 'none'; 
         helpCenterModal.style.display = 'block'; 
