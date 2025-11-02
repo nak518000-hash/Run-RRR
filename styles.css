@@ -2,8 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * MODIFIED: Cleaned up unused styles (Dark Mode Toggle, User Count, Share App Modal)
- * 🔑 UPDATED: Added styles for Large Number Warnings and Badhotri Scrolling
+ * MODIFIED: Styles for Add Line Button added.
  */
 
 body {
@@ -69,6 +68,37 @@ body {
     font-size: 32px;
     line-height: 1;
 }
+
+/* 🔑 NEW: Add Line Button Styles */
+.add-line-btn {
+    background-color: #343a40; /* Black background */
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8mm; 
+    cursor: pointer;
+    font-size: 16px; 
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    height: 44px; 
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+    min-width: 110px;
+}
+.add-line-btn .icon {
+    font-size: 24px;
+    line-height: 1;
+    color: #ff8c00; /* Orange plus icon */
+    font-weight: 900;
+}
+.add-line-btn:hover {
+    background-color: #23272b;
+    transform: scale(1.02);
+}
+/* 🔑 END NEW */
 
 .clear-button {
     background-color: #ff8c00; 
@@ -1086,6 +1116,20 @@ body.dark-mode .app-header h1 {
 body.dark-mode .settings-btn {
     color: #b0b0b0;
 }
+
+/* 🔑 NEW: Add Line Button Styles (Dark Mode) */
+body.dark-mode .add-line-btn {
+    background-color: #555; 
+    color: #f0f0f0;
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+}
+body.dark-mode .add-line-btn .icon {
+    color: #ff9800; /* Orange plus icon */
+}
+body.dark-mode .add-line-btn:hover {
+    background-color: #444;
+}
+/* 🔑 END NEW (Dark Mode) */
 
 body.dark-mode .clear-button {
     background-color: #ff9800;
