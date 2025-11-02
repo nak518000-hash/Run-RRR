@@ -1003,3 +1003,4 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
+
