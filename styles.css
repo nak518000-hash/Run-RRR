@@ -2,7 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * MODIFIED: Styles for Add Line Button (Icon Only).
+ * 🛠️ MODIFIED: Styles for Add Line Button (Simple Black Icon Only).
  */
 
 body {
@@ -69,41 +69,40 @@ body {
     line-height: 1;
 }
 
-/* 🔑 UPDATED: Add Line Button Styles (Only Icon) */
+/* 🛠️ UPDATED: Add Line Button Styles (Simple Black Icon Only) */
 .add-line-btn {
-    background-color: #343a40; 
-    color: white; 
+    background: none; /* बैकग्राउंड हटा दिया गया */
+    border: none; /* बॉर्डर हटा दिया गया */
+    box-shadow: none; /* शैडो हटा दिया गया */
+    
+    color: #000; /* सिंपल ब्लैक कलर */
     font-weight: bold; 
-    border: none;
-    padding: 8px; /* पैडिंग कम की गई */
-    border-radius: 50%; /* गोल बटन के लिए */
+    
+    padding: 8px; 
+    border-radius: 50%; 
     cursor: pointer;
     font-size: 16px; 
-    transition: background-color 0.2s, transform 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s, opacity 0.2s;
+    
     flex-shrink: 0; 
-    height: 44px; /* ऊँचाई */
-    width: 44px; /* चौड़ाई */
+    height: 44px; 
+    width: 44px; 
     display: flex;
     align-items: center;
-    justify-content: center; /* आइकॉन को बीच में लाने के लिए */
+    justify-content: center;
     min-width: 44px;
 }
 .add-line-btn .icon {
-    font-size: 28px; /* आइकॉन को बड़ा दिखाने के लिए */
+    font-size: 36px; /* आइकॉन को बड़ा दिखाने के लिए */
     line-height: 1;
-    color: #ff8c00; 
+    color: #000; /* आइकॉन का रंग काला */
     font-weight: 900;
 }
-/* टेक्स्ट ओवरले को पूरी तरह से छुपाना */
-.add-line-btn .button-text-overlay {
-    display: none; 
-}
 .add-line-btn:hover {
-    background-color: #23272b;
-    transform: scale(1.02);
+    transform: scale(1.1);
+    opacity: 0.8;
 }
-/* 🔑 END UPDATED */
+/* 🛠️ END UPDATED */
 
 .clear-button {
     background-color: #ff8c00; 
@@ -115,7 +114,7 @@ body {
     cursor: pointer;
     font-size: 16px; 
     transition: background-color 0.2s, transform 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     flex-shrink: 0; 
     min-width: 70px; 
     height: 44px; 
@@ -1122,22 +1121,20 @@ body.dark-mode .settings-btn {
     color: #b0b0b0;
 }
 
-/* 🔑 UPDATED: Add Line Button Styles (Dark Mode) - Icon Only */
+/* 🛠️ UPDATED: Add Line Button Styles (Dark Mode) - Simple White Icon Only */
 body.dark-mode .add-line-btn {
-    background-color: #555; 
-    color: #f0f0f0;
-    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
-    width: 44px; 
-    height: 44px; 
-    min-width: 44px;
+    background: none; 
+    border: none;
+    box-shadow: none;
 }
 body.dark-mode .add-line-btn .icon {
-    color: #ff9800; /* Orange plus icon */
+    color: #f0f0f0; /* Dark Mode के लिए व्हाइट प्लस आइकॉन */
 }
 body.dark-mode .add-line-btn:hover {
-    background-color: #444;
+    transform: scale(1.1);
+    opacity: 0.8;
 }
-/* 🔑 END UPDATED (Dark Mode) */
+/* 🛠️ END UPDATED (Dark Mode) */
 
 body.dark-mode .clear-button {
     background-color: #ff9800;
