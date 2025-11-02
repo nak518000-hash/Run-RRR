@@ -260,8 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // NEW FUNCTION: Parses MILK/SAMPLE/RATE inputs to BigInt
-    // precision: 2 for Milk/Sample, 4 for Rate
-    // Returns BigInt value * 10^precision
+    // precisionMultiplier: 100 for Milk (2 decimals), 100 for Sample (2 decimals), 10000 for Rate (4 decimals)
     function parseInputToBigInt(value, precision = 2) {
         let cleaned = value.toString().replace(/[eE,]/g, '').replace(/[^0-9.]/g, '');
         
@@ -306,7 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Remove trailing zeros (e.g., 5.00 -> 5)
+        // Ensure that for financial output like Price, we keep exactly 2 decimals (Removed the regex for Price formatting in updateCalculations)
         if (precision === 2) { 
+             // Special case for Milk/Badhotri: remove trailing zeros
              result = result.replace(/(\.0+|0+)$/, '');
         }
 
@@ -361,12 +362,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Multiplication result has 4 implied decimals.
         const badhotriGmBigInt_temp = factor15 * milkKgBigInt; 
         
-        // BigInt version: ( (Sample*100 - 6500) * 15 * (MilkKg*100) ) / 10000
-        
-        // Correct approach: Divide by 100 * 100 = 10000n.
-        // The result is an exact integer in Gm.
+        // Step 4: Divide by 100 * 100 = 10000n.
         const badhotriGmBigInt = badhotriGmBigInt_temp / 10000n;
         
+        // The result is an exact integer in Gm.
         return badhotriGmBigInt; 
     }
     
@@ -559,7 +558,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasWarning) {
              combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
              quantityForRateDisplay.textContent = `(---)`;
-             finalPriceDisplay.textContent = '0';
+             finalPriceDisplay.textContent = '0'; 
+             totalAmountBox.classList.remove('warning-price-large'); 
              return; 
         }
         
@@ -567,8 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Convert Badhotri Gm to Kg*100 BigInt units for addition: (Gm * 10) / 1000 * 100
         // Correct way to convert Gm (integer) to Kg*100 (precision 2): Gm * 100 / 1000 = Gm / 10n
-        // For correct rounding in Kg*100 units: add 5n before division by 10n
-        const badhotriInKgBigInt = (totalBadhotriGmBigInt + (totalBadhotriGmBigInt >= 0n ? 5n : -5n)) / 10n; 
+        const badhotriInKgBigInt = totalBadhotriGmBigInt / 10n; 
         
         // Combined Total is in Kg*100 BigInt units (precision 2)
         let combinedTotalBigInt = totalMilkKgBigInt + badhotriInKgBigInt;
@@ -576,10 +575,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const combinedTotalValue = formatBigIntToNumberString(combinedTotalBigInt, 2); 
         combinedTotalValueDisplay.innerHTML = `${combinedTotalValue}${NBSP}Kg`;
 
-        // --- FULL BigInt PRICE CALCULATION (संशोधन यहाँ किया गया है) ---
+        // --- FULL BigInt PRICE CALCULATION (100 से गुणा के लिए संशोधित) ---
         
         // 1. Rate को BigInt में parse करें (4 दशमलव स्थानों की सटीकता के साथ: Rate * 10000)
-        // Rate input is read as a string and converted to BigInt * 10000
         const rateBigInt = parseInputToBigInt(ratePerKgInput.value, 4) || 0n;
         
         // 2. Price Calculation: 
@@ -588,41 +586,44 @@ document.addEventListener('DOMContentLoaded', () => {
         // Multiplication result: Price * (100 * 10000) = Price * 1000000
         
         const PRICE_DIVISOR = 1000000n; 
-        let finalPriceBigInt = (combinedTotalBigInt * rateBigInt);
+        let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // Round to the nearest whole rupee/paise (2 decimals).
-        // To round to 2 decimals, we need to divide by 10000.
-        // For correct rounding: add half of the divisor before division.
-        // The intermediate result is Price * 1000000. To get Price * 100 (2 decimals), we divide by 10000.
+        // --- *100 MODIFICATION START ---
+        // हम Price * 1000000 से सीधे Price * 100 (2 दशमलव रुपये) तक राउंड करते थे, 
+        // जिसके लिए 10000n से भाग दिया जाता था।
+        // अब हमें Price * 100 * 100 = Price * 10000 (0 दशमलव रुपये) चाहिए।
+        // इसके लिए, हमें PRICE_DIVISOR (1000000n) को 100 से कम (अर्थात् 10000) से भाग देने की बजाय
+        // 100 से और कम (अर्थात् 100) से भाग देना होगा।
         
-        const ROUNDING_DIVISOR = 10000n; // This is the amount we need to divide to get to 2 decimals (1000000 / 100)
-        const HALF_ROUNDING_DIVISOR = ROUNDING_DIVISOR / 2n;
+        // Price * 10000 (जो रुपये में 0 दशमलव है, उदाहरण के लिए 14230 रुपये) के लिए, 
+        // हमें 1000000n को 100n से भाग देना होगा: 10000n.
         
-        // Price * 100 BigInt (with correct rounding)
-        // finalPriceBigInt_rounded is now Price * 100
-        let finalPriceBigInt_rounded = (finalPriceBigInt + (finalPriceBigInt >= 0n ? HALF_ROUNDING_DIVISOR : -HALF_ROUNDING_DIVISOR)) / ROUNDING_DIVISOR;
+        const FINAL_DISPLAY_DIVISOR = 100n; // 1000000n / 10000n = 100n (Price * 10000n)
+        const HALF_FINAL_DIVISOR = FINAL_DISPLAY_DIVISOR / 2n;
 
-        // 3. Format final price (which is in Price*100 BigInt units) to EXACTLY 2 decimal places
+        // Price * 10000 BigInt (0 decimal precision) with correct rounding
+        let finalPriceBigInt_multiplied_rounded;
+        if (finalPriceBigInt_temp >= 0n) {
+             // Add half the divisor for rounding away from zero (standard rounding)
+             finalPriceBigInt_multiplied_rounded = (finalPriceBigInt_temp + HALF_FINAL_DIVISOR) / FINAL_DISPLAY_DIVISOR;
+        } else {
+             // Subtract half the divisor for rounding away from zero (standard rounding for negative)
+             finalPriceBigInt_multiplied_rounded = (finalPriceBigInt_temp - HALF_FINAL_DIVISOR) / FINAL_DISPLAY_DIVISOR;
+        }
         
-        const isNegative = finalPriceBigInt_rounded < 0n;
-        const absoluteBigInt = isNegative ? -finalPriceBigInt_rounded : finalPriceBigInt_rounded;
+        // 3. Format final price (जो अब Price * 100 के रूप में एक पूर्णांक है)
+        // चूंकि अब कोई दशमलव नहीं है, हम इसे सीधे स्ट्रिंग में बदल सकते हैं.
         
-        const stringValue = absoluteBigInt.toString();
+        const finalPriceValue = finalPriceBigInt_multiplied_rounded.toString();
         
-        // Format to exactly 2 decimals (handling implicit precision 2 from BigInt * 100)
-        const finalPriceValue = (isNegative ? '-' : '') + (stringValue.length < 3 ? 
-            '0.' + stringValue.padStart(2, '0') : 
-            stringValue.slice(0, -2) + '.' + stringValue.slice(-2)
-        );
-        
-        // --- END OF FULL BigInt PRICE CALCULATION ---
+        // --- *100 MODIFICATION END ---
         
         quantityForRateDisplay.textContent = `(${combinedTotalValue})`;
         finalPriceDisplay.textContent = `${finalPriceValue}`;
         
         // NEW: FINAL PRICE WARNING LOGIC 
         // priceLength is checked against the final formatted string value (max 14 integer digits)
-        const priceIntegerPart = finalPriceValue.split('.')[0].replace('-', '');
+        const priceIntegerPart = finalPriceValue.replace('-', '');
         const priceLength = priceIntegerPart.length;
 
         if (priceLength > MAX_DIGITS_PRICE_WARNING) { 
@@ -907,4 +908,3 @@ ${problem}
     applyLanguage(storedLang); 
     updateCharCount(); 
 });
-
