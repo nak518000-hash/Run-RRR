@@ -840,9 +840,9 @@ document.addEventListener('DOMContentLoaded', () => {
              if (e.key === 'Enter') {
                  e.preventDefault();
                  if (deleteEndInput.value === '') {
-                     deleteLinesByRange();
-                 } else {
                      deleteEndInput.focus();
+                 } else {
+                     deleteLinesByRange();
                  }
              }
         });
@@ -887,7 +887,8 @@ document.addEventListener('DOMContentLoaded', () => {
                      element.placeholder = t[key];
                  } else if (element.id === 'add-line-btn') {
                      // Add Line Button is a special case for innerHTML (to keep the icon class)
-                     element.innerHTML = `<span class="icon">${t[key]}</span>`;
+                     element.innerHTML = `<span class="icon">+</span>`; // Keep '+' as an icon
+                     element.setAttribute('title', t.add_line_btn);
                  } else if (element.classList.contains('feedback-title')) {
                       // Feedback Title is handled by data-key
                       element.textContent = t[key];
@@ -1003,4 +1004,3 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
-
