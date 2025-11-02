@@ -1157,13 +1157,24 @@ body.dark-mode .add-line-btn:hover {
 }
 /* 🔑 END UPDATED (Dark Mode) */
 
-body.dark-mode .clear-button {
-    background-color: #ff9800;
-    color: #222; 
-    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+.clear-button {
+    background-color: #ff8c00; 
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8mm; 
+    cursor: pointer;
+    font-size: 16px; 
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    min-width: 70px; 
+    height: 44px; 
 }
-body.dark-mode .clear-button:hover {
-    background-color: #cc7a00;
+.clear-button:hover {
+    background-color: #e07b00;
+    transform: scale(1.02);
 }
 
 /* LINE DELETE SETTING DARK MODE - CUSTOMIZED (FIXED) */
@@ -1508,4 +1519,3 @@ body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
-
