@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // 🔑 NEW: Add Line Button Text
+            // 🔑 NEW: Add Line Button Text (अब HTML में उपयोग नहीं हो रहा है, लेकिन अनुवाद में रखा गया है)
             add_line_btn: 'पंक्ति जोड़ें',
             add_line_text: 'पंक्ति जोड़ें',
             
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // 🔑 NEW: Add Line Button Text
+            // 🔑 NEW: Add Line Button Text (अब HTML में उपयोग नहीं हो रहा है, लेकिन अनुवाद में रखा गया है)
             add_line_btn: 'Add Line',
             add_line_text: 'Add Line',
             
@@ -259,13 +259,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Remove trailing zeros (e.g., 5.00 -> 5)
-        // Ensure that for financial output like Price, we keep exactly 4 decimals (Removed the regex for Price formatting in updateCalculations)
         if (precision === 2) { 
              // Special case for Milk/Badhotri: remove trailing zeros
              result = result.replace(/(\.0+|0+)$/, '');
         }
         
-        // 🔑 MODIFICATION: For Price output (which is now BigInt/10000) ensure 4 decimal places.
+        // 🔑 MODIFICATION: For Price output (precision 4) ensure 4 decimal places.
         if (precision === 4) { 
             // 4 decimal places are required (e.g., 142.3456)
             if (!result.includes('.')) {
@@ -641,10 +640,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // 🔑 MODIFIED: Enter Key को नई लाइन जोड़ने के लिए बाध्य करना
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
-                addLine(); // Use the new addLine function
+                addLine(); // Use the updated addLine function
             }
         });
         
@@ -656,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return row;
     }
     
-    // 🔑 NEW FUNCTION: Add Line with check
+    // 🔑 UPDATED FUNCTION: Add Line with Empty Check and Focus
     function addLine() {
         const rows = tableBody.querySelectorAll('.input-row');
         const lastRow = rows[rows.length - 1];
@@ -665,13 +665,16 @@ document.addEventListener('DOMContentLoaded', () => {
              const milkInput = lastRow.querySelector('.milk-kg-input');
              const sampleInput = lastRow.querySelector('.sample-input');
              
-             // Check if both fields in the last row are empty or not
+             // Check if *both* fields in the last row are empty 
              const milkFilled = milkInput.value.trim() !== '';
              const sampleFilled = sampleInput.value.trim() !== '';
 
+             // अगर पिछली पंक्ति में दूध और सैंपल दोनों खाली हैं, तो चेतावनी दिखाएँ
              if (!milkFilled && !sampleFilled) {
                  const currentLang = languageSelect.value || 'hi';
                  showAlert(translations[currentLang].alert_message);
+                 // 🔑 महत्वपूर्ण: यदि खाली है, तो फ़ोकस को वापस पिछली पंक्ति पर लाएँ
+                 milkInput.focus();
                  return;
              }
         }
@@ -692,11 +695,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingRows = tableBody.querySelectorAll('.input-row');
         const currentCount = existingRows.length;
 
-        // 🔑 FIX: Ensure AT LEAST ONE row exists, and always re-index/recalculate
+        // 🔑 FIX: सुनिश्चित करें कि हमेशा AT LEAST ONE row मौजूद रहे
         if (currentCount === 0) {
             const newRow = createRow(1);
             tableBody.appendChild(newRow);
         } else {
+            // यदि रीसेट नहीं हो रहा है, तो केवल क्रमांक अपडेट करें
             updateSerialNumbers();
         }
 
@@ -753,11 +757,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSerialNumbers();
         updateCalculations();
         
-        // Ensure at least one row remains (already handled by the check above, but for safety)
+        // 🔑 MODIFIED: Ensure at least one row remains
         initializeTable(false);
     }
     
-    // 🔑 NEW: Add Line Button Listener
+    // 🔑 UPDATED: Add Line Button Listener
     if (addLineBtn) {
          addLineBtn.addEventListener('click', addLine);
     }
@@ -832,6 +836,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Language Change Listener
+    // ... (applyLanguage फ़ंक्शन को लोड करने के लिए यहाँ कोड होना चाहिए)
+    
+    // Placeholder function for language application (assuming it exists elsewhere or is missing)
+    function applyLanguage(lang) {
+        const t = translations[lang];
+        document.querySelectorAll('[data-key]').forEach(element => {
+            const key = element.dataset.key;
+            if (t[key]) {
+                 if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                     element.placeholder = t[key];
+                 } else {
+                     element.textContent = t[key];
+                 }
+            }
+        });
+        // Special case for select options
+        document.querySelectorAll('#language-select option').forEach(option => {
+             const key = option.dataset.key;
+             if (t[key]) {
+                 option.textContent = t[key];
+             }
+        });
+        document.title = t.app_title;
+        
+        // Re-initialize table to update placeholders/titles if language changes
+        initializeTable(false); 
+        updateCalculations();
+    }
+    // End Placeholder function
+    
     languageSelect.addEventListener('change', () => {
         const newLang = languageSelect.value;
         localStorage.setItem('appLanguage', newLang);
@@ -918,6 +952,6 @@ ${problem}
     applyLanguage(storedLang); 
     updateCharCount(); 
     
-    // 🔑 Fix: Initial table load is now called inside applyLanguage, but keeping it here for clarity.
+    // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
