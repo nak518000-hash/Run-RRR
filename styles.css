@@ -2,7 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * MODIFIED: Styles for Add Line Button added.
+ * MODIFIED: Styles for Add Line Button (Icon Only).
  */
 
 body {
@@ -69,36 +69,41 @@ body {
     line-height: 1;
 }
 
-/* 🔑 NEW: Add Line Button Styles */
+/* 🔑 UPDATED: Add Line Button Styles (Only Icon) */
 .add-line-btn {
-    background-color: #343a40; /* Black background */
+    background-color: #343a40; 
     color: white; 
     font-weight: bold; 
     border: none;
-    padding: 8px 10px;
-    border-radius: 8mm; 
+    padding: 8px; /* पैडिंग कम की गई */
+    border-radius: 50%; /* गोल बटन के लिए */
     cursor: pointer;
     font-size: 16px; 
     transition: background-color 0.2s, transform 0.2s;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     flex-shrink: 0; 
-    height: 44px; 
+    height: 44px; /* ऊँचाई */
+    width: 44px; /* चौड़ाई */
     display: flex;
     align-items: center;
-    gap: 5px; /* Space between icon and text */
-    min-width: 110px;
+    justify-content: center; /* आइकॉन को बीच में लाने के लिए */
+    min-width: 44px;
 }
 .add-line-btn .icon {
-    font-size: 24px;
+    font-size: 28px; /* आइकॉन को बड़ा दिखाने के लिए */
     line-height: 1;
-    color: #ff8c00; /* Orange plus icon */
+    color: #ff8c00; 
     font-weight: 900;
+}
+/* टेक्स्ट ओवरले को पूरी तरह से छुपाना */
+.add-line-btn .button-text-overlay {
+    display: none; 
 }
 .add-line-btn:hover {
     background-color: #23272b;
     transform: scale(1.02);
 }
-/* 🔑 END NEW */
+/* 🔑 END UPDATED */
 
 .clear-button {
     background-color: #ff8c00; 
@@ -1117,11 +1122,14 @@ body.dark-mode .settings-btn {
     color: #b0b0b0;
 }
 
-/* 🔑 NEW: Add Line Button Styles (Dark Mode) */
+/* 🔑 UPDATED: Add Line Button Styles (Dark Mode) - Icon Only */
 body.dark-mode .add-line-btn {
     background-color: #555; 
     color: #f0f0f0;
     box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+    width: 44px; 
+    height: 44px; 
+    min-width: 44px;
 }
 body.dark-mode .add-line-btn .icon {
     color: #ff9800; /* Orange plus icon */
@@ -1129,7 +1137,7 @@ body.dark-mode .add-line-btn .icon {
 body.dark-mode .add-line-btn:hover {
     background-color: #444;
 }
-/* 🔑 END NEW (Dark Mode) */
+/* 🔑 END UPDATED (Dark Mode) */
 
 body.dark-mode .clear-button {
     background-color: #ff9800;
