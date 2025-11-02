@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
     
-    // 🔑 NEW: Add Line Button Element
-    const addLineBtn = document.getElementById('add-line-btn');
+    // ❌ REMOVED: Add Line Button Element (अब केवल एंटर की से लाइन जुड़ेगी)
+    // const addLineBtn = document.getElementById('add-line-btn');
 
     // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
@@ -96,9 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // 🔑 NEW: Add Line Button Text (अब HTML में उपयोग नहीं हो रहा है, लेकिन अनुवाद में रखा गया है)
-            add_line_btn: 'पंक्ति जोड़ें',
-            add_line_text: 'पंक्ति जोड़ें',
+            // ❌ REMOVED: Add Line Button Text 
+            // add_line_btn: 'पंक्ति जोड़ें',
+            // add_line_text: 'पंक्ति जोड़ें',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'डेटा साफ़ करें',
@@ -156,9 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
             copy_link_text: '', 
             clear_btn: 'Clear', 
             
-            // 🔑 NEW: Add Line Button Text (अब HTML में उपयोग नहीं हो रहा है, लेकिन अनुवाद में रखा गया है)
-            add_line_btn: 'Add Line',
-            add_line_text: 'Add Line',
+            // ❌ REMOVED: Add Line Button Text 
+            // add_line_btn: 'Add Line',
+            // add_line_text: 'Add Line',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'Clear Data',
@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
              const milkInput = lastRow.querySelector('.milk-kg-input');
              const sampleInput = lastRow.querySelector('.sample-input');
              
-             // Check if *both* fields in the last row are empty 
+             // Check if *either* field in the last row is filled (only require one to be non-empty)
              const milkFilled = milkInput.value.trim() !== '';
              const sampleFilled = sampleInput.value.trim() !== '';
 
@@ -761,10 +761,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeTable(false);
     }
     
-    // 🔑 UPDATED: Add Line Button Listener
-    if (addLineBtn) {
-         addLineBtn.addEventListener('click', addLine);
-    }
+    // ❌ REMOVED: Add Line Button Listener
+    // if (addLineBtn) {
+    //      addLineBtn.addEventListener('click', addLine);
+    // }
     
     // Clear Button Listener to open modal
     if (clearAllBtn) {
