@@ -2,7 +2,7 @@
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
- * ✅ ADDED: Styles for Add Line Button.
+ * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  */
 
 body {
@@ -1092,6 +1092,40 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES START */
+/* ------------------------------------------------------------------ */
+.feedback-message-container {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff; /* White background for contrast */
+    border: 1px solid #ffc107; /* Light orange border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.feedback-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff8c00; /* Orange title for attention */
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ffc107;
+    padding-bottom: 5px;
+}
+
+.feedback-body {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    text-align: justify; /* Justify text for a cleaner look */
+}
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES END */
+/* ------------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES START 💥 */
 /* ------------------------------------------------------------------ */
 
@@ -1478,6 +1512,27 @@ body.dark-mode .custom-alert-panel #alert-ok-btn {
 body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
     background-color: #cc9900;
 }
+
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES START (DARK MODE) */
+/* ------------------------------------------------------------------ */
+body.dark-mode .feedback-message-container {
+    background-color: #333; /* Dark background */
+    border: 1px solid #ff7043; /* Darker orange border */
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .feedback-title {
+    color: #ffb74d; /* Light orange title */
+    border-bottom: 1px dashed #ff7043;
+}
+
+body.dark-mode .feedback-body {
+    color: #ccc; /* Light gray text */
+}
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES END (DARK MODE) */
+/* ------------------------------------------------------------------ */
 
 
 /* ------------------------------------------------------------------ */
