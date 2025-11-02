@@ -687,6 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    // 🛠️ FIX: initializeTable को अपडेट किया गया ताकि यह सुनिश्चित हो सके कि हमेशा एक रो रहे
     function initializeTable(reset = true) {
         if (reset) {
             tableBody.innerHTML = '';
@@ -699,6 +700,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentCount === 0) {
             const newRow = createRow(1);
             tableBody.appendChild(newRow);
+        } else if (reset) { 
+             // अगर reset = true है लेकिन रो मौजूद हैं, तो उन्हें हटाकर एक नई रो जोड़ें
+             tableBody.innerHTML = '';
+             const newRow = createRow(1);
+             tableBody.appendChild(newRow);
         } else {
             // यदि रीसेट नहीं हो रहा है, तो केवल क्रमांक अपडेट करें
             updateSerialNumbers();
