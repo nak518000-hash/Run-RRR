@@ -1252,10 +1252,13 @@ body.dark-mode .delete-lines-btn:hover {
 }
 /* LINE DELETE SETTING DARK MODE END */
 
-/* 🎯 FIXED ALIGNMENT: Dark Mode के लिए भी new-position को अपडेट करें */
+/* 🎯 FIXED ALIGNMENT: Add Line Button - New Position Styles */
 body.dark-mode .add-line-button.new-position {
+    width: 50px; 
+    height: 50px; 
+    font-size: 32px;
     align-self: center; /* ✅ इसे रो (Row) के वर्टिकल सेंटर में अलाइन करता है */
-    margin-bottom: 0;
+    margin-bottom: 0; 
 }
 body.dark-mode .main-page-settings-row {
      align-items: center; /* Dark Mode में भी वर्टिकली बीच में रहे */
