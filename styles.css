@@ -4,6 +4,7 @@
  * Special Focus: Enhanced Delete Lines Section (Customized as requested).
  * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  * 🔑 FIX: Added Noto Sans Devanagari font support.
+ * 🎯 FIXED: Add Line Button vertical alignment.
  */
 
 body {
@@ -126,13 +127,13 @@ body {
 /* RESTORED: Row for Delete Box (Single item) */
 .main-page-settings-row {
     display: flex;
-    /* 🔑 MODIFIED: आइटम्स को ऊपर से शुरू करने के बजाय बीच में लाने के लिए */
-    justify-content: space-between; /* Delete Container और Add Button के बीच जगह दें */
-    align-items: center; /* आइटम्स को वर्टिकली बीच में रखें */
+    /* 🎯 FIXED ALIGNMENT: आइटम्स को सेंटर में लाने के लिए */
+    justify-content: space-between; 
+    align-items: center; /* ✅ यह सुनिश्चित करता है कि '+' बटन, 'Delete Lines' बॉक्स के सेंटर में अलाइन हो */
     margin-bottom: 15px;
     gap: 10px; 
     flex-wrap: nowrap; 
-    height: 94px; /* ✅ FIXED HEIGHT: Delete Container की पूरी ऊँचाई के बराबर */
+    /* ❌ REMOVED: height: 94px; */ /* अब यह CSS flexbox के द्वारा ही नियंत्रित होगा */
 }
 
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (FIXED) 💥 */
@@ -143,7 +144,8 @@ body {
     width: 100%; 
     max-width: calc(100% - 60px); /* 44px बटन + 10px गैप + थोड़ा मार्जिन */
     flex-shrink: 1; 
-    margin-bottom: 0; /* कंटेनर की ऊँचाई को main-page-settings-row नियंत्रित करेगा */
+    margin-bottom: 0; 
+    /* ❌ REMOVED: height: 94px; */ /* अब यह CSS flexbox के द्वारा ही नियंत्रित होगा */
 }
 
 .delete-lines-section-label {
@@ -172,7 +174,7 @@ body {
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2); 
     
     box-sizing: border-box; 
-    height: 60px; 
+    height: 60px; /* 🔑 HEIGHT: यह 'हटाएँ' बटन और इनपुट के अलाइनमेंट के लिए है */
 }
 
 /* 🔑 FIX 2/4: justify-content: space-between सेट किया गया, margin-right जोड़ा */
@@ -255,13 +257,13 @@ body {
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END 💥 */
 
 
-/* 🔑 NEW: Add Line Button - New Position Styles */
+/* 🎯 FIXED ALIGNMENT: Add Line Button - New Position Styles */
 .add-line-button.new-position {
-    width: 50px; /* थोड़ा बड़ा */
-    height: 50px; /* थोड़ा बड़ा */
+    width: 50px; 
+    height: 50px; 
     font-size: 32px;
-    align-self: flex-end; /* Delete Button को 'हटाएँ' बटन की सीध में लाने के लिए */
-    margin-bottom: 0; /* यह सुनिश्चित करने के लिए कि यह delete-lines-section-main के नीचे के साथ अलाइन हो */
+    align-self: center; /* ✅ इसे रो (Row) के वर्टिकल सेंटर में अलाइन करता है */
+    margin-bottom: 0; 
 }
 
 
@@ -1250,9 +1252,9 @@ body.dark-mode .delete-lines-btn:hover {
 }
 /* LINE DELETE SETTING DARK MODE END */
 
-/* 🔑 FIX: Dark Mode के लिए भी new-position को अपडेट करें */
+/* 🎯 FIXED ALIGNMENT: Dark Mode के लिए भी new-position को अपडेट करें */
 body.dark-mode .add-line-button.new-position {
-    align-self: flex-end;
+    align-self: center; /* ✅ इसे रो (Row) के वर्टिकल सेंटर में अलाइन करता है */
     margin-bottom: 0;
 }
 body.dark-mode .main-page-settings-row {
