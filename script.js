@@ -71,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         hi: {
             app_title: 'Milk Scale App', 
-            serial: 'क्रम',
+            serial: 'क्रम', // पुराने हेडर के लिए (जो अब इस्तेमाल नहीं हो रहा है)
+            serial_short: 'क्रम', // 🔑 NEW: नया छोटा हेडर
             milk_kg: 'दूध (Kg)',
             sample: 'सैंपल',
             badhotri_gm: 'बढ़ोतरी (Gm)',
@@ -107,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'अंत',
             separator_to: 'से',
             delete_btn: 'हटाएँ', 
+            delete_icon: '&#128465;', // 🔑 NEW: आइकन के लिए कोड
             
             // Large Number Warning
             number_too_large: 'संख्या बहुत बड़ी है', 
@@ -140,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         en: {
             app_title: 'Milk Scale App', 
-            serial: 'Sr. No.',
+            serial: 'Sr. No.', // पुराने हेडर के लिए (जो अब इस्तेमाल नहीं हो रहा है)
+            serial_short: 'Sr.', // 🔑 NEW: नया छोटा हेडर
             milk_kg: 'Milk (Kg)',
             sample: 'Sample',
             badhotri_gm: 'Increment (Gm)',
@@ -175,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'End',
             separator_to: 'to',
             delete_btn: 'Delete', 
+            delete_icon: '&#128465;', // 🔑 NEW: आइकन के लिए कोड
             
             // Large Number Warning
             number_too_large: 'Number is very large', 
@@ -872,8 +876,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (t[key]) {
                  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                      element.placeholder = t[key];
-                 } else if (element.id === 'add-line-btn') {
-                     // ❌ REMOVED: Add Line Button is no longer present
+                 } else if (key === 'delete_icon') {
+                     // 🔑 NEW: Delete Icon के लिए innerHTML का उपयोग करें
+                     element.innerHTML = t[key];
                  } else if (element.classList.contains('feedback-title')) {
                       // Feedback Title is handled by data-key
                       element.textContent = t[key];
@@ -989,4 +994,3 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
-
