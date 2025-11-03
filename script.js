@@ -931,7 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentLang = languageSelect.value;
         const t = translations[currentLang];
         
-        const recipientEmail = 'milkscale.help.request@gmail.com'; 
+        const recipientEmail = 'milkscaleapp@gmail.com'; 
         
         const name = userNameInput.value.trim();
         const email = userEmailInput.value.trim();
