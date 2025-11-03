@@ -329,7 +329,8 @@ body {
     white-space: nowrap; 
 }
 
-.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 13%; } 
+/* 🎯 UPDATED: 'Sr.' के लिए 12% width */
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 12%; } 
 .header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 22%; } 
 .header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
 
