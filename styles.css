@@ -8,7 +8,7 @@
 
 body {
     /* 🔑 FIX: 'Noto Sans Devanagari' को प्राथमिक फ़ॉन्ट के रूप में जोड़ा गया */
-    font-family: 'Noto Sans Devanagari', 'Noto Sans', Arial, sans-serif;
+    font-family: 'Noto Sans Devangari', 'Noto Sans', Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 20px;
@@ -194,14 +194,14 @@ body {
 }
 
 
-/* 🔑 FIX: चौड़ाई 60px की गई */
+/* 🔑 MODIFIED: चौड़ाई 44px की गई और टेक्स्ट हटाकर आइकन के लिए स्टाइलिंग जोड़ी गई */
 .delete-lines-btn {
     background-color: #dc3545; 
     color: white; 
     font-weight: bold; 
     border: 3px solid #b30000; 
     
-    padding: 0 5px; 
+    padding: 0; /* padding हटाया */
     
     border-radius: 8mm; 
     cursor: pointer;
@@ -216,13 +216,26 @@ body {
     line-height: 1.2;
     box-sizing: border-box; 
     
-    width: 60px; /* चौड़ाई कम की गई */
+    width: 44px; /* चौड़ाई कम की गई */
     text-align: center;
+    
+    /* 🔑 NEW: Icon Styling */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .delete-lines-btn:hover {
     background-color: #c82333;
     transform: scale(1.02);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔑 NEW: Delete Icon Style */
+.delete-icon {
+    font-size: 24px; /* आइकन को बड़ा करें */
+    line-height: 1;
+    color: white;
+    font-family: Arial, sans-serif; /* सुनिश्चित करें कि यह मानक फ़ॉन्ट से आता है */
 }
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END (SIZE FIX) 💥 */
 
@@ -274,8 +287,9 @@ body {
     white-space: nowrap; 
 }
 
-.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 13%; } 
-.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 22%; } 
+/* 🔑 MODIFIED: Serial Number (क्रम) हेडर की चौड़ाई कम की गई */
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 10%; } 
+.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 25%; } 
 .header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
 
 .header-cell:nth-child(4), .cell:nth-child(4) { 
@@ -1185,18 +1199,18 @@ body.dark-mode .delete-serial-input:focus {
     box-shadow: 0 0 5px rgba(77, 166, 255, 0.7);
 }
 
-/* 🔑 FIX (DARK MODE): चौड़ाई 60px की गई */
+/* 🔑 MODIFIED (DARK MODE): चौड़ाई 44px की गई और टेक्स्ट हटाकर आइकन के लिए स्टाइलिंग जोड़ी गई */
 body.dark-mode .delete-lines-btn {
     background-color: #f05050; 
     border: 3px solid #8c0000;
     color: #f0f0f0;
     
-    padding: 0 5px; 
+    padding: 0; 
 
     height: 44px; 
     font-size: 18px; 
     
-    width: 60px; /* चौड़ाई कम की गई */
+    width: 44px; /* चौड़ाई कम की गई */
     text-align: center;
     
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
