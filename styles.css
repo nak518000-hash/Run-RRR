@@ -6,7 +6,7 @@
  * 🔑 FIX: Added Noto Sans Devanagari font support.
  * 🎯 FIXED: Add Line Button vertical alignment.
  * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
- * 🔑 FIX 3.0: DELETE LINES SECTION SIZE REDUCED.
+ * 🎯 FIXED 3.0: SERIAL NUMBER COLUMN WIDTH REDUCED TO 10% (For 'Sr.')
  */
 
 body {
@@ -329,9 +329,9 @@ body {
     white-space: nowrap; 
 }
 
-/* 🎯 UPDATED: 'Sr.' के लिए 12% width */
-.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 12%; } 
-.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 22%; } 
+/* 🎯 UPDATED: 'Sr.' के लिए 10% width */
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 10%; } 
+.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 25%; } 
 .header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
 
 .header-cell:nth-child(4), .cell:nth-child(4) { 
