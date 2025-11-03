@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const combinedTotalValueDisplay = document.getElementById('combined-total-value'); 
     const quantityForRateDisplay = document.getElementById('quantity-for-rate');
-    // const rateSectionTitle = document.getElementById('rate-section-title'); // Not used here
-    // const combinedLabelDisplay = document.querySelector('.total-combined .combined-label'); // Not used here
     
     // Settings elements
     const settingsModal = document.getElementById('settings-modal');
@@ -26,8 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
     
-    // ✅ NEW: Add Line Button Element
-    const addLineBtn = document.getElementById('add-line-btn');
+    // ❌ REMOVED: const addLineBtn = document.getElementById('add-line-btn');
 
     // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
@@ -57,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertOkBtn = document.getElementById('alert-ok-btn');
     
     // --- Core App Link and Text ---
-    // const APP_URL = 'https://your-domain.com/app-apk.apk'; // Not used in this version
     
     // Scrolling animation duration for individual badhotri boxes
     const SCROLL_ANIMATION_DURATION = '13.431s'; 
@@ -97,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert_message: 'कृपया अगली लाइन जोड़ने से पहले पिछली लाइन में दूध या सैंपल का मान भरें।',
             clear_btn: 'Clear', 
             
-            // ✅ NEW: Add Line Button Text 
-            add_line_btn: '+',
+            // ❌ REMOVED: add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'डेटा साफ़ करें',
@@ -166,8 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert_message: 'Please enter Milk or Sample value in the previous line before adding the next one.',
             clear_btn: 'Clear', 
             
-            // ✅ NEW: Add Line Button Text 
-            add_line_btn: '+',
+            // ❌ REMOVED: add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'Clear Data',
@@ -604,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // हम Price * 10000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
+        // हम Price * 1000000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
         // जिसके लिए 100n से भाग दिया जाता है (1000000n / 10000n = 100n).
 
         const FINAL_DISPLAY_DIVISOR = 100n; 
@@ -680,11 +674,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 🔑 MODIFIED: Enter Key to add new line or focus to milk input on new line
+        // ✅ MODIFIED: Enter Key logic - Only last row adds a new line
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
-                addLine(); 
+                const isLastRow = parseInt(row.dataset.serial) === tableBody.querySelectorAll('.input-row').length;
+                if (isLastRow) {
+                     addLine(); 
+                } else {
+                     // अगली लाइन के Milk इनपुट पर फ़ोकस करें
+                     const nextRow = row.nextElementSibling;
+                     if (nextRow) {
+                         nextRow.querySelector('.milk-kg-input').focus();
+                     }
+                }
             }
         });
         
@@ -697,8 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     /**
-     * ✅ MODIFIED FUNCTION: Add Line - Removed empty check.
-     * अब पिछली लाइन के खाली होने पर भी नई लाइन बन जाएगी.
+     * ✅ MODIFIED FUNCTION: Add Line - Auto add line now.
      */
     function addLine() {
         const rows = tableBody.querySelectorAll('.input-row');
@@ -789,11 +791,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeTable(false);
     }
     
-    // ✅ NEW: Add Line Button Listener
-    if (addLineBtn) {
-         addLineBtn.addEventListener('click', addLine);
-    }
-    
+    // ❌ REMOVED: Add Line Button Listener
+
     // Clear Button Listener to open modal
     if (clearAllBtn) {
         clearAllBtn.addEventListener('click', () => {
@@ -874,9 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                      element.placeholder = t[key];
                  } else if (element.id === 'add-line-btn') {
-                     // Add Line Button is a special case for innerHTML (to keep the icon class)
-                     element.innerHTML = `<span class="icon">+</span>`; // Keep '+' as an icon
-                     element.setAttribute('title', t.add_line_btn);
+                     // ❌ REMOVED: Add Line Button is no longer present
                  } else if (element.classList.contains('feedback-title')) {
                       // Feedback Title is handled by data-key
                       element.textContent = t[key];
@@ -992,3 +989,4 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
+
