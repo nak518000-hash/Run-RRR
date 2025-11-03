@@ -261,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * ✅ MODIFIED FUNCTION: Formats BigInt into a decimal string (BigInt / Divisor)
      * यह अब `finalPriceDisplay` (precision 4) के लिए ट्रेलिंग ज़ीरो हटाएगा.
+     * 🔑 FIX: Trailing zeros logic for precision 4 is now more robust.
      */
     function formatBigIntToNumberString(bigIntValue, precision = 2) {
         if (bigIntValue === 0n) return '0';
@@ -288,12 +289,22 @@ document.addEventListener('DOMContentLoaded', () => {
              result = result.replace(/(\.0+|0+)$/, '');
         }
         
-        // 🔑 MODIFICATION START: Trailing zeros removal for Final Price (precision 4)
+        // 🔑 MODIFICATION START (FIXED): Trailing zeros removal for Final Price (precision 4)
         if (precision === 4) { 
-             // Remove trailing zeros (e.g., 142.345600 -> 142.3456)
-             result = result.replace(/0+$/, ''); 
-             // Remove trailing decimal point if it exists (e.g., 142. -> 142)
-             result = result.replace(/\.$/, '');
+             
+             if (result.includes('.')) {
+                 // केवल दशमलव के बाद के हिस्से को साफ़ करें
+                 let parts = result.split('.');
+                 parts[1] = parts[1].replace(/0+$/, ''); // 0000 -> ''
+                 
+                 if (parts[1] === '') {
+                     // अगर दशमलव के बाद कुछ नहीं बचा
+                     result = parts[0]; 
+                 } else {
+                     // अगर कुछ बचा है
+                     result = parts[0] + '.' + parts[1];
+                 }
+             }
         }
         // 🔑 MODIFICATION END
         
@@ -981,4 +992,3 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
-
