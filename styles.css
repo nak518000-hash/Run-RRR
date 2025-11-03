@@ -1,14 +1,17 @@
 /*
  * FINAL STYLESHEET for Milk Scale App
  * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
- * Special Focus: Enhanced Delete Lines Section.
- * ❌ REMOVED: Styles for Add Line Button and Add Line Row.
+ * Special Focus: Enhanced Delete Lines Section (Customized as requested).
+ * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  * 🔑 FIX: Added Noto Sans Devanagari font support.
+ * 🎯 FIXED: Add Line Button vertical alignment.
+ * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
+ * 🔑 FIX 3.0: DELETE LINES SECTION SIZE REDUCED.
  */
 
 body {
     /* 🔑 FIX: 'Noto Sans Devanagari' को प्राथमिक फ़ॉन्ट के रूप में जोड़ा गया */
-    font-family: 'Noto Sans Devangari', 'Noto Sans', Arial, sans-serif;
+    font-family: 'Noto Sans Devanagari', 'Noto Sans', Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 20px;
@@ -57,7 +60,36 @@ body {
     flex-shrink: 0;
 }
 
-/* ❌ REMOVED: Add Line Button Styles (General) */
+/* ✅ MODIFIED: Add Line Button Styles (General) */
+.add-line-button {
+    background-color: #28a745; 
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 0; 
+    border-radius: 50%; 
+    cursor: pointer;
+    font-size: 28px; 
+    line-height: 1;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    width: 44px; 
+    height: 44px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-line-button:hover {
+    background-color: #1e7e34;
+    transform: scale(1.05);
+}
+.add-line-button .icon {
+    line-height: 1;
+    margin-top: -2px; 
+}
+/* ✅ END MODIFIED: Add Line Button Styles (General) */
+
 
 .settings-btn {
     background: none;
@@ -194,14 +226,14 @@ body {
 }
 
 
-/* 🔑 MODIFIED: चौड़ाई 44px की गई और टेक्स्ट हटाकर आइकन के लिए स्टाइलिंग जोड़ी गई */
+/* 🔑 FIX: चौड़ाई 60px की गई */
 .delete-lines-btn {
     background-color: #dc3545; 
     color: white; 
     font-weight: bold; 
     border: 3px solid #b30000; 
     
-    padding: 0; /* padding हटाया */
+    padding: 0 5px; 
     
     border-radius: 8mm; 
     cursor: pointer;
@@ -216,31 +248,42 @@ body {
     line-height: 1.2;
     box-sizing: border-box; 
     
-    width: 44px; /* चौड़ाई कम की गई */
+    width: 60px; /* चौड़ाई कम की गई */
     text-align: center;
-    
-    /* 🔑 NEW: Icon Styling */
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .delete-lines-btn:hover {
     background-color: #c82333;
     transform: scale(1.02);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
-
-/* 🔑 NEW: Delete Icon Style */
-.delete-icon {
-    font-size: 24px; /* आइकन को बड़ा करें */
-    line-height: 1;
-    color: white;
-    font-family: Arial, sans-serif; /* सुनिश्चित करें कि यह मानक फ़ॉन्ट से आता है */
-}
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END (SIZE FIX) 💥 */
 
 
-/* ❌ REMOVED: Add Line Row and Button Styles (Table Bottom Position) */
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position) */
+.add-line-row {
+    display: flex;
+    justify-content: flex-end; /* बटन को दाईं ओर ले जाएँ */
+    margin-top: 10px; /* टेबल से थोड़ा मार्जिन */
+    margin-bottom: 15px; /* परिणाम सेक्शन से मार्जिन */
+    width: 100%;
+}
+
+.add-line-button.table-bottom-position {
+    /* 🔑 UPDATED Size: इसे थोड़ा बड़ा और प्रमुख बनाएँ */
+    width: 50px; 
+    height: 50px; 
+    font-size: 32px; 
+    flex-shrink: 0; 
+    
+    /* 🔑 MODIFIED: Day Mode में गहरे नीले रंग का उपयोग करें */
+    background-color: #007bff; /* Blue color for clear visibility */
+}
+
+.add-line-button.table-bottom-position:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05);
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles */
 
 
 /* --- Table Structure --- */
@@ -265,8 +308,7 @@ body {
 #table-body {
     max-height: 500px; 
     overflow-y: auto; 
-    /* ✅ MODIFIED: बटन हटाने के बाद मार्जिन को बढ़ाया गया */
-    margin-bottom: 15px; 
+    margin-bottom: 8px; 
     scrollbar-width: thin; 
     scrollbar-color: #007bff #f0f0f0; 
 }
@@ -287,9 +329,8 @@ body {
     white-space: nowrap; 
 }
 
-/* 🔑 MODIFIED: Serial Number (क्रम) हेडर की चौड़ाई कम की गई */
-.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 10%; } 
-.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 25%; } 
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 13%; } 
+.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 22%; } 
 .header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
 
 .header-cell:nth-child(4), .cell:nth-child(4) { 
@@ -1142,7 +1183,16 @@ body.dark-mode .header-buttons {
     gap: 10px;
 }
 
-/* ❌ REMOVED: Add Line Button Styles (General Dark Mode) */
+/* ✅ NEW: Add Line Button Styles (General Dark Mode) */
+body.dark-mode .add-line-button {
+    background-color: #5cb85c; 
+    color: #222; 
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+}
+body.dark-mode .add-line-button:hover {
+    background-color: #4aa44a;
+}
+/* ✅ END NEW: Add Line Button Styles (General Dark Mode) */
 
 body.dark-mode .settings-btn {
     color: #b0b0b0;
@@ -1199,18 +1249,18 @@ body.dark-mode .delete-serial-input:focus {
     box-shadow: 0 0 5px rgba(77, 166, 255, 0.7);
 }
 
-/* 🔑 MODIFIED (DARK MODE): चौड़ाई 44px की गई और टेक्स्ट हटाकर आइकन के लिए स्टाइलिंग जोड़ी गई */
+/* 🔑 FIX (DARK MODE): चौड़ाई 60px की गई */
 body.dark-mode .delete-lines-btn {
     background-color: #f05050; 
     border: 3px solid #8c0000;
     color: #f0f0f0;
     
-    padding: 0; 
+    padding: 0 5px; 
 
     height: 44px; 
     font-size: 18px; 
     
-    width: 44px; /* चौड़ाई कम की गई */
+    width: 60px; /* चौड़ाई कम की गई */
     text-align: center;
     
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
@@ -1225,7 +1275,15 @@ body.dark-mode .main-page-settings-row {
      justify-content: flex-start; /* Dark Mode में भी start अलाइनमेंट */
 }
 
-/* ❌ REMOVED: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+body.dark-mode .add-line-button.table-bottom-position {
+    background-color: #4da6ff; /* Dark Mode Blue */
+    color: #222; 
+}
+body.dark-mode .add-line-button.table-bottom-position:hover {
+    background-color: #388ae8;
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
 
 
 /* Table Header */
@@ -1236,8 +1294,6 @@ body.dark-mode .header-row {
 /* Scrollbar (Dark Mode) */
 body.dark-mode #table-body {
     scrollbar-color: #4da6ff #222; 
-    /* ✅ MODIFIED: बटन हटाने के बाद मार्जिन को बढ़ाया गया */
-    margin-bottom: 15px; 
 }
 body.dark-mode #table-body::-webkit-scrollbar-thumb {
     background-color: #4da6ff;
@@ -1374,15 +1430,15 @@ body.dark-mode .total-amount-box #final-price {
 /* 💥 NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
 body.dark-mode .total-amount-box.warning-price-large {
     background: linear-gradient(90deg, #ff7043, #f05050) !important; /* Darker Yellow/Orange to Red Gradient */
-    border: 3px solid #8c0000 !important; 
+    border: 3px solid #8c0000 !important; /* Dark Red Border */
 }
 
 body.dark-mode .total-amount-box.warning-price-large .rupee-large {
-    color: #fffacd !important; 
+    color: #fffacd !important; /* Light text for contrast */
 }
 
 body.dark-mode .total-amount-box.warning-price-large #final-price {
-    color: #fffacd !important; 
+    color: #fffacd !important; /* Light Yellow Warning Text */
 }
 /* 💥 END OF NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
 
