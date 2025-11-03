@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         en: {
             app_title: 'Milk Scale App', 
-            serial: 'Sr. No.',
+            serial: 'Sr.', // 🎯 UPDATED: 'Sr. No.' से बदलकर 'Sr.' किया गया
             milk_kg: 'Milk (Kg)',
             sample: 'Sample',
             badhotri_gm: 'Increment (Gm)',
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // ✅ NEW: Feedback Message
             feedback_message_title: '👋 Your feedback is our top priority!',
             feedback_message_body: `
-                If you encounter any **issues, technical errors (bugs), or missing features** while using this app, or if you have a **great new idea** to make it **even better**, please **do not hesitate** to tell us via the **'Contact Us' button** above.
+                If you encounter any **issues, technical errors (bugs), or missing features** while using this app, or if you have a **great new idea** to make it **even better**, please **do not hesitate** to tell us via the **'Contact Us' button'** above.
                 <br><br>
                 Our team takes every suggestion seriously and with respect. If we like your idea, we will try our best to implement it as soon as possible, and, if necessary, we will contact you for further detailed discussion.
                 <br><br>
