@@ -6,6 +6,7 @@
  * 🔑 FIX: Added Noto Sans Devanagari font support.
  * 🎯 FIXED: Add Line Button vertical alignment.
  * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
+ * 🔑 FIX 3.0: DELETE LINES SECTION SIZE REDUCED.
  */
 
 body {
@@ -128,24 +129,22 @@ body {
 .main-page-settings-row {
     display: flex;
     /* 🎯 FIXED ALIGNMENT: आइटम्स को सेंटर में लाने के लिए */
-    justify-content: space-between; 
+    justify-content: flex-start; 
     align-items: flex-start; /* 🎯 MODIFIED: अब flex-start, ताकि दोनों का top अलाइन हो */
     margin-bottom: 15px;
-    gap: 10px; 
+    gap: 15px; /* गैप को 15px किया गया */
     flex-wrap: nowrap; 
 }
 
-/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (FIXED) 💥 */
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (SIZE FIX) 💥 */
 .delete-lines-container {
     display: flex;
     flex-direction: column; 
-    /* 🔑 MODIFIED: Delete Container को ज़्यादा जगह दें, क्योंकि Add Button अब यहाँ नहीं है */
-    width: 100%; 
+    /* 🔑 FIX: चौड़ाई को कम करने के लिए flex-shrink को 0.75 पर सेट किया गया */
+    width: auto; 
     max-width: 100%; 
-    flex-shrink: 1; 
-    margin-bottom: 0; 
+    flex-shrink: 0.75; 
     
-    /* 🎯 NEW/MODIFIED: पैडिंग को एडजस्ट किया गया */
     padding-top: 3px; 
 }
 
@@ -163,12 +162,12 @@ body {
     text-transform: uppercase;
 }
 
-/* 🔑 FIX 1/4: justify-content: space-between सेट किया गया */
+/* 🔑 FIX: justify-content: flex-start किया गया ताकि कम चौड़ाई में सिकुड़ सके */
 .delete-lines-section-main {
     display: flex;
     align-items: center; 
-    justify-content: space-between; 
-    width: 100%; 
+    justify-content: flex-start; 
+    width: auto; /* अब width ऑटो रहेगी */
     
     padding: 8px 10px; 
     border-radius: 10mm; 
@@ -178,17 +177,17 @@ body {
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2); 
     
     box-sizing: border-box; 
-    height: 50px; /* 🎯 MODIFIED: 'हटाएँ' बटन और इनपुट के लिए कम ऊँचाई सेट की गई */
+    height: 50px; 
 }
 
-/* 🔑 FIX 2/4: justify-content: space-between सेट किया गया, margin-right जोड़ा */
+/* 🔑 FIX: justify-content को flex-start किया गया ताकि यह सिकुड़ जाए */
 .delete-controls {
     display: flex;
     align-items: center;
-    /* gap: 8px; */ /* Gap removed for more control */
-    width: 100%; 
-    justify-content: space-between; 
-    margin-right: 5px; 
+    gap: 8px; /* गैप फिर से जोड़ा गया */
+    width: auto; 
+    justify-content: flex-start; 
+    margin-right: 0; 
 }
 
 .range-separator {
@@ -196,17 +195,17 @@ body {
     font-weight: 900; 
     color: #ff8c00; 
     flex-shrink: 0;
-    margin: 0 5px;
+    margin: 0; /* मार्जिन हटाया */
 }
 
-/* 🔑 FIX 3/4: max-width और flex-shrink जोड़ा गया */
+/* 🔑 FIX: width को 40px किया गया ताकि यह छोटा दिखे */
 .delete-serial-input {
-    width: 50px; 
-    max-width: 30%; 
+    width: 40px; /* चौड़ाई कम की गई */
+    max-width: 40px; 
     min-width: 40px; 
     text-align: center;
-    margin: 0 4px; 
-    flex-shrink: 1; /* Allow to shrink if space is tight */
+    margin: 0; /* मार्जिन हटाया */
+    flex-shrink: 0; 
     
     border: 2px solid #ff8c00; 
     background-color: white;
@@ -214,7 +213,7 @@ body {
     font-weight: 700;
     padding: 0; 
     
-    height: 38px; /* 🎯 MODIFIED: ऊँचाई कम की गई */
+    height: 38px; 
     line-height: 38px; 
     border-radius: 8mm; 
     box-sizing: border-box; 
@@ -227,8 +226,7 @@ body {
 }
 
 
-/* --- MODIFIED: FIXED WIDTH FOR LANGUAGE CONSISTENCY (80px) --- */
-/* 🔑 FIX 4/4: margin-left: auto और margin-right: 5px हटाया गया */
+/* 🔑 FIX: चौड़ाई 60px की गई */
 .delete-lines-btn {
     background-color: #dc3545; 
     color: white; 
@@ -246,11 +244,11 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
     flex-shrink: 0;
     
-    height: 44px; /* 🎯 MODIFIED: ऊँचाई कम की गई (align with delete box height) */
+    height: 44px; 
     line-height: 1.2;
     box-sizing: border-box; 
     
-    width: 80px; 
+    width: 60px; /* चौड़ाई कम की गई */
     text-align: center;
 }
 .delete-lines-btn:hover {
@@ -258,20 +256,8 @@ body {
     transform: scale(1.02);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
-/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END 💥 */
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END (SIZE FIX) 💥 */
 
-
-/* ❌ REMOVED: Old Add Line Button new-position styles */
-/*
-.add-line-button.new-position {
-    width: 50px; 
-    height: 50px; 
-    font-size: 32px;
-    align-self: flex-start; 
-    margin-top: 15px; 
-    margin-bottom: 0; 
-}
-*/
 
 /* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position) */
 .add-line-row {
@@ -855,8 +841,6 @@ body {
     color: #007bff; 
 }
 
-/* --- Share App Styles Removed --- */
-
 .close-btn {
     position: absolute;
     top: 10px;
@@ -963,8 +947,6 @@ body {
 .email-icon { 
     font-size: 1.4em; 
 }
-
-/* User Count and Dark Mode Styles Removed */
 
 .small-input {
     width: 60px;
@@ -1080,7 +1062,6 @@ body {
     margin: 20px 0;
     font-weight: 500;
 }
-/* Removed .clear-icon-container and .clear-icon-danger */
 
 .clear-options-container {
     display: flex;
@@ -1226,48 +1207,49 @@ body.dark-mode .clear-button:hover {
     background-color: #cc7a00;
 }
 
-/* LINE DELETE SETTING DARK MODE - CUSTOMIZED (FIXED) */
+/* LINE DELETE SETTING DARK MODE - CUSTOMIZED (SIZE FIX) */
 body.dark-mode .delete-lines-container {
     margin-bottom: 0;
-    padding-top: 3px; /* 🎯 MODIFIED: Day mode के समान */
+    padding-top: 3px; 
 }
 
 body.dark-mode .delete-lines-section-label {
     color: #4da6ff; 
-    margin-bottom: 5px; /* 🎯 MODIFIED: Day mode के समान */
+    margin-bottom: 5px; 
 }
 
-/* 🔑 FIX (DARK MODE): justify-content: space-between सेट किया गया */
+/* 🔑 FIX (DARK MODE): justify-content: flex-start सेट किया गया */
 body.dark-mode .delete-lines-section-main {
      background-color: #332a2a; 
      border: 2px solid #ff7043; 
      box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2); 
      color: #f0f0f0; 
-     height: 50px; /* 🎯 MODIFIED: Day mode के समान */
-     justify-content: space-between; 
+     height: 50px; 
+     justify-content: flex-start; 
 }
 
 body.dark-mode .range-separator {
     color: #ff7043; 
 }
 
-/* 🔑 FIX (DARK MODE): max-width, flex-shrink, और margin जोड़ा गया */
+/* 🔑 FIX (DARK MODE): width को 40px किया गया */
 body.dark-mode .delete-serial-input {
     background-color: #444;
     color: #f0f0f0;
     border: 2px solid #ff7043; 
-    max-width: 30%; 
+    max-width: 40px; 
     min-width: 40px; 
-    flex-shrink: 1;
-    margin: 0 4px;
-    height: 38px; /* 🎯 MODIFIED: Day mode के समान */
+    width: 40px;
+    flex-shrink: 0;
+    margin: 0;
+    height: 38px; 
 }
 body.dark-mode .delete-serial-input:focus {
     border-color: #4da6ff; 
     box-shadow: 0 0 5px rgba(77, 166, 255, 0.7);
 }
 
-/* 🔑 FIX (DARK MODE): margin-left: auto और margin-right: 5px हटाया गया */
+/* 🔑 FIX (DARK MODE): चौड़ाई 60px की गई */
 body.dark-mode .delete-lines-btn {
     background-color: #f05050; 
     border: 3px solid #8c0000;
@@ -1275,10 +1257,10 @@ body.dark-mode .delete-lines-btn {
     
     padding: 0 5px; 
 
-    height: 44px; /* 🎯 MODIFIED: Day mode के समान */
+    height: 44px; 
     font-size: 18px; 
     
-    width: 80px; 
+    width: 60px; /* चौड़ाई कम की गई */
     text-align: center;
     
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
@@ -1288,19 +1270,9 @@ body.dark-mode .delete-lines-btn:hover {
 }
 /* LINE DELETE SETTING DARK MODE END */
 
-/* ❌ REMOVED: Old Add Line Button new-position styles */
-/*
-body.dark-mode .add-line-button.new-position {
-    width: 50px; 
-    height: 50px; 
-    font-size: 32px;
-    align-self: flex-start; 
-    margin-top: 15px; 
-    margin-bottom: 0; 
-}
-*/
 body.dark-mode .main-page-settings-row {
      align-items: flex-start; /* Dark Mode में भी top अलाइनमेंट */
+     justify-content: flex-start; /* Dark Mode में भी start अलाइनमेंट */
 }
 
 /* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
@@ -1618,4 +1590,3 @@ body.dark-mode .feedback-body {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
-
