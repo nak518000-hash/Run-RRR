@@ -5,6 +5,7 @@
  * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  * 🔑 FIX: Added Noto Sans Devanagari font support.
  * 🎯 FIXED: Add Line Button vertical alignment.
+ * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT with '+' button.
  */
 
 body {
@@ -129,11 +130,10 @@ body {
     display: flex;
     /* 🎯 FIXED ALIGNMENT: आइटम्स को सेंटर में लाने के लिए */
     justify-content: space-between; 
-    align-items: center; /* ✅ यह सुनिश्चित करता है कि '+' बटन, 'Delete Lines' बॉक्स के सेंटर में अलाइन हो */
+    align-items: flex-start; /* 🎯 MODIFIED: अब flex-start, ताकि दोनों का top अलाइन हो */
     margin-bottom: 15px;
     gap: 10px; 
     flex-wrap: nowrap; 
-    /* ❌ REMOVED: height: 94px; */ /* अब यह CSS flexbox के द्वारा ही नियंत्रित होगा */
 }
 
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (FIXED) 💥 */
@@ -145,7 +145,9 @@ body {
     max-width: calc(100% - 60px); /* 44px बटन + 10px गैप + थोड़ा मार्जिन */
     flex-shrink: 1; 
     margin-bottom: 0; 
-    /* ❌ REMOVED: height: 94px; */ /* अब यह CSS flexbox के द्वारा ही नियंत्रित होगा */
+    
+    /* 🎯 NEW/MODIFIED: पैडिंग को एडजस्ट किया गया */
+    padding-top: 3px; 
 }
 
 .delete-lines-section-label {
@@ -154,7 +156,10 @@ body {
     color: #007bff; /* Blue color for better prominence */
     font-weight: bold;
     flex-shrink: 0;
-    margin-bottom: 8px; 
+    
+    /* 🎯 MODIFIED: मार्जिन को एडजस्ट किया गया */
+    margin-bottom: 5px; 
+    
     padding-left: 5px; 
     text-transform: uppercase;
 }
@@ -174,7 +179,7 @@ body {
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2); 
     
     box-sizing: border-box; 
-    height: 60px; /* 🔑 HEIGHT: यह 'हटाएँ' बटन और इनपुट के अलाइनमेंट के लिए है */
+    height: 50px; /* 🎯 MODIFIED: 'हटाएँ' बटन और इनपुट के लिए कम ऊँचाई सेट की गई */
 }
 
 /* 🔑 FIX 2/4: justify-content: space-between सेट किया गया, margin-right जोड़ा */
@@ -210,8 +215,8 @@ body {
     font-weight: 700;
     padding: 0; 
     
-    height: 44px; 
-    line-height: 44px; 
+    height: 38px; /* 🎯 MODIFIED: ऊँचाई कम की गई */
+    line-height: 38px; 
     border-radius: 8mm; 
     box-sizing: border-box; 
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -242,7 +247,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
     flex-shrink: 0;
     
-    height: 48px; 
+    height: 44px; /* 🎯 MODIFIED: ऊँचाई कम की गई (align with delete box height) */
     line-height: 1.2;
     box-sizing: border-box; 
     
@@ -262,7 +267,8 @@ body {
     width: 50px; 
     height: 50px; 
     font-size: 32px;
-    align-self: center; /* ✅ इसे रो (Row) के वर्टिकल सेंटर में अलाइन करता है */
+    align-self: flex-start; /* 🎯 MODIFIED: Delete box के top से अलाइन करने के लिए */
+    margin-top: 3px; /* 🎯 NEW: delete-lines-container की padding-top से मेल खाने के लिए */
     margin-bottom: 0; 
 }
 
@@ -1196,10 +1202,12 @@ body.dark-mode .clear-button:hover {
 /* LINE DELETE SETTING DARK MODE - CUSTOMIZED (FIXED) */
 body.dark-mode .delete-lines-container {
     margin-bottom: 0;
+    padding-top: 3px; /* 🎯 MODIFIED: Day mode के समान */
 }
 
 body.dark-mode .delete-lines-section-label {
     color: #4da6ff; 
+    margin-bottom: 5px; /* 🎯 MODIFIED: Day mode के समान */
 }
 
 /* 🔑 FIX (DARK MODE): justify-content: space-between सेट किया गया */
@@ -1208,7 +1216,7 @@ body.dark-mode .delete-lines-section-main {
      border: 2px solid #ff7043; 
      box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2); 
      color: #f0f0f0; 
-     height: 60px; 
+     height: 50px; /* 🎯 MODIFIED: Day mode के समान */
      justify-content: space-between; 
 }
 
@@ -1225,6 +1233,7 @@ body.dark-mode .delete-serial-input {
     min-width: 40px; 
     flex-shrink: 1;
     margin: 0 4px;
+    height: 38px; /* 🎯 MODIFIED: Day mode के समान */
 }
 body.dark-mode .delete-serial-input:focus {
     border-color: #4da6ff; 
@@ -1239,7 +1248,7 @@ body.dark-mode .delete-lines-btn {
     
     padding: 0 5px; 
 
-    height: 48px; 
+    height: 44px; /* 🎯 MODIFIED: Day mode के समान */
     font-size: 18px; 
     
     width: 80px; 
@@ -1257,11 +1266,12 @@ body.dark-mode .add-line-button.new-position {
     width: 50px; 
     height: 50px; 
     font-size: 32px;
-    align-self: center; /* ✅ इसे रो (Row) के वर्टिकल सेंटर में अलाइन करता है */
+    align-self: flex-start; /* 🎯 MODIFIED: Dark mode में भी top से अलाइन करने के लिए */
+    margin-top: 3px; /* 🎯 NEW: delete-lines-container की padding-top से मेल खाने के लिए */
     margin-bottom: 0; 
 }
 body.dark-mode .main-page-settings-row {
-     align-items: center; /* Dark Mode में भी वर्टिकली बीच में रहे */
+     align-items: flex-start; /* Dark Mode में भी top अलाइनमेंट */
 }
 
 /* Table Header */
