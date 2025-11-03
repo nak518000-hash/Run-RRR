@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const combinedTotalValueDisplay = document.getElementById('combined-total-value'); 
     const quantityForRateDisplay = document.getElementById('quantity-for-rate');
+    // const rateSectionTitle = document.getElementById('rate-section-title'); // Not used here
+    // const combinedLabelDisplay = document.querySelector('.total-combined .combined-label'); // Not used here
     
     // Settings elements
     const settingsModal = document.getElementById('settings-modal');
@@ -24,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear Button Element
     const clearAllBtn = document.getElementById('clear-all-btn'); 
     
-    // ❌ REMOVED: const addLineBtn = document.getElementById('add-line-btn');
+    // ✅ NEW: Add Line Button Element
+    const addLineBtn = document.getElementById('add-line-btn');
 
     // Clear All Modal Elements
     const clearAllModal = document.getElementById('clear-all-modal'); 
@@ -54,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertOkBtn = document.getElementById('alert-ok-btn');
     
     // --- Core App Link and Text ---
+    // const APP_URL = 'https://your-domain.com/app-apk.apk'; // Not used in this version
     
     // Scrolling animation duration for individual badhotri boxes
     const SCROLL_ANIMATION_DURATION = '13.431s'; 
@@ -71,8 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         hi: {
             app_title: 'Milk Scale App', 
-            serial: 'क्रम', // पुराने हेडर के लिए (जो अब इस्तेमाल नहीं हो रहा है)
-            serial_short: 'क्रम', // 🔑 NEW: नया छोटा हेडर
+            serial: 'क्रम',
             milk_kg: 'दूध (Kg)',
             sample: 'सैंपल',
             badhotri_gm: 'बढ़ोतरी (Gm)',
@@ -94,7 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
             alert_message: 'कृपया अगली लाइन जोड़ने से पहले पिछली लाइन में दूध या सैंपल का मान भरें।',
             clear_btn: 'Clear', 
             
-            // ❌ REMOVED: add_line_btn: '+',
+            // ✅ NEW: Add Line Button Text 
+            add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'डेटा साफ़ करें',
@@ -108,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'अंत',
             separator_to: 'से',
             delete_btn: 'हटाएँ', 
-            delete_icon: '&#128465;', // 🔑 NEW: आइकन के लिए कोड
             
             // Large Number Warning
             number_too_large: 'संख्या बहुत बड़ी है', 
@@ -142,8 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         en: {
             app_title: 'Milk Scale App', 
-            serial: 'Sr. No.', // पुराने हेडर के लिए (जो अब इस्तेमाल नहीं हो रहा है)
-            serial_short: 'Sr.', // 🔑 NEW: नया छोटा हेडर
+            serial: 'Sr. No.',
             milk_kg: 'Milk (Kg)',
             sample: 'Sample',
             badhotri_gm: 'Increment (Gm)',
@@ -164,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             alert_message: 'Please enter Milk or Sample value in the previous line before adding the next one.',
             clear_btn: 'Clear', 
             
-            // ❌ REMOVED: add_line_btn: '+',
+            // ✅ NEW: Add Line Button Text 
+            add_line_btn: '+',
             
             // CLEAR MODAL KEYS 
             clear_modal_title: 'Clear Data',
@@ -178,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder_end: 'End',
             separator_to: 'to',
             delete_btn: 'Delete', 
-            delete_icon: '&#128465;', // 🔑 NEW: आइकन के लिए कोड
             
             // Large Number Warning
             number_too_large: 'Number is very large', 
@@ -678,20 +680,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // ✅ MODIFIED: Enter Key logic - Only last row adds a new line
+        // 🔑 MODIFIED: Enter Key to add new line or focus to milk input on new line
         sampleInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); 
-                const isLastRow = parseInt(row.dataset.serial) === tableBody.querySelectorAll('.input-row').length;
-                if (isLastRow) {
-                     addLine(); 
-                } else {
-                     // अगली लाइन के Milk इनपुट पर फ़ोकस करें
-                     const nextRow = row.nextElementSibling;
-                     if (nextRow) {
-                         nextRow.querySelector('.milk-kg-input').focus();
-                     }
-                }
+                addLine(); 
             }
         });
         
@@ -704,7 +697,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     /**
-     * ✅ MODIFIED FUNCTION: Add Line - Auto add line now.
+     * ✅ MODIFIED FUNCTION: Add Line - Removed empty check.
+     * अब पिछली लाइन के खाली होने पर भी नई लाइन बन जाएगी.
      */
     function addLine() {
         const rows = tableBody.querySelectorAll('.input-row');
@@ -795,8 +789,11 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeTable(false);
     }
     
-    // ❌ REMOVED: Add Line Button Listener
-
+    // ✅ NEW: Add Line Button Listener
+    if (addLineBtn) {
+         addLineBtn.addEventListener('click', addLine);
+    }
+    
     // Clear Button Listener to open modal
     if (clearAllBtn) {
         clearAllBtn.addEventListener('click', () => {
@@ -876,9 +873,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (t[key]) {
                  if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                      element.placeholder = t[key];
-                 } else if (key === 'delete_icon') {
-                     // 🔑 NEW: Delete Icon के लिए innerHTML का उपयोग करें
-                     element.innerHTML = t[key];
+                 } else if (element.id === 'add-line-btn') {
+                     // Add Line Button is a special case for innerHTML (to keep the icon class)
+                     element.innerHTML = `<span class="icon">+</span>`; // Keep '+' as an icon
+                     element.setAttribute('title', t.add_line_btn);
                  } else if (element.classList.contains('feedback-title')) {
                       // Feedback Title is handled by data-key
                       element.textContent = t[key];
