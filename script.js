@@ -689,33 +689,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     /**
-     * 🔑 UPDATED FUNCTION: Add Line with Empty Check and Focus
-     * + बटन पर क्लिक करने पर यही फ़ंक्शन चलता है।
+     * ✅ MODIFIED FUNCTION: Add Line - Removed empty check.
+     * अब पिछली लाइन के खाली होने पर भी नई लाइन बन जाएगी.
      */
     function addLine() {
         const rows = tableBody.querySelectorAll('.input-row');
-        const lastRow = rows[rows.length - 1];
         
-        // यदि कोई पंक्ति मौजूद है, तो जाँच करें
-        if (lastRow) {
-             const milkInput = lastRow.querySelector('.milk-kg-input');
-             const sampleInput = lastRow.querySelector('.sample-input');
-             
-             // जाँच करें कि क्या पिछली पंक्ति में 'दूध' या 'सैंपल' में से कोई भी भरा गया है
-             const milkFilled = milkInput.value.trim() !== '';
-             const sampleFilled = sampleInput.value.trim() !== '';
-
-             // यदि पिछली पंक्ति में दूध और सैंपल दोनों खाली हैं, तो चेतावनी दिखाएँ
-             if (!milkFilled && !sampleFilled) {
-                 const currentLang = languageSelect.value || 'hi';
-                 showAlert(translations[currentLang].alert_message);
-                 // 🔑 महत्वपूर्ण: यदि खाली है, तो फ़ोकस को वापस पिछली पंक्ति पर लाएँ
-                 milkInput.focus();
-                 return;
-             }
-        }
-        
-        // यदि पहली बार जोड़ रहे हैं या पिछली पंक्ति भरी हुई है, तो नई पंक्ति बनाएँ
+        // नई पंक्ति बनाएँ
         const newSerial = rows.length + 1; 
         const newRow = createRow(newSerial, true); // नई पंक्ति पर फ़ोकस करने के लिए true पास करें
         tableBody.appendChild(newRow);
