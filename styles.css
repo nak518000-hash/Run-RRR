@@ -268,7 +268,7 @@ body {
     height: 50px; 
     font-size: 32px;
     align-self: flex-start; /* 🎯 MODIFIED: Delete box के top से अलाइन करने के लिए */
-    margin-top: 3px; /* 🎯 NEW: delete-lines-container की padding-top से मेल खाने के लिए */
+    margin-top: 15px; /* 🎯 UPDATED: 10-12px नीचे लाने के लिए 3px से 15px किया गया */
     margin-bottom: 0; 
 }
 
@@ -557,7 +557,7 @@ body {
 .custom-text-box {
     width: 100%;
     word-break: break-word; 
-    overflow-wrap: break-word;
+    overflow-wrap: word-break;
     min-height: 50px; 
     height: auto;
     box-sizing: border-box; 
@@ -1267,7 +1267,7 @@ body.dark-mode .add-line-button.new-position {
     height: 50px; 
     font-size: 32px;
     align-self: flex-start; /* 🎯 MODIFIED: Dark mode में भी top से अलाइन करने के लिए */
-    margin-top: 3px; /* 🎯 NEW: delete-lines-container की padding-top से मेल खाने के लिए */
+    margin-top: 15px; /* 🎯 UPDATED: Day mode के समान अलाइनमेंट रखने के लिए 3px से 15px किया गया */
     margin-bottom: 0; 
 }
 body.dark-mode .main-page-settings-row {
@@ -1578,3 +1578,4 @@ body.dark-mode .feedback-body {
 /* ------------------------------------------------------------------ */
 /* 💥 DARK MODE STYLES END 💥 */
 /* ------------------------------------------------------------------ */
+
