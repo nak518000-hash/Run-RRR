@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // हम Price * 1000000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
+        // हम Price * 10000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
         // जिसके लिए 100n से भाग दिया जाता है (1000000n / 10000n = 100n).
 
         const FINAL_DISPLAY_DIVISOR = 100n; 
