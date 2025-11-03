@@ -5,7 +5,7 @@
  * ✅ ADDED: Styles for Add Line Button and Feedback Message.
  * 🔑 FIX: Added Noto Sans Devanagari font support.
  * 🎯 FIXED: Add Line Button vertical alignment.
- * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT with '+' button.
+ * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
  */
 
 body {
@@ -59,7 +59,7 @@ body {
     flex-shrink: 0;
 }
 
-/* ✅ MODIFIED: Add Line Button Styles */
+/* ✅ MODIFIED: Add Line Button Styles (General) */
 .add-line-button {
     background-color: #28a745; 
     color: white; 
@@ -78,7 +78,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* 🔑 NEW/MODIFIED: New Position (Optional base styles, mainly for size) */
 }
 .add-line-button:hover {
     background-color: #1e7e34;
@@ -88,7 +87,7 @@ body {
     line-height: 1;
     margin-top: -2px; 
 }
-/* ✅ END MODIFIED: Add Line Button Styles */
+/* ✅ END MODIFIED: Add Line Button Styles (General) */
 
 
 .settings-btn {
@@ -140,9 +139,9 @@ body {
 .delete-lines-container {
     display: flex;
     flex-direction: column; 
-    /* 🔑 MODIFIED: Delete Container को ज़्यादा जगह दें, लेकिन Add Button के लिए जगह छोड़ें */
+    /* 🔑 MODIFIED: Delete Container को ज़्यादा जगह दें, क्योंकि Add Button अब यहाँ नहीं है */
     width: 100%; 
-    max-width: calc(100% - 60px); /* 44px बटन + 10px गैप + थोड़ा मार्जिन */
+    max-width: 100%; 
     flex-shrink: 1; 
     margin-bottom: 0; 
     
@@ -262,15 +261,43 @@ body {
 /* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END 💥 */
 
 
-/* 🎯 FIXED ALIGNMENT: Add Line Button - New Position Styles */
+/* ❌ REMOVED: Old Add Line Button new-position styles */
+/*
 .add-line-button.new-position {
     width: 50px; 
     height: 50px; 
     font-size: 32px;
-    align-self: flex-start; /* 🎯 MODIFIED: Delete box के top से अलाइन करने के लिए */
-    margin-top: 15px; /* 🎯 UPDATED: 10-12px नीचे लाने के लिए 3px से 15px किया गया */
+    align-self: flex-start; 
+    margin-top: 15px; 
     margin-bottom: 0; 
 }
+*/
+
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position) */
+.add-line-row {
+    display: flex;
+    justify-content: flex-end; /* बटन को दाईं ओर ले जाएँ */
+    margin-top: 10px; /* टेबल से थोड़ा मार्जिन */
+    margin-bottom: 15px; /* परिणाम सेक्शन से मार्जिन */
+    width: 100%;
+}
+
+.add-line-button.table-bottom-position {
+    /* 🔑 UPDATED Size: इसे थोड़ा बड़ा और प्रमुख बनाएँ */
+    width: 50px; 
+    height: 50px; 
+    font-size: 32px; 
+    flex-shrink: 0; 
+    
+    /* 🔑 MODIFIED: Day Mode में गहरे नीले रंग का उपयोग करें */
+    background-color: #007bff; /* Blue color for clear visibility */
+}
+
+.add-line-button.table-bottom-position:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05);
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles */
 
 
 /* --- Table Structure --- */
@@ -1175,7 +1202,7 @@ body.dark-mode .header-buttons {
     gap: 10px;
 }
 
-/* ✅ NEW: Add Line Button Styles (Dark Mode) */
+/* ✅ NEW: Add Line Button Styles (General Dark Mode) */
 body.dark-mode .add-line-button {
     background-color: #5cb85c; 
     color: #222; 
@@ -1184,7 +1211,7 @@ body.dark-mode .add-line-button {
 body.dark-mode .add-line-button:hover {
     background-color: #4aa44a;
 }
-/* ✅ END NEW: Add Line Button Styles (Dark Mode) */
+/* ✅ END NEW: Add Line Button Styles (General Dark Mode) */
 
 body.dark-mode .settings-btn {
     color: #b0b0b0;
@@ -1261,18 +1288,31 @@ body.dark-mode .delete-lines-btn:hover {
 }
 /* LINE DELETE SETTING DARK MODE END */
 
-/* 🎯 FIXED ALIGNMENT: Add Line Button - New Position Styles */
+/* ❌ REMOVED: Old Add Line Button new-position styles */
+/*
 body.dark-mode .add-line-button.new-position {
     width: 50px; 
     height: 50px; 
     font-size: 32px;
-    align-self: flex-start; /* 🎯 MODIFIED: Dark mode में भी top से अलाइन करने के लिए */
-    margin-top: 15px; /* 🎯 UPDATED: Day mode के समान अलाइनमेंट रखने के लिए 3px से 15px किया गया */
+    align-self: flex-start; 
+    margin-top: 15px; 
     margin-bottom: 0; 
 }
+*/
 body.dark-mode .main-page-settings-row {
      align-items: flex-start; /* Dark Mode में भी top अलाइनमेंट */
 }
+
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+body.dark-mode .add-line-button.table-bottom-position {
+    background-color: #4da6ff; /* Dark Mode Blue */
+    color: #222; 
+}
+body.dark-mode .add-line-button.table-bottom-position:hover {
+    background-color: #388ae8;
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+
 
 /* Table Header */
 body.dark-mode .header-row {
