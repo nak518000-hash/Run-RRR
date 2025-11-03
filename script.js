@@ -258,7 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NEW FUNCTION: Formats BigInt into a decimal string (BigInt / Divisor)
+    /**
+     * ✅ MODIFIED FUNCTION: Formats BigInt into a decimal string (BigInt / Divisor)
+     * यह अब `finalPriceDisplay` (precision 4) के लिए ट्रेलिंग ज़ीरो हटाएगा.
+     */
     function formatBigIntToNumberString(bigIntValue, precision = 2) {
         if (bigIntValue === 0n) return '0';
         
@@ -280,25 +283,20 @@ document.addEventListener('DOMContentLoaded', () => {
             result = stringValue.slice(0, decimalIndex) + '.' + stringValue.slice(decimalIndex);
         }
         
-        // Remove trailing zeros (e.g., 5.00 -> 5)
+        // Remove trailing zeros for Milk/Badhotri/Combined (precision 2)
         if (precision === 2) { 
-             // Special case for Milk/Badhotri: remove trailing zeros
              result = result.replace(/(\.0+|0+)$/, '');
         }
         
-        // 🔑 MODIFICATION: For Price output (precision 4) ensure 4 decimal places.
+        // 🔑 MODIFICATION START: Trailing zeros removal for Final Price (precision 4)
         if (precision === 4) { 
-            // 4 decimal places are required (e.g., 142.3456)
-            if (!result.includes('.')) {
-                 result += '.0000';
-            } else {
-                 let parts = result.split('.');
-                 // Pad with zeros to 4 decimal places
-                 let paddedDecimal = (parts[1] || '').padEnd(4, '0').substring(0, 4);
-                 result = parts[0] + '.' + paddedDecimal;
-            }
+             // Remove trailing zeros (e.g., 142.345600 -> 142.3456)
+             result = result.replace(/0+$/, ''); 
+             // Remove trailing decimal point if it exists (e.g., 142. -> 142)
+             result = result.replace(/\.$/, '');
         }
-
+        // 🔑 MODIFICATION END
+        
         return isNegative ? `-${result}` : result;
     }
     
@@ -556,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hasWarning) {
              combinedTotalValueDisplay.innerHTML = `---${NBSP}Kg`;
              quantityForRateDisplay.textContent = `(---)`;
-             finalPriceDisplay.textContent = '0.0000'; // Updated for 4 decimal display
+             finalPriceDisplay.textContent = '0'; // Updated to 0 after trailing zero removal logic
              totalAmountBox.classList.remove('warning-price-large'); 
              return; 
         }
@@ -595,7 +593,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let finalPriceBigInt_temp = (combinedTotalBigInt * rateBigInt);
 
-        // 🔑 MODIFICATION: 4 दशमलव स्थान के लिए डिवीज़न में बदलाव
         // हम Price * 1000000 से Price * 10000 (4 दशमलव रुपये) चाहते हैं, 
         // जिसके लिए 100n से भाग दिया जाता है (1000000n / 10000n = 100n).
 
@@ -613,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // 3. Format final price (जो अब Price * 10000 के रूप में एक पूर्णांक है)
-        // Use precision 4 for the final display value
+        // Use precision 4 for the final display value (Trailing zeros removed inside function)
         const finalPriceValue = formatBigIntToNumberString(finalPriceBigInt_multiplied_rounded, 4);
         
         // 🔑 MODIFICATION END
@@ -984,3 +981,4 @@ ${problem}
     // 🔑 FIX: Initial table load is called to ensure at least one row exists
     initializeTable(false); 
 });
+
