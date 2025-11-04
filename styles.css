@@ -7,6 +7,7 @@
  * 🎯 FIXED: Add Line Button vertical alignment.
  * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
  * 🎯 FIXED 3.0: SERIAL NUMBER COLUMN WIDTH REDUCED TO 10% (For 'Sr.')
+ * 🚀 FIXED: Social Button Text Size
  */
 
 body {
@@ -901,7 +902,8 @@ body {
     color: white;
     transition: transform 0.2s, box-shadow 0.2s;
     flex-shrink: 0;
-    padding: 0;
+    /* 🔑 UPDATED: बाएँ/दाएँ पैडिंग को जोड़ा गया ताकि आइकॉन के लिए जगह बन सके */
+    padding: 0 10px 0 10px; 
     
     position: relative; 
 }
@@ -916,10 +918,18 @@ body {
     position: absolute;
     color: white; 
     font-weight: bold; 
-    font-size: 1.2em; 
+    /* 🔑 UPDATED: फ़ॉन्ट साइज़ 1.2em से 1.1em किया गया */
+    font-size: 1.1em; 
     z-index: 2; 
-    left: 20px; 
+    /* 🔑 UPDATED: लेफ्ट पोजीशन को 20px से 15px किया गया */
+    left: 15px; 
     padding-top: 2px; 
+    
+    /* 🔑 NEW: सुनिश्चित करता है कि टेक्स्ट एक ही लाइन में रहे */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 70%; /* अधिकतम चौड़ाई सेट की गई */
 }
 
 .icon-container-circle {
