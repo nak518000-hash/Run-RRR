@@ -152,7 +152,8 @@ body {
 .delete-lines-section-label {
     text-align: left;
     font-size: 16px; 
-    color: #007bff; /* Blue color for better prominence */
+    /* 🔑 UPDATED: Blue (#007bff) to Black (#333) */
+    color: #333; /* Black color for better prominence */
     font-weight: bold;
     flex-shrink: 0;
     
@@ -1265,7 +1266,8 @@ body.dark-mode .delete-lines-container {
 }
 
 body.dark-mode .delete-lines-section-label {
-    color: #4da6ff; 
+    /* 🔑 UPDATED: Dark Mode blue (#4da6ff) to Light Gray (#ccc) */
+    color: #ccc; 
     margin-bottom: 5px; 
 }
 
