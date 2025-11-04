@@ -1,675 +1,1665 @@
-/* --- Global Styles --- */
-:root {
-    --primary-color: #4CAF50; /* Green */
-    --secondary-color: #2196F3; /* Blue */
-    --accent-color: #FF9800; /* Orange */
-    --danger-color: #F44336; /* Red */
-    --background-light: #f9f9f9;
-    --background-dark: #fff;
-    --border-color: #ccc;
-    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
+/*
+ * FINAL STYLESHEET for Milk Scale App
+ * Includes: Core Layout, Table, Results, Modals, and complete Dark Mode.
+ * Special Focus: Enhanced Delete Lines Section (Customized as requested).
+ * ✅ ADDED: Styles for Add Line Button, Feedback Message, AND NEW SOCIAL BUTTONS.
+ * 🔑 FIX: Added Noto Sans Devanagari font support.
+ * 🎯 FIXED: Add Line Button vertical alignment.
+ * 🎯 FIXED 2.0: DELETE LINES TOP ALIGNMENT (Now that '+' button is moved).
+ * 🎯 FIXED 3.0: SERIAL NUMBER COLUMN WIDTH REDUCED TO 10% (For 'Sr.')
+ */
 
 body {
-    background-color: var(--background-light);
+    /* 🔑 FIX: 'Noto Sans Devanagari' को प्राथमिक फ़ॉन्ट के रूप में जोड़ा गया */
+    font-family: 'Noto Sans Devanagari', 'Noto Sans', Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
+    align-items: flex-start;
+    min-height: 10vh;
+    transition: background-color 0.3s;
 }
 
 .container {
     width: 100%;
-    max-width: 600px;
-    background-color: var(--background-dark);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    background-color: white;
     padding: 15px;
-    padding-bottom: 30px; 
-}
-
-/* --- Header --- */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-}
-
-.header h1 {
-    font-size: 24px;
-    color: var(--primary-color);
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    color: #333;
-    padding: 5px;
-}
-
-/* --- Rate Section --- */
-.rate-section {
-    background-color: #e3f2fd; /* Light Blue Background */
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: var(--box-shadow);
-}
-
-.rate-section label {
-    display: block;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1565C0; /* Darker Blue */
-    margin-bottom: 8px;
-}
-
-.rate-input-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.currency-symbol {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-right: 5px;
-}
-
-#rate-per-kg {
-    flex-grow: 1;
-    padding: 10px;
-    font-size: 20px;
-    border: 2px solid var(--secondary-color);
-    border-radius: 4px;
-    text-align: right;
-    font-weight: bold;
-}
-
-.rate-label {
-    font-size: 14px;
-    color: #555;
-    margin-left: 10px;
-}
-
-.total-amount-box {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 15px;
-    border-radius: 6px;
-    text-align: center;
-    font-size: 32px;
-    font-weight: bolder;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10mm;
     transition: background-color 0.3s;
 }
 
-.total-amount-box.warning-price-large {
-    background-color: var(--danger-color);
-    animation: pulse-red 0.5s infinite alternate;
-}
-
-/* --- Table Styles --- */
-.table-container {
-    overflow-x: auto;
-    margin-bottom: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: #fff;
-}
-
-.table-header, .input-row {
-    display: flex;
-    border-bottom: 1px solid #eee;
-    min-width: 450px; /* To prevent squishing on small screens */
-}
-
-.table-header {
-    background-color: var(--secondary-color);
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.table-body {
-    max-height: 300px; /* Scrollable area */
-    overflow-y: auto;
-}
-
-.cell {
-    padding: 8px 5px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Column Widths */
-.table-header .cell:nth-child(1), .input-row .cell:nth-child(1) { flex: 0.8; } /* Sr. No. */
-.table-header .cell:nth-child(2), .input-row .cell:nth-child(2) { flex: 1.5; } /* Milk */
-.table-header .cell:nth-child(3), .input-row .cell:nth-child(3) { flex: 1.5; } /* Sample */
-.table-header .cell:nth-child(4), .input-row .cell:nth-child(4) { flex: 2; }   /* Badhotri */
-.table-header .cell:nth-child(5), .input-row .cell:nth-child(5) { flex: 0.5; } /* Action (empty) */
-
-.input-row:nth-child(even) {
-    background-color: #f0f0f0;
-}
-
-.input-row:last-child {
-    border-bottom: none;
-}
-
-/* Input Fields */
-.input-row input {
-    width: 100%;
-    padding: 6px 4px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 15px;
-    text-align: center;
-}
-
-/* Badhotri Display Box */
-.badhotri-box {
-    width: 100%;
-    height: 100%;
-    min-height: 35px;
-    background-color: #fff;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid #eee;
-    position: relative;
-    padding: 0 5px;
-}
-
-.badhotri-box.static-box {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.badhotri-box.positive {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-.badhotri-box.negative {
-    color: var(--danger-color);
-    border-color: var(--danger-color);
-}
-
-.badhotri-box.highlight-border {
-    outline: 2px solid var(--accent-color);
-    outline-offset: -1px;
-}
-
-/* Scrolling Text for Large Numbers */
-.scrolling-text {
-    display: inline-block;
-    white-space: nowrap;
-    position: absolute;
-    left: 100%; /* Start off-screen to the right */
-    transform: translateX(0);
-}
-
-/* Marquee Animation */
-@keyframes marquee-badhotri {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-
-/* --- Action Bar --- */
-.action-bar {
+/* --- APP Header and Settings --- */
+.app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    gap: 10px; 
 }
 
-.add-line-btn {
+.app-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #007bff; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    flex-shrink: 1; 
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px; 
+    align-items: center;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
+}
+
+/* ✅ MODIFIED: Add Line Button Styles (General) */
+.add-line-button {
+    background-color: #28a745; 
+    color: white; 
+    font-weight: bold; 
     border: none;
-    font-size: 24px;
-    line-height: 1;
+    padding: 0; 
+    border-radius: 50%; 
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.2s;
-}
-
-.add-line-btn:hover {
-    background-color: #388E3C;
-}
-
-.delete-line-group {
+    font-size: 28px; 
+    line-height: 1;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    width: 44px; 
+    height: 44px; 
     display: flex;
     align-items: center;
-    flex-grow: 1;
-    gap: 5px;
+    justify-content: center;
 }
-
-.delete-line-group span {
-    font-size: 14px;
-    white-space: nowrap;
+.add-line-button:hover {
+    background-color: #1e7e34;
+    transform: scale(1.05);
 }
+.add-line-button .icon {
+    line-height: 1;
+    margin-top: -2px; 
+}
+/* ✅ END MODIFIED: Add Line Button Styles (General) */
 
-.delete-line-group input {
-    width: 50px;
+
+.settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
     padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    flex-shrink: 0; 
+}
+
+.settings-btn .icon {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.clear-button {
+    background-color: #ff8c00; 
+    color: white; 
+    font-weight: bold; 
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8mm; 
+    cursor: pointer;
+    font-size: 16px; 
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0; 
+    min-width: 70px; 
+    height: 44px; 
+}
+.clear-button:hover {
+    background-color: #e07b00;
+    transform: scale(1.02);
+}
+
+/* RESTORED: Row for Delete Box (Single item) */
+.main-page-settings-row {
+    display: flex;
+    /* 🎯 FIXED ALIGNMENT: आइटम्स को सेंटर में लाने के लिए */
+    justify-content: flex-start; 
+    align-items: flex-start; /* 🎯 MODIFIED: अब flex-start, ताकि दोनों का top अलाइन हो */
+    margin-bottom: 15px;
+    gap: 15px; /* गैप को 15px किया गया */
+    flex-wrap: nowrap; 
+}
+
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION START (SIZE FIX) 💥 */
+.delete-lines-container {
+    display: flex;
+    flex-direction: column; 
+    /* 🔑 FIX: चौड़ाई को कम करने के लिए flex-shrink को 0.75 पर सेट किया गया */
+    width: auto; 
+    max-width: 100%; 
+    flex-shrink: 0.75; 
+    
+    padding-top: 3px; 
+}
+
+.delete-lines-section-label {
+    text-align: left;
+    font-size: 16px; 
+    color: #007bff; /* Blue color for better prominence */
+    font-weight: bold;
+    flex-shrink: 0;
+    
+    /* 🎯 MODIFIED: मार्जिन को एडजस्ट किया गया */
+    margin-bottom: 5px; 
+    
+    padding-left: 5px; 
+    text-transform: uppercase;
+}
+
+/* 🔑 FIX: justify-content: flex-start किया गया ताकि कम चौड़ाई में सिकुड़ सके */
+.delete-lines-section-main {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start; 
+    width: auto; /* अब width ऑटो रहेगी */
+    
+    padding: 8px 10px; 
+    border-radius: 10mm; 
+    
+    background-color: #fff8f0; 
+    border: 2px solid #ff8c00; 
+    box-shadow: 0 4px 10px rgba(255, 140, 0, 0.2); 
+    
+    box-sizing: border-box; 
+    height: 50px; 
+}
+
+/* 🔑 FIX: justify-content को flex-start किया गया ताकि यह सिकुड़ जाए */
+.delete-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* गैप फिर से जोड़ा गया */
+    width: auto; 
+    justify-content: flex-start; 
+    margin-right: 0; 
+}
+
+.range-separator {
+    font-size: 18px; 
+    font-weight: 900; 
+    color: #ff8c00; 
+    flex-shrink: 0;
+    margin: 0; /* मार्जिन हटाया */
+}
+
+/* 🔑 FIX: width को 40px किया गया ताकि यह छोटा दिखे */
+.delete-serial-input {
+    width: 40px; /* चौड़ाई कम की गई */
+    max-width: 40px; 
+    min-width: 40px; 
+    text-align: center;
+    margin: 0; /* मार्जिन हटाया */
+    flex-shrink: 0; 
+    
+    border: 2px solid #ff8c00; 
+    background-color: white;
+    font-size: 18px; 
+    font-weight: 700;
+    padding: 0; 
+    
+    height: 38px; 
+    line-height: 38px; 
+    border-radius: 8mm; 
+    box-sizing: border-box; 
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.delete-serial-input:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+
+/* 🔑 FIX: चौड़ाई 60px की गई */
+.delete-lines-btn {
+    background-color: #dc3545; 
+    color: white; 
+    font-weight: bold; 
+    border: 3px solid #b30000; 
+    
+    padding: 0 5px; 
+    
+    border-radius: 8mm; 
+    cursor: pointer;
+    
+    font-size: 18px; 
+    
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    flex-shrink: 0;
+    
+    height: 44px; 
+    line-height: 1.2;
+    box-sizing: border-box; 
+    
+    width: 60px; /* चौड़ाई कम की गई */
+    text-align: center;
+}
+.delete-lines-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+/* 💥 CUSTOMIZATION FOCUS: LINE DELETE SECTION END (SIZE FIX) 💥 */
+
+
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position) */
+.add-line-row {
+    display: flex;
+    justify-content: flex-end; /* बटन को दाईं ओर ले जाएँ */
+    margin-top: 10px; /* टेबल से थोड़ा मार्जिन */
+    margin-bottom: 15px; /* परिणाम सेक्शन से मार्जिन */
+    width: 100%;
+}
+
+.add-line-button.table-bottom-position {
+    /* 🔑 UPDATED Size: इसे थोड़ा बड़ा और प्रमुख बनाएँ */
+    width: 50px; 
+    height: 50px; 
+    font-size: 32px; 
+    flex-shrink: 0; 
+    
+    /* 🔑 MODIFIED: Day Mode में गहरे नीले रंग का उपयोग करें */
+    background-color: #007bff; /* Blue color for clear visibility */
+}
+
+.add-line-button.table-bottom-position:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05);
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles */
+
+
+/* --- Table Structure --- */
+.header-row, .input-row {
+    display: flex;
     text-align: center;
     font-size: 14px;
+    margin-bottom: 4px;
 }
 
-.delete-btn-small {
-    padding: 5px 10px;
-    background-color: var(--danger-color);
+.header-row {
+    background-color: #007bff;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    flex-shrink: 0;
+    padding: 8px 0;
+    border-radius: 6mm;
+    margin-bottom: 8px;
+    font-weight: bold;
+    white-space: nowrap; 
+    overflow: hidden; 
 }
 
-.clear-all-btn {
-    padding: 8px 15px;
-    background-color: #607D8B; /* Blue Gray */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    flex-shrink: 0;
+#table-body {
+    max-height: 500px; 
+    overflow-y: auto; 
+    margin-bottom: 8px; 
+    scrollbar-width: thin; 
+    scrollbar-color: #007bff #f0f0f0; 
 }
+#table-body::-webkit-scrollbar {
+    width: 6px;
+}
+#table-body::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+.header-cell, .cell {
+    padding: 5px 2px;
+    box-sizing: border-box;
+    min-width: 10%; 
+    max-width: 45%; 
+    overflow: hidden; 
+    white-space: nowrap; 
+}
+
+/* 🎯 UPDATED: 'Sr.' के लिए 10% width */
+.header-cell:nth-child(1), .cell:nth-child(1) { flex-basis: 10%; } 
+.header-cell:nth-child(2), .cell:nth-child(2) { flex-basis: 25%; } 
+.header-cell:nth-child(3), .cell:nth-child(3) { flex-basis: 27%; } 
+
+.header-cell:nth-child(4), .cell:nth-child(4) { 
+    flex-basis: 38%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-weight: bold;
+    padding: 0; 
+    overflow: visible; 
+} 
+
+.header-cell:nth-child(5), .cell:nth-child(5) { flex-basis: 0%; padding: 0; } 
+
+
+.increment-box, .badhotri-box {
+    width: 100%; 
+    min-height: 40px; 
+    height: auto; 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    padding: 8px 10px; 
+    border-radius: 4mm; 
+    transition: background-color 0.3s, color 0.3s, border-color 0.1s; 
+    
+    font-size: 21.6px; 
+    color: #333;
+    border: 1px solid transparent;
+    box-sizing: border-box; 
+    
+    overflow: hidden; 
+    white-space: nowrap; 
+    position: relative; 
+}
+
+.badhotri-box.highlight-border {
+    border-color: #000000 !important; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4); 
+    transition: border-color 0.05s ease-out, box-shadow 0.05s ease-out; 
+}
+
+.scrolling-text {
+    display: inline-block;
+    padding-right: 0; 
+}
+
+/* 🔑 NEW CSS: Scrolling Badhotri */
+.badhotri-box:not(.static-box) .scrolling-text {
+    animation-name: marquee-badhotri;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite; 
+}
+
+@keyframes marquee-badhotri {
+    0% { transform: translateX(100%); } 
+    100% { transform: translateX(-95%); } 
+}
+/* 🔑 END NEW CSS: Scrolling Badhotri */
+
+.badhotri-box.static-box {
+    justify-content: center; 
+    overflow: hidden; 
+}
+.badhotri-box.static-box .scrolling-text {
+    animation: none !important;
+    padding-left: 0;
+    padding-right: 0;
+    transform: none !important;
+    text-align: center; 
+    width: 100%;
+}
+
+.increment-box.positive, .badhotri-box.positive {
+    background-color: #e6ffec; 
+    color: #1a7e37; 
+    border-color: #c8e6c9;
+}
+
+.increment-box.negative, .badhotri-box.negative {
+    background-color: #ffe6e6; 
+    color: #b73232; 
+    border-color: #f1b0b0;
+}
+
+.input-row input {
+    width: 98%; 
+    padding: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 6mm; 
+    text-align: center;
+    font-size: 18px; 
+    font-weight: bold;
+    color: #333;
+    min-height: 40px; 
+    height: auto;
+    box-sizing: border-box;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.input-row .milk-kg-input { border-color: #007bff; }
+.input-row .sample-input { border-color: #ffc107; }
 
 /* --- Results Section --- */
 .results-section {
     display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 10px;
-    padding: 15px;
-    background-color: var(--background-dark);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    flex-wrap: wrap;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    margin-top: 20px;
+    margin-bottom: 10px; 
+    text-align: center; 
+    gap: 15px; 
 }
 
-/* Total Box Styling */
-.result-box {
-    flex: 1;
-    min-width: 120px;
-    padding: 10px 5px;
-    border-radius: 6px;
-    text-align: center;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+
+.result-card {
+    flex-basis: calc(50% - 7.5px); 
+    width: calc(50% - 7.5px);
+    max-width: 50%; 
+    
+    padding: 10px 5px 15px 5px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white; 
+    border: 1px solid transparent; 
+    
+    position: relative; 
+    overflow: hidden;
+    
+    min-height: 100px; 
+    height: auto; 
+    
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center; 
+    justify-content: space-between; 
+    
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
 }
 
-.result-box .label {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
-    font-weight: 600;
+/* 🔑 TARGET CLASS: FULL WIDTH STACK FOR LARGE NUMBERS */
+.results-section.full-width-stack {
+    flex-direction: column; 
+    gap: 5px; /* Less gap when stacked */
 }
 
-.big-blue-text { color: var(--secondary-color); font-weight: bold; font-size: 20px; }
-.big-green-text { font-weight: bold; font-size: 20px; }
-.green-text { color: var(--primary-color); }
-.red-text { color: var(--danger-color); }
-
-.big-value {
-    font-size: 24px;
-    font-weight: bolder;
-    color: #333;
+.results-section.full-width-stack .result-card {
+    flex-basis: 100%; 
+    width: 100%;
+    max-width: 100%; 
+    margin-bottom: 5px; 
+    padding: 10px 10px 15px 10px; 
 }
 
-/* Combined Total Box specific style */
-.total-combined {
-    flex-basis: 100%; /* Take full width */
-    background-color: #fff3e0; /* Light Orange/Yellow */
-    border-color: var(--accent-color);
-    flex-direction: row;
+.total-milk-card {
+    order: 1; 
+    border-bottom: 8px solid #007bff; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 5px 0 #007bff1a; 
+}
+.total-increment-card {
+    order: 2; 
+    border-bottom: 8px solid #ffb300; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 5px 0 #ffb3001a; 
+}
+
+.result-card p:first-child { 
+    margin: 0; 
+    font-size: 20px; 
+    color: #555; 
+    font-weight: 500; 
+    position: relative; 
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
+    padding-top: 5px;
+    
+    transition: font-size 0.3s ease; 
+}
+.results-section.full-width-stack .result-card p:first-child { 
+    font-size: 26px; /* Bada hone par title bhi bada ho */
+}
+
+.result-value { 
+    font-size: 35px; 
+    font-weight: 900; 
+    margin: 5px 0 0 0; 
+    width: 100%; 
+    box-sizing: border-box;
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal !important; 
+    
+    min-height: 35px; 
+    height: auto; 
+    position: relative; 
+    z-index: 1;
+    line-height: 1.1; 
+    
+    transition: color 0.3s ease; 
+    
+    text-align: center; 
+}
+
+.big-blue-text { color: #007bff; } 
+.big-green-text { color: #28a745; } 
+
+.green-text { color: #28a745; } 
+.red-text { color: #dc3545; } 
+
+
+/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING (BADHOTRI WARNING) 💥 */
+.warning-text-large {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #dc3545 !important; /* Red color for warning */
+    word-break: normal !important; 
+    overflow-wrap: normal !important;
+    white-space: normal !important; 
+    line-height: 1.2 !important; 
+    padding: 5px !important;
+    margin-top: 10px !important;
+    /* Ensure height is sufficient for warning text, especially in stacked mode */
+    min-height: 50px !important; 
+    display: flex; /* Centering the text */
     align-items: center;
     justify-content: center;
+    text-align: center;
+}
+/* 💥 END OF NEW CSS CLASS FOR LARGE NUMBER WARNING (BADHOTRI WARNING) 💥 */
+
+
+/* --- Combined Total --- */
+.custom-text-box {
+    width: 100%;
+    word-break: break-word; 
+    overflow-wrap: word-break;
+    min-height: 50px; 
+    height: auto;
+    box-sizing: border-box; 
+}
+
+.total-combined {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px 15px; 
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 24px; 
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #c3e6cb;
+    
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    min-height: 80px; 
+    
+    box-sizing: border-box; 
 }
 
 .total-combined .combined-label {
-    font-size: 16px;
-    margin-right: 5px;
-    color: #333;
+    display: block; 
+    line-height: 1.2;
+    font-size: 22px; 
+    color: #0d421d; 
+    margin-bottom: 5px;
 }
 
-/* Warning for Large Numbers in Totals */
-.warning-text-large {
-    font-size: 14px;
-    color: var(--danger-color);
+.total-combined .combined-value {
+    display: block;
+    line-height: 1.2;
+    font-size: 30px; 
+    color: #155724;
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal; 
+}
+
+
+/* --- Rate Section --- */
+.rate-section-header {
+    background-color: #fff3cd; 
+    padding: 10px 15px 5px 15px; 
+    margin: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border: 1px solid #ffeeba;
+    border-bottom: none;
+    box-sizing: border-box;
+}
+
+.rate-section-header h3 {
+    margin: 0;
+    text-align: center; 
+    font-size: 32px; 
+    color: #ff8c00; 
     font-weight: bold;
-    animation: pulse-red 0.5s infinite alternate;
+    white-space: normal; 
+    word-break: break-word; 
 }
 
-/* Layout for very large numbers (Stacking) */
-.results-section.full-width-stack {
-    flex-direction: column;
-    gap: 15px;
-}
-.results-section.full-width-stack .result-box {
-    min-width: unset;
-    flex: none;
-    flex-basis: auto;
-}
-.results-section.full-width-stack .total-combined {
-    flex: none;
+.rate-section {
+    background-color: #fff3cd;
+    padding: 15px 15px 20px 15px; 
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid #ffeeba;
+    border-right: 1px solid #ffeeba;
+    border-bottom: 1px solid #ffeeba;
+    border-top: none; 
+    text-align: center;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin-top: 0; 
+    margin-bottom: 20px; 
 }
 
+.rate-calculation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%; 
+}
 
-/* --- Modal Styles --- */
+.rate-quantity-box {
+    width: 180px; 
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    word-break: break-word; 
+    overflow-wrap: break-word;
+    height: auto;
+    min-height: 40px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; 
+    
+    font-size: 1.2em; 
+}
+
+.orange-button {
+    background-color: #ff8c00; 
+    color: white; 
+    font-weight: bold; 
+    border: 2px solid #e07b00;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#rate-per-kg {
+    width: 64px; 
+    padding: 10px;
+    border: 2px solid #ffc107;
+    border-radius: 6mm;
+    text-align: center;
+    font-size: 18px;
+    margin: 0 10px;
+    flex-shrink: 0;
+}
+#rate-per-kg::placeholder {
+    color: #555; 
+    opacity: 1; 
+}
+
+/* 🔑 MODIFIED: Total Amount Box Style - Match Blue/Green Display (Day Mode) */
+.total-amount-box {
+    background: linear-gradient(90deg, #007bff, #28a745); /* Same as .blue-green-display */
+    color: white;
+    padding: 8px 0;
+    border-radius: 12px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: flex-start;
+    margin-top: 10px; 
+    width: 100%; 
+    box-sizing: border-box;
+    min-height: 45px;
+    height: auto; 
+    
+    border: 3px solid #0056b3; /* Darker blue for border */
+    box-shadow: none; 
+    transition: background 0.3s, border 0.3s; /* Transition for warning */
+}
+
+.rupee-large {
+    font-size: 2.1em; 
+    margin-right: 8px; 
+    flex-shrink: 0;
+    padding-left: 15px;
+    color: white; 
+    line-height: 1; 
+    vertical-align: middle; 
+    transform: translateY(0); 
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s; /* Transition for warning */
+}
+
+.total-amount-box #final-price {
+    font-size: 2.2em; 
+    flex-grow: 1; 
+    text-align: center; 
+    word-break: break-word; 
+    overflow-wrap: break-word;
+    white-space: normal; 
+    min-height: 48px;
+    padding-right: 15px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); 
+    
+    padding-top: 0; 
+    padding-bottom: 0; 
+    height: auto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    transition: color 0.3s, font-size 0.3s; /* Transition for warning */
+}
+
+/* 💥 NEW CSS: PRICE WARNING STYLE 💥 */
+.total-amount-box.warning-price-large {
+    background: linear-gradient(90deg, #ffc107, #dc3545) !important; /* Yellow to Red Gradient */
+    border: 3px solid #8c0000 !important; /* Dark Red Border */
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.total-amount-box.warning-price-large .rupee-large {
+    color: #333 !important; /* Dark text for contrast */
+}
+
+.total-amount-box.warning-price-large #final-price {
+    font-size: 1.4em !important; /* Smaller font for warning text */
+    color: #8c0000 !important; /* Dark Red Warning Text */
+    font-weight: bold;
+    text-shadow: none;
+    padding: 0 10px;
+    text-align: center;
+    justify-content: center;
+}
+/* 💥 END OF NEW CSS: PRICE WARNING STYLE 💥 */
+
+
+/* --- Modal (Settings & Contact Us) Styles --- */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
-    z-index: 20;
+    z-index: 10;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 10% auto; /* 10% from the top and centered */
+    margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 450px;
-    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
 }
 
-.modal-content.small-modal {
-    max-width: 350px;
-    text-align: center;
+.settings-panel-light {
+    background-color: #fff5e6; 
+    border: 1px solid #ffc107; 
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+.settings-panel-light h2 {
+    color: #ff9800; 
+    border-bottom: 2px solid #ff9800;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.settings-panel-light .close-btn {
+    color: #ff4500; 
+}
+
+
+.blue-panel {
+    background-color: #e6f7ff; 
+    border: 1px solid #90caf9; 
+}
+.blue-panel h2 {
+    color: #007bff; 
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.blue-panel .close-btn {
+    color: #007bff; 
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 40px; 
     font-weight: bold;
     cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-}
-
-/* --- Settings/Contact Form Styles --- */
-.modal-content h2 {
-    color: var(--secondary-color);
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    line-height: 1;
 }
 
 .setting-item {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-.setting-item label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #333;
-}
-
-#language-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.secondary-action-btn {
-    width: 100%;
-    padding: 10px 15px;
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s;
-}
-.secondary-action-btn:hover {
-    background-color: #E68900;
-}
-
-/* Help Form specific styles */
-#help-form input[type="text"],
-#help-form input[type="email"],
-#help-form input[type="tel"],
-#help-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    resize: vertical;
-}
-
-#help-form button[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 15px;
-    transition: background-color 0.2s;
-}
-#help-form button[type="submit"]:hover {
-    background-color: #388E3C;
-}
-
-.char-count {
-    text-align: right;
-    font-size: 12px;
-    color: #777;
-    margin-top: -5px;
-    margin-bottom: 10px;
-}
-
-.feedback-message {
-    background-color: #fffbe6;
-    border: 1px solid #ffeb3b;
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-.feedback-message h3 {
-    color: #FFC107;
-    font-size: 16px;
-    margin-bottom: 5px;
-    border: none;
-    padding: 0;
-}
-.feedback-message p {
-    font-size: 14px;
-    color: #333;
-    line-height: 1.4;
-}
-
-/* Clear Modal Action Buttons */
-.modal-actions {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background-color: white; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd; 
+    color: #333;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.settings-panel-light .bordered-item {
+    border: 1px solid #ff9800; 
+}
+
+.setting-item.no-border-item {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 5px 0; 
+    margin-bottom: 4px; 
+}
+
+.icon-with-text-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.icon-button,
+.social-icon-button { /* 🚀 NEW CLASS ADDED 🚀 */
+    width: 100%; 
+    height: 60px; 
+    border-radius: 30px; 
+    border: 3px solid; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    font-size: 24px; 
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+    padding: 0;
+    
+    position: relative; 
+}
+
+.icon-button:hover,
+.social-icon-button:hover { /* 🚀 NEW CLASS ADDED 🚀 */
+    transform: scale(1.03); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.button-text-overlay {
+    position: absolute;
+    color: white; 
+    font-weight: bold; 
+    font-size: 1.2em; 
+    z-index: 2; 
+    left: 20px; 
+    padding-top: 2px; 
+}
+
+.icon-container-circle {
+    width: 44px; 
+    height: 44px; 
+    border-radius: 50%;
+    background-color: #FF8C00; 
+    border: 3px solid #FFD700; 
+    display: flex;
+    align-items: center;
     justify-content: center;
+    position: absolute;
+    right: 10px; 
+    z-index: 2;
+    box-shadow: none; 
+}
+
+.green-icon-btn {
+    background-color: #28a745; 
+    border-color: #1e7e34; 
+}
+
+.blue-icon-btn {
+    background-color: #007bff; 
+    border-color: #0056b3; 
+}
+
+.email-icon { 
+    font-size: 1.4em; 
+}
+
+.small-input {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4mm;
+    font-size: 16px; 
+}
+
+/* 🚀 NEW SOCIAL BUTTON STYLES START 🚀 */
+.whatsapp-btn {
+    background-color: #25D366; /* WhatsApp Green */
+    border-color: #1EBE57;
+}
+.whatsapp-btn .icon-container-circle {
+    background-color: white; 
+    border: 3px solid #1EBE57;
+    color: #25D366;
+}
+.whatsapp-icon {
+    font-size: 1.4em; 
+}
+
+.telegram-group-btn {
+    background-color: #0088CC; /* Telegram Blue */
+    border-color: #006699;
+}
+.telegram-group-btn .icon-container-circle {
+    background-color: white; 
+    border: 3px solid #006699;
+    color: #0088CC;
+}
+.telegram-icon {
+    font-size: 1.2em; 
+}
+
+.telegram-channel-btn {
+    background-color: #00A6CC; /* Slightly lighter Telegram Blue */
+    border-color: #007A99;
+}
+.telegram-channel-btn .icon-container-circle {
+    background-color: white; 
+    border: 3px solid #007A99;
+    color: #00A6CC;
+}
+/* 🚀 NEW SOCIAL BUTTON STYLES END 🚀 */
+
+
+/* --- Form Styles (Contact Us/Help Center) --- */
+
+#help-form {
+    display: flex;
+    flex-direction: column;
     gap: 15px;
     margin-top: 20px;
 }
-.modal-actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: opacity 0.2s;
-}
-.modal-actions button:hover {
-    opacity: 0.8;
-}
 
-.primary-btn {
-    background-color: var(--primary-color);
-    color: white;
-}
-.secondary-btn {
-    background-color: #ccc;
-    color: #333;
-}
-.delete-confirm-btn {
-    background-color: var(--danger-color);
-}
-
-/* --- Pulse Animation for Warnings --- */
-@keyframes pulse-red {
-    0% { box-shadow: 0 0 5px rgba(244, 67, 54, 0.7); }
-    100% { box-shadow: 0 0 10px rgba(244, 67, 54, 1); }
-}
-
-/* --- NEW SOCIAL BUTTON STYLES --- */
-
-/* Separator Line */
-.settings-separator {
-    border: 0;
-    height: 1px;
-    background-color: #ddd; /* Light gray line */
-    margin: 15px 0;
-}
-
-.social-buttons-group {
-    /* To hold the three buttons */
+.form-group {
     display: flex;
     flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #007bff; 
+}
+
+#help-form input:not([type="submit"]), 
+#problemDescription { 
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 6mm;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    background-color: white; 
+    
+    font-family: Arial, sans-serif; 
+}
+
+#help-form input:focus, #problemDescription:focus {
+    border-color: #0056b3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.textarea-group {
+    position: relative;
+}
+
+#problemDescription {
+    resize: none;
+    min-height: 150px;
+    max-height: 300px;
+}
+
+.char-count { 
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    z-index: 5;
+}
+
+.submit-btn {
+    align-self: flex-end; 
+    width: 120px; 
+    background-color: #28a745; 
+    color: white;
+    padding: 10px 15px; 
+    border: none;
+    border-radius: 6mm;
+    font-size: 16px; 
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+    background-color: #1e7e34;
+}
+
+/* --- CLEAR ALL MODAL STYLES (MODIFIED) --- */
+
+.clear-panel-yellow {
+    background-color: #fffacd; /* Light Yellow Color */
+    border: 1px solid #ffc107; /* Warning Yellow */
+    text-align: center;
+}
+.clear-panel-yellow h2 {
+    color: #ff9800; /* Darker Orange/Yellow Title */
+    border-bottom: 2px solid #ff9800;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+.clear-panel-yellow .close-btn {
+    color: #ff9800; 
+}
+.clear-warning-text {
+    font-size: 18px;
+    color: #555;
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+.clear-options-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-btn {
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 6mm;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+}
+.modal-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.cancel-btn {
+    background-color: #6c757d; /* Grey */
+    color: white;
+}
+.confirm-btn {
+    /* Uses .red-button styles from existing CSS */
+    background-color: #dc3545 !important;
+    border: 3px solid #b30000;
+    color: white;
+}
+
+/* 💥 NEW: CUSTOM ALERT MODAL STYLE 💥 */
+.custom-alert-panel {
+    /* light yellow color from clear-panel-yellow */
+    background-color: #fffacd !important; 
+    border: 3px solid #ff9800 !important; /* Orange Border */
+    text-align: center;
+    max-width: 350px !important;
+}
+
+.custom-alert-panel .close-btn {
+    color: #ff9800 !important; 
+}
+
+.custom-alert-panel #alert-message-text {
+    font-size: 18px;
+    color: #333; /* Darker text for readability */
+    margin: 10px 0 20px 0;
+    font-weight: 600;
+}
+
+.custom-alert-panel #alert-ok-btn {
+    background-color: #ff9800; /* Orange OK button */
+    border: none;
+    color: white;
+}
+.custom-alert-panel #alert-ok-btn:hover {
+    background-color: #cc7a00;
+}
+
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES START */
+/* ------------------------------------------------------------------ */
+.feedback-message-container {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff; /* White background for contrast */
+    border: 1px solid #ffc107; /* Light orange border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.feedback-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff8c00; /* Orange title for attention */
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ffc107;
+    padding-bottom: 5px;
+}
+
+.feedback-body {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    text-align: justify; /* Justify text for a cleaner look */
+}
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES END */
+/* ------------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------------------ */
+/* 💥 DARK MODE STYLES START 💥 */
+/* ------------------------------------------------------------------ */
+
+body.dark-mode {
+    background-color: #121212; 
+}
+
+body.dark-mode .container {
+    background-color: #222222; 
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    color: #f0f0f0;
+}
+
+body.dark-mode .app-header {
+    border-bottom: 2px solid #333;
+}
+
+body.dark-mode .app-header h1 {
+    color: #4da6ff; 
+}
+
+body.dark-mode .header-buttons {
     gap: 10px;
 }
 
-.social-btn {
-    width: 100%;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    color: white; 
-    transition: background-color 0.2s;
-    font-weight: 600;
+/* ✅ NEW: Add Line Button Styles (General Dark Mode) */
+body.dark-mode .add-line-button {
+    background-color: #5cb85c; 
+    color: #222; 
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
+}
+body.dark-mode .add-line-button:hover {
+    background-color: #4aa44a;
+}
+/* ✅ END NEW: Add Line Button Styles (General Dark Mode) */
+
+body.dark-mode .settings-btn {
+    color: #b0b0b0;
 }
 
-/* Telegram Group and Channel Button */
-.telegram-group-btn, .telegram-channel-btn {
-    background-color: #0088cc; /* Telegram Blue */
+body.dark-mode .clear-button {
+    background-color: #ff9800;
+    color: #222; 
+    box-shadow: 0 2px 4px rgba(255,255,255,0.2);
 }
-.telegram-group-btn:hover, .telegram-channel-btn:hover {
-    background-color: #0077b3;
-}
-
-/* WhatsApp Group Button */
-.whatsapp-group-btn {
-    background-color: #25D366; /* WhatsApp Green */
-}
-.whatsapp-group-btn:hover {
-    background-color: #1DA851;
+body.dark-mode .clear-button:hover {
+    background-color: #cc7a00;
 }
 
-/* Social Icon Styling */
-.social-btn i {
-    margin-right: 8px; /* आइकॉन और टेक्स्ट के बीच की दूरी */
-    font-size: 18px;
+/* LINE DELETE SETTING DARK MODE - CUSTOMIZED (SIZE FIX) */
+body.dark-mode .delete-lines-container {
+    margin-bottom: 0;
+    padding-top: 3px; 
 }
 
-/* Contact Us Button at the Bottom (Ensures it is last and full width) */
-.contact-us-at-bottom {
-    margin-top: 20px; 
+body.dark-mode .delete-lines-section-label {
+    color: #4da6ff; 
+    margin-bottom: 5px; 
+}
+
+/* 🔑 FIX (DARK MODE): justify-content: flex-start सेट किया गया */
+body.dark-mode .delete-lines-section-main {
+     background-color: #332a2a; 
+     border: 2px solid #ff7043; 
+     box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2); 
+     color: #f0f0f0; 
+     height: 50px; 
+     justify-content: flex-start; 
+}
+
+body.dark-mode .range-separator {
+    color: #ff7043; 
+}
+
+/* 🔑 FIX (DARK MODE): width को 40px किया गया */
+body.dark-mode .delete-serial-input {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 2px solid #ff7043; 
+    max-width: 40px; 
+    min-width: 40px; 
+    width: 40px;
+    flex-shrink: 0;
+    margin: 0;
+    height: 38px; 
+}
+body.dark-mode .delete-serial-input:focus {
+    border-color: #4da6ff; 
+    box-shadow: 0 0 5px rgba(77, 166, 255, 0.7);
+}
+
+/* 🔑 FIX (DARK MODE): चौड़ाई 60px की गई */
+body.dark-mode .delete-lines-btn {
+    background-color: #f05050; 
+    border: 3px solid #8c0000;
+    color: #f0f0f0;
+    
+    padding: 0 5px; 
+
+    height: 44px; 
+    font-size: 18px; 
+    
+    width: 60px; /* चौड़ाई कम की गई */
     text-align: center;
+    
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
 }
-.contact-us-at-bottom button {
-    width: 100%; 
+body.dark-mode .delete-lines-btn:hover {
+    background-color: #cc4040;
+}
+/* LINE DELETE SETTING DARK MODE END */
+
+body.dark-mode .main-page-settings-row {
+     align-items: flex-start; /* Dark Mode में भी top अलाइनमेंट */
+     justify-content: flex-start; /* Dark Mode में भी start अलाइनमेंट */
 }
 
-/* --- Media Queries for smaller screens --- */
-@media (max-width: 480px) {
-    .container {
-        padding: 10px;
-    }
-    .header h1 {
-        font-size: 20px;
-    }
-    .rate-input-group {
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-    .rate-label {
-        flex-basis: 100%;
-        text-align: right;
-    }
-    .action-bar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .delete-line-group {
-        justify-content: space-between;
-    }
-    .clear-all-btn {
-        width: 100%;
-    }
+/* ✅ NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+body.dark-mode .add-line-button.table-bottom-position {
+    background-color: #4da6ff; /* Dark Mode Blue */
+    color: #222; 
 }
+body.dark-mode .add-line-button.table-bottom-position:hover {
+    background-color: #388ae8;
+}
+/* ✅ END NEW CSS: Add Line Row and Button Styles (Table Bottom Position - Dark Mode) */
+
+
+/* Table Header */
+body.dark-mode .header-row {
+    background-color: #0056b3; 
+}
+
+/* Scrollbar (Dark Mode) */
+body.dark-mode #table-body {
+    scrollbar-color: #4da6ff #222; 
+}
+body.dark-mode #table-body::-webkit-scrollbar-thumb {
+    background-color: #4da6ff;
+}
+
+
+/* Input Fields */
+body.dark-mode .input-row input {
+    background-color: #333333;
+    color: #f0f0f0;
+    border: 1px solid #555;
+}
+body.dark-mode .input-row .milk-kg-input { border-color: #4da6ff; }
+body.dark-mode .input-row .sample-input { border-color: #ff9800; }
+
+/* Badhotri Box */
+body.dark-mode .badhotri-box {
+    background-color: #333;
+    color: #ccc;
+    border-color: #444;
+}
+
+body.dark-mode .badhotri-box.positive {
+    background-color: #2a472f; 
+    color: #5cb85c;
+    border-color: #4c6d52;
+}
+
+body.dark-mode .badhotri-box.negative {
+    background-color: #4a2f2f; 
+    color: #f05050;
+    border-color: #6d4c4c;
+}
+
+body.dark-mode .badhotri-box.highlight-border {
+    border-color: #ffffff !important; 
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4); 
+}
+
+
+/* Result Cards */
+body.dark-mode .result-card {
+    background-color: #333333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .result-card p:first-child { 
+    color: #b0b0b0; 
+}
+
+body.dark-mode .total-milk-card {
+    border-bottom: 8px solid #4da6ff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 5px 0 #4da6ff1a; 
+}
+body.dark-mode .total-increment-card {
+    border-bottom: 8px solid #ff9800;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 5px 0 #ff98001a; 
+}
+
+body.dark-mode .big-blue-text { color: #4da6ff; } 
+body.dark-mode .big-green-text { color: #5cb85c; } 
+body.dark-mode .green-text { color: #5cb85c; } 
+body.dark-mode .red-text { color: #f05050; } 
+
+/* 💥 NEW CSS CLASS FOR LARGE NUMBER WARNING (BADHOTRI WARNING) 💥 */
+body.dark-mode .warning-text-large {
+    color: #ff7043 !important; /* Dark Mode Orange/Red Warning */
+}
+
+/* Combined Total Box */
+body.dark-mode .total-combined {
+    background-color: #2a472f;
+    color: #5cb85c;
+    border: 1px solid #4c6d52;
+}
+
+body.dark-mode .total-combined .combined-label {
+    color: #99d6a3;
+}
+
+body.dark-mode .total-combined .combined-value {
+    color: #5cb85c;
+}
+
+/* Rate Section */
+body.dark-mode .rate-section-header,
+body.dark-mode .rate-section {
+    background-color: #333322;
+    border: 1px solid #554400;
+    border-bottom: 1px solid #554400; 
+}
+
+body.dark-mode .rate-section-header h3 {
+    color: #ffb74d; 
+}
+
+body.dark-mode .rate-section-header,
+body.dark-mode .rate-section {
+    background-color: #333322;
+    border: 1px solid #554400;
+    border-bottom: 1px solid #554400; 
+}
+
+body.dark-mode .rate-section-header h3 {
+    color: #ffb74d; 
+}
+
+body.dark-mode .orange-button {
+    background-color: #ff9800; 
+    border: 2px solid #cc7a00;
+}
+
+body.dark-mode #rate-per-kg {
+    background-color: #222;
+    color: #f0f0f0;
+    border: 2px solid #ff9800;
+}
+body.dark-mode #rate-per-kg::placeholder {
+    color: #aaa;
+}
+
+/* 🔑 MODIFIED: Total Amount Box Style - Match Golden Display (Dark Mode) */
+body.dark-mode .total-amount-box {
+    background: linear-gradient(90deg, #FFD700, #FFA500); /* Golden Gradient */
+    border: 3px solid #CC9900; /* Darker Gold Border */
+    color: #333; /* Dark text for contrast */
+}
+body.dark-mode .total-amount-box .rupee-large,
+body.dark-mode .total-amount-box #final-price {
+    color: #333; /* Dark text for contrast */
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3); 
+}
+
+/* 💥 NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
+body.dark-mode .total-amount-box.warning-price-large {
+    background: linear-gradient(90deg, #ff7043, #f05050) !important; /* Darker Yellow/Orange to Red Gradient */
+    border: 3px solid #8c0000 !important; /* Dark Red Border */
+}
+
+body.dark-mode .total-amount-box.warning-price-large .rupee-large {
+    color: #fffacd !important; /* Light text for contrast */
+}
+
+body.dark-mode .total-amount-box.warning-price-large #final-price {
+    color: #fffacd !important; /* Light Yellow Warning Text */
+}
+/* 💥 END OF NEW CSS: PRICE WARNING STYLE (DARK MODE) 💥 */
+
+
+/* Settings Modal */
+body.dark-mode .settings-panel-light {
+    background-color: #222222; 
+    border: 1px solid #ff9800; 
+    color: #f0f0f0;
+}
+
+body.dark-mode .settings-panel-light h2 {
+    color: #ffb74d; 
+    border-bottom: 2px solid #ffb74d;
+}
+body.dark-mode .settings-panel-light .close-btn {
+    color: #ff7043; 
+}
+body.dark-mode .setting-item {
+    background-color: #333;
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+    border: 1px solid #444; 
+    color: #f0f0f0;
+}
+body.dark-mode .settings-panel-light .bordered-item {
+    border: 1px solid #ffb74d; 
+}
+
+body.dark-mode .small-input {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+body.dark-mode #language-select {
+    background-color: #444;
+    color: #f0f0f0;
+    border: 1px solid #666;
+}
+body.dark-mode #language-select option {
+    background-color: #444;
+}
+
+/* 🚀 NEW SOCIAL BUTTON STYLES DARK MODE START 🚀 */
+body.dark-mode .whatsapp-btn {
+    background-color: #1EBE57; 
+    border-color: #1a7e34;
+}
+body.dark-mode .whatsapp-btn .icon-container-circle {
+    background-color: #222; 
+    border: 3px solid #1a7e34;
+    color: #1EBE57;
+}
+
+body.dark-mode .telegram-group-btn {
+    background-color: #4da6ff; 
+    border-color: #0056b3;
+}
+body.dark-mode .telegram-group-btn .icon-container-circle {
+    background-color: #222; 
+    border: 3px solid #0056b3;
+    color: #4da6ff;
+}
+
+body.dark-mode .telegram-channel-btn {
+    background-color: #66CCFF; 
+    border-color: #0088CC;
+}
+body.dark-mode .telegram-channel-btn .icon-container-circle {
+    background-color: #222; 
+    border: 3px solid #0088CC;
+    color: #66CCFF;
+}
+/* 🚀 NEW SOCIAL BUTTON STYLES DARK MODE END 🚀 */
+
+/* Contact Us/Help Center Modal */
+body.dark-mode .blue-panel,
+body.dark-mode .share-panel-blue {
+    background-color: #222222; 
+    border: 1px solid #4da6ff; 
+    color: #f0f0f0;
+}
+body.dark-mode .blue-panel h2,
+body.dark-mode .share-panel-blue h2 {
+    color: #4da6ff; 
+    border-bottom: 2px solid #4da6ff;
+}
+body.dark-mode .blue-panel .close-btn,
+body.dark-mode .share-panel-blue .close-btn {
+    color: #4da6ff; 
+}
+
+body.dark-mode .form-group label {
+    color: #4da6ff; 
+}
+
+body.dark-mode #help-form input:not([type="submit"]), 
+body.dark-mode #problemDescription { 
+    border: 1px solid #4da6ff;
+    background-color: #333; 
+    color: #f0f0f0;
+}
+body.dark-mode .char-count { 
+    color: #b0b0b0;
+    background-color: #333;
+}
+
+/* --- Icon Buttons Dark Mode Fix --- */
+body.dark-mode .icon-container-circle {
+    background-color: #FF9800; 
+    border: 3px solid #FFC107; 
+}
+
+/* --- CLEAR ALL MODAL DARK MODE (MODIFIED) --- */
+body.dark-mode .clear-panel-yellow {
+    background-color: #333322; /* Dark Yellowish background */
+    border: 1px solid #ff9800; /* Darker Yellow */
+}
+body.dark-mode .clear-panel-yellow h2 {
+    color: #ffb74d; 
+    border-bottom: 2px solid #ffb74d;
+}
+body.dark-mode .clear-panel-yellow .close-btn {
+    color: #ffb74d; 
+}
+body.dark-mode .clear-warning-text {
+    color: #ccc;
+}
+body.dark-mode .cancel-btn {
+    background-color: #444; 
+    border: 2px solid #6c757d;
+}
+body.dark-mode .confirm-btn {
+    background-color: #f05050 !important;
+    border: 3px solid #8c0000;
+}
+
+/* 💥 NEW: CUSTOM ALERT MODAL DARK MODE STYLE 💥 */
+body.dark-mode .custom-alert-panel {
+    background-color: #333322 !important; /* Dark Yellowish background */
+    border: 3px solid #ffb74d !important; 
+}
+
+body.dark-mode .custom-alert-panel .close-btn {
+    color: #ffb74d !important; 
+}
+
+body.dark-mode .custom-alert-panel #alert-message-text {
+    color: #f0f0f0;
+}
+
+body.dark-mode .custom-alert-panel #alert-ok-btn {
+    background-color: #ffb74d; 
+    color: #333;
+}
+body.dark-mode .custom-alert-panel #alert-ok-btn:hover {
+    background-color: #cc9900;
+}
+
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES START (DARK MODE) */
+/* ------------------------------------------------------------------ */
+body.dark-mode .feedback-message-container {
+    background-color: #333; /* Dark background */
+    border: 1px solid #ff7043; /* Darker orange border */
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .feedback-title {
+    color: #ffb74d; /* Light orange title */
+    border-bottom: 1px dashed #ff7043;
+}
+
+body.dark-mode .feedback-body {
+    color: #ccc; /* Light gray text */
+}
+/* ------------------------------------------------------------------ */
+/* ✅ NEW: FEEDBACK MESSAGE STYLES END (DARK MODE) */
+/* ------------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------------------ */
+/* 💥 DARK MODE STYLES END 💥 */
+/* ------------------------------------------------------------------ */
