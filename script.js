@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         hi: {
             app_title: 'Milk Scale App', 
-            serial: 'क्रम',
+            // ✅ बदलाव यहाँ: 'क्रम' की जगह 'Sr.' किया गया
+            serial: 'Sr.', 
             milk_kg: 'दूध (Kg)',
             sample: 'सैंपल',
             badhotri_gm: 'बढ़ोतरी (Gm)',
@@ -160,7 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         en: {
             app_title: 'Milk Scale App', 
-            serial: 'Sr. No.',
+            // ✅ बदलाव यहाँ: 'Sr. No.' की जगह 'Sr.' किया गया
+            serial: 'Sr.', 
             milk_kg: 'Milk (Kg)',
             sample: 'Sample',
             badhotri_gm: 'Increment (Gm)',
